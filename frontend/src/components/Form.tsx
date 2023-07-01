@@ -1,39 +1,25 @@
 "use client";
 
+import {
+  characterList,
+  specialNeedsList,
+  languageList,
+} from "@utils/constants";
+import { FormValues } from "@utils/interfaces";
 import { useFormik } from "formik";
 import React from "react";
-
-interface FormValues {
-  subject: string;
-  character: string;
-  message: string;
-  description: string;
-  ageGroup: number;
-  //   special_needs?: string;
-  //   language: string;
-}
-
-const characterList: string[] = [
-  "boy",
-  "girl",
-  "toy",
-  "superhero",
-  "car",
-  "pet",
-  "other",
-];
 
 const Form = () => {
   const { values, handleChange, handleBlur, errors, touched, handleSubmit } =
     useFormik<FormValues>({
       initialValues: {
         subject: "",
-        character: "",
+        character: "boy",
         message: "",
         description: "",
         ageGroup: 0,
-        // special_needs: "",
-        // language: "",
+        specialNeeds: "",
+        language: "English",
       },
 
       onSubmit: (values) => {
@@ -49,14 +35,13 @@ const Form = () => {
         className="mt-10 w-full max-w-2xl flex-col gap-7"
       >
         <div className="flex flex-col mt-5">
-          <label htmlFor="subject" className="my-3">
-            Subject of a story
-          </label>
+          <label htmlFor="subject">Subject of a story</label>
           <textarea
             name="subject"
             id="subject"
             cols={20}
             rows={5}
+            className="my-3"
             placeholder="Ex. A young girl name sara loves exploring a world. And she faces challenges along the way. "
             value={values.subject}
             onChange={handleChange}
@@ -67,13 +52,11 @@ const Form = () => {
           ) : null}
         </div>
 
-        <div className="mt-5 flex">
-          <div className="flex flex-col w-2/5 p-3">
-            <label htmlFor="character" className="m-1">
-              Choose the character
-            </label>
+        <div className="mt-5 flex-between grid justify-items-stretch">
+          <div className="flex flex-col w-2/5 justify-items-start">
+            <label htmlFor="character">Choose the character</label>
             <select
-              className="p-2"
+              className="my-3 p-3"
               name="character"
               id="character"
               value={values.character}
@@ -91,7 +74,7 @@ const Form = () => {
             ) : null}
           </div>
 
-          <div className="flex flex-col w-3/5 p-3">
+          <div className="flex flex-col w-2/4 justify-self-end">
             <label htmlFor="message">Message to convey</label>
             <input
               type="text"
@@ -109,7 +92,7 @@ const Form = () => {
           </div>
         </div>
 
-        <div className="flex flex-col mt-5 gap-5">
+        <div className="flex flex-col mt-5">
           <label htmlFor="description" className="">
             Character description:
           </label>
@@ -118,7 +101,7 @@ const Form = () => {
             id="description"
             cols={20}
             rows={5}
-            className="m-3"
+            className="my-3"
             placeholder="Ex. A young girl with curly brown hair and brown green eyes."
             value={values.description}
             onChange={handleChange}
@@ -142,14 +125,61 @@ const Form = () => {
             onChange={handleChange}
             onBlur={handleBlur}
           />
-          <span>* Please Enter a number</span>
+          <span className="text-neutral-400">* Please Enter a number</span>
           {touched.ageGroup && errors.ageGroup ? (
             <div>{errors.ageGroup}</div>
           ) : null}
         </div>
+
+        <div className="mt-5 flex-between grid justify-items-stretch">
+          <div className="flex flex-col w-2/5 justify-items-start">
+            <label htmlFor="specialNeeds" className="m-1">
+              Special Needs of Children:
+            </label>
+            <select
+              className="my-3 p-3"
+              name="specialNeeds"
+              id="specialNeeds"
+              value={values.specialNeeds}
+              onBlur={handleBlur}
+              onChange={handleChange}
+            >
+              {specialNeedsList.map((need) => (
+                <option value={need} key={need} className="">
+                  A {need}
+                </option>
+              ))}
+            </select>
+            {touched.specialNeeds && errors.specialNeeds ? (
+              <div>{errors.specialNeeds}</div>
+            ) : null}
+          </div>
+
+          <div className="flex flex-col w-2/4 justify-self-end">
+            <label htmlFor="language">Language: </label>
+            <select
+              className="my-3 p-3"
+              name="language"
+              id="language"
+              value={values.language}
+              onBlur={handleBlur}
+              onChange={handleChange}
+            >
+              {languageList.map((language) => (
+                <option value={language} key={language} className="">
+                  A {language}
+                </option>
+              ))}
+            </select>
+            {touched.language && errors.language ? (
+              <div>{errors.language}</div>
+            ) : null}
+          </div>
+        </div>
+
         <button
           type="submit"
-          className="w-full rounded-none bg-sky-500 p-2 m-5"
+          className="w-full rounded-none bg-sky-500 py-3 mt-5"
         >
           Create
         </button>

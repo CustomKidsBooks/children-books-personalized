@@ -9,7 +9,7 @@ const Nav = () => {
       <Link href="/" className="flex gap-2 flex-center">
         <Image
           alt="Children Book"
-          src="/public/assets/images/logo.svg"
+          src="/assets/logo.svg"
           width={30}
           height={30}
           className="object-contain"
@@ -24,6 +24,13 @@ const Nav = () => {
             Sign in
           </button>
         </div>
+      </div>
+
+      {/* Mobile Navigation */}
+      <div className="sm:hidden flex relative">
+        <button type="button" className="black_btn">
+          Sign in
+        </button>
       </div>
     </nav>
   );
