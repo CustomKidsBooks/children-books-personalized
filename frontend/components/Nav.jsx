@@ -23,14 +23,26 @@ const Nav = () => {
           height={30}
           className="object-contain"
         />
-        <p className="logo_text">AI Child Book generator</p>
+        <p className="logo_text">AI Child Book</p>
       </Link>
       {/* Desktop Navigation */}
       <div className="sm:flex hidden">
         {isUserLoggedIn ? (
           <div className="flex gap-3 md:gap-5">
-            <Link href="/create-book" className="black_btn">
-              Create a Book
+            <Link href="/create-book" className="mt-2">
+              Home
+            </Link>
+            <Link href="/create-book" className="mt-2">
+              Service
+            </Link>
+            <Link href="/create-book" className="mt-2">
+              Contact
+            </Link>
+            <Link href="/create-book" className="outline_btn">
+              Create
+            </Link>
+            <Link href="/askChatGPT" className="outline_btn">
+              AskGPT
             </Link>
 
             <button type="button" className="outline_btn">
@@ -39,9 +51,9 @@ const Nav = () => {
 
             <Link href="/profile">
               <Image
-                src="/assets/images/logo.svg"
-                width={37}
-                height={37}
+                src="/assets/images/profile.png"
+                width={67}
+                height={67}
                 className="rounded-full"
                 alt="profile"
               />
@@ -64,9 +76,9 @@ const Nav = () => {
         {isUserLoggedIn ? (
           <div className="flex">
             <Image
-              src="/assets/images/logo.svg"
-              width={37}
-              height={37}
+              src="/assets/images/profile.png"
+              width={67}
+              height={67}
               className="rounded-full"
               alt="profile"
               onClick={() => setToggleDropdown(!toggleDropdown)}
@@ -74,6 +86,27 @@ const Nav = () => {
 
             {toggleDropdown && (
               <div className="dropdown">
+                <Link
+                  href="/create-book"
+                  className="dropdown_link"
+                  onClick={() => setToggleDropdown(false)}
+                >
+                  Home
+                </Link>
+                <Link
+                  href="/create-book"
+                  className="dropdown_link"
+                  onClick={() => setToggleDropdown(false)}
+                >
+                  Service
+                </Link>
+                <Link
+                  href="/create-book"
+                  className="dropdown_link"
+                  onClick={() => setToggleDropdown(false)}
+                >
+                  Contact
+                </Link>
                 <Link
                   href="/profile"
                   className="dropdown_link"

@@ -2,14 +2,12 @@
 require("dotenv").config();
 const express = require("express"); // Express framework for building web applications
 const app = express(); // Creating an instance of Express application
-
 const mysql = require("mysql2"); // MySQL module for connecting to MySQL database
 const cors = require("cors"); // CORS middleware for enabling cross-origin resource sharing
 
 // Configuring middleware
 app.use(express.json()); // Parsing JSON request bodies
 app.use(cors()); // Enabling CORS for cross-origin requests
-
 // Creating a MySQL connection pool
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
@@ -22,10 +20,14 @@ console.log("DB_USER:", process.env.DB_USER);
 console.log("DB_PASSWORD:", process.env.DB_PASSWORD);
 console.log("DB_DATABASE:", process.env.DB_DATABASE);
 
+const { Configuration, OpenAIApi } = require("openai");
+const config = new Configuration({
+  apiKey: "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",
+});
+const openai = new OpenAIApi(config);
 // Handling GET request to fetch data from the database
 app.get("/books", (req, res) => {
   let mysqlQuery = "SELECT * FROM BOOKS_TABLE";
-
   pool.query(mysqlQuery, (err, result) => {
     if (err) {
       console.error("Error fetching data from the database:", err);
@@ -38,27 +40,52 @@ app.get("/books", (req, res) => {
   });
 });
 
-// Handling POST request to create a new book
-app.post("/create_book", (req, res) => {
-  const { title, description, author, page } = req.body; // Extracting data from the request body
+/*app.post("/chatgpt_request", async (req, res) => {
+  const { description } = req.body;
+  console.log(description);
+  const completion = await openai.createCompletion({
+    model: "text-davinci-003",
+    max_tokens: 512,
+    temperature: 0,
+    prompt: description,
+  });
 
+  const generatedMessage = completion.data.choices[0].text;
+  console.log(generatedMessage); // Log the generated message
+
+  res.send(generatedMessage);
+}*/
+// Handling POST request to create a new book
+app.post("/create_book", async (req, res) => {
+  const { title, description, author, page } = req.body; // Extracting data from the request body
+  const completion = await openai.createCompletion({
+    model: "text-davinci-003",
+    max_tokens: 512,
+    temperature: 0,
+    prompt: description,
+  });
+  const generatedMessage = completion.data.choices[0].text;
   // SQL query to insert a new book into the "BOOKS" table
   let mysqlQuery =
     "INSERT INTO BOOKS_TABLE (TITLE, DESCRIPTION, AUTHOR, PAGE) VALUES (?, ?, ?, ?)";
 
   // Executing the SQL query using the MySQL connection pool
-  pool.query(mysqlQuery, [title, description, author, page], (err, result) => {
-    if (err) {
-      // If an error occurred while executing the query
-      console.error("Error inserting data into the database:", err);
-      res.status(500).json({
-        error: "An error occurred while inserting data into the database.",
-      });
-      return;
+  pool.query(
+    mysqlQuery,
+    [title, generatedMessage, author, page],
+    (err, result) => {
+      if (err) {
+        // If an error occurred while executing the query
+        console.error("Error inserting data into the database:", err);
+        res.status(500).json({
+          error: "An error occurred while inserting data into the database.",
+        });
+        return;
+      }
+      // If the query executed successfully
+      res.status(200).json({ message: "Data inserted successfully." });
     }
-    // If the query executed successfully
-    res.status(200).json({ message: "Data inserted successfully." });
-  });
+  );
 });
 
 // DELETE request to delete a book
