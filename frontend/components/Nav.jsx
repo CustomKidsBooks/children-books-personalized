@@ -41,9 +41,6 @@ const Nav = () => {
             <Link href="/create-book" className="outline_btn">
               Create
             </Link>
-            <Link href="/askChatGPT" className="outline_btn">
-              AskGPT
-            </Link>
 
             <button type="button" className="outline_btn">
               Sign Out
