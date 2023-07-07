@@ -51,40 +51,8 @@ app.get("/books", (req, res) => {
 
   res.send(generatedMessage);
 }*/
+
 // Handling POST request to create a new book
-/*app.post("/create_book", async (req, res) => {
-  const { title, description, author, page } = req.body; // Extracting data from the request body
-  const completion = await openai.createCompletion({
-    model: "text-davinci-003",
-    max_tokens: 512,
-    temperature: 0,
-    prompt: description,
-  });
-  const generatedMessage = completion.data.choices[0].text;
-  // SQL query to insert a new book into the "BOOKS" table
-  let mysqlQuery =
-    "INSERT INTO BOOKS_TABLE (TITLE, DESCRIPTION, AUTHOR, PAGE) VALUES (?, ?, ?, ?)";
-
-  // Executing the SQL query using the MySQL connection pool
-  pool.query(
-    mysqlQuery,
-    [title, generatedMessage, author, page],
-    (err, result) => {
-      if (err) {
-        // If an error occurred while executing the query
-        console.error("Error inserting data into the database:", err);
-        res.status(500).json({
-          error: "An error occurred while inserting data into the database.",
-        });
-        return;
-      }
-      // If the query executed successfully
-      res.status(200).json({ message: "Data inserted successfully." });
-    }
-  );
-});
-*/
-
 app.post("/create_book", async (req, res) => {
   const { title, description, author, page, image } = req.body;
 
