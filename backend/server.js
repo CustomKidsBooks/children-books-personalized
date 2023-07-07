@@ -164,17 +164,30 @@ app.post("/create_book", async (req, res) => {
 app.delete("/books/:id", (req, res) => {
   const bookId = req.params.id;
 
-  let mysqlQuery = "DELETE FROM BOOKS_TABLE WHERE ID_BOOK = ?";
+  let mysqlPageQuery = "DELETE FROM PAGE_TABLE WHERE BOOKS_ID_FK = ?";
+  let mysqlBookQuery = "DELETE FROM BOOKS_TABLE WHERE ID_BOOK = ?";
 
-  pool.query(mysqlQuery, [bookId], (err, result) => {
-    if (err) {
-      console.error("Error deleting data from the database:", err);
+  // First, delete the related pages from the PAGE_TABLE
+  pool.query(mysqlPageQuery, [bookId], (pageErr, pageResult) => {
+    if (pageErr) {
+      console.error("Error deleting pages from the database:", pageErr);
       res.status(500).json({
-        error: "An error occurred while deleting data from the database.",
+        error: "An error occurred while deleting pages from the database.",
       });
       return;
     }
-    res.status(200).json({ message: "Data deleted successfully." });
+
+    // Once the pages are deleted, delete the book from the BOOKS_TABLE
+    pool.query(mysqlBookQuery, [bookId], (bookErr, bookResult) => {
+      if (bookErr) {
+        console.error("Error deleting book from the database:", bookErr);
+        res.status(500).json({
+          error: "An error occurred while deleting the book from the database.",
+        });
+        return;
+      }
+      res.status(200).json({ message: "Data deleted successfully." });
+    });
   });
 });
 
