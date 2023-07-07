@@ -15,14 +15,10 @@ const pool = mysql.createPool({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
 });
-console.log("DB_HOST:", process.env.DB_HOST);
-console.log("DB_USER:", process.env.DB_USER);
-console.log("DB_PASSWORD:", process.env.DB_PASSWORD);
-console.log("DB_DATABASE:", process.env.DB_DATABASE);
 
 const { Configuration, OpenAIApi } = require("openai");
 const config = new Configuration({
-  apiKey: "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",
+  apiKey: process.env.OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(config);
 // Handling GET request to fetch data from the database
