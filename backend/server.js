@@ -128,7 +128,6 @@ app.post("/create_book", async (req, res) => {
             pageNumber: Math.floor(i / paragraphsPerPage) + 1,
             paragraphs: pageParagraphs,
           };
-
           pages.push(page); // Add the page to the pages array
         }
       }
@@ -152,15 +151,10 @@ app.post("/create_book", async (req, res) => {
                 );
                 return;
               }
-
-              const pageId = pageResult.insertId; // Get the auto-generated ID of the inserted page
-
-              console.log(`Inserted Page ${pageNumber} with ID ${pageId}`);
             }
           );
         });
       });
-
       res.status(200).json({ message: "Data inserted successfully." });
     }
   );

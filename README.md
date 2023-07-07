@@ -13,3 +13,7 @@ The target community involves all groups of people, schools, government bodies, 
 # env file info:
 
 DB_HOST=sql9.freesqldatabase.com DB_USER=sql9630763 DB_PASSWORD=mlcBqLwMLe DB_DATABASE=sql9630763
+<<<<<<< HEAD
+=======
+
+>>>>>>> 155d89bf13151d4cd6003d53f5ef6a040ae3c556
