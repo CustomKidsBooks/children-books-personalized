@@ -52,7 +52,7 @@ app.get("/books", (req, res) => {
   res.send(generatedMessage);
 }*/
 // Handling POST request to create a new book
-app.post("/create_book", async (req, res) => {
+/*app.post("/create_book", async (req, res) => {
   const { title, description, author, page } = req.body; // Extracting data from the request body
   const completion = await openai.createCompletion({
     model: "text-davinci-003",
@@ -79,6 +79,88 @@ app.post("/create_book", async (req, res) => {
         return;
       }
       // If the query executed successfully
+      res.status(200).json({ message: "Data inserted successfully." });
+    }
+  );
+});
+*/
+
+app.post("/create_book", async (req, res) => {
+  const { title, description, author, page, image } = req.body;
+
+  let mysqlBookQuery =
+    "INSERT INTO BOOKS_TABLE (TITLE, DESCRIPTION, AUTHOR, PAGE, IMAGE) VALUES (?, ?, ?, ?, ?)";
+
+  pool.query(
+    mysqlBookQuery,
+    [title, description, author, page, image],
+    async (err, bookResult) => {
+      if (err) {
+        console.error("Error inserting book data into the database:", err);
+        res.status(500).json({
+          error:
+            "An error occurred while inserting book data into the database.",
+        });
+        return;
+      }
+
+      const bookId = bookResult.insertId; // Get the auto-generated ID of the inserted book
+
+      const completion = await openai.createCompletion({
+        model: "text-davinci-003",
+        max_tokens: 512,
+        temperature: 0,
+        prompt: description,
+      });
+
+      const bookContent = completion.data.choices[0].text;
+      const paragraphs = bookContent.split("Page");
+      const paragraphsPerPage = 1;
+      const pages = [];
+
+      for (let i = 1; i < paragraphs.length; i += paragraphsPerPage) {
+        const pageParagraphs = paragraphs
+          .slice(i, i + paragraphsPerPage)
+          .map((p) => p.trim());
+
+        if (pageParagraphs.length > 0) {
+          const page = {
+            pageNumber: Math.floor(i / paragraphsPerPage) + 1,
+            paragraphs: pageParagraphs,
+          };
+
+          pages.push(page); // Add the page to the pages array
+        }
+      }
+
+      // Insert the pages and their paragraphs into the database
+      pages.forEach((page) => {
+        const { pageNumber, paragraphs } = page;
+
+        paragraphs.forEach((paragraph) => {
+          let mysqlPageQuery =
+            "INSERT INTO PAGE_TABLE (PAGE_NUM, PARAGRAPH, IMAGE, BOOKS_ID_FK) VALUES (?, ?, ?, ?)";
+          const pageN = pageNumber - 1;
+          pool.query(
+            mysqlPageQuery,
+            [pageN, paragraph, image, bookId],
+            (err, pageResult) => {
+              if (err) {
+                console.error(
+                  "Error inserting page data into the database:",
+                  err
+                );
+                return;
+              }
+
+              const pageId = pageResult.insertId; // Get the auto-generated ID of the inserted page
+
+              console.log(`Inserted Page ${pageNumber} with ID ${pageId}`);
+            }
+          );
+        });
+      });
+
       res.status(200).json({ message: "Data inserted successfully." });
     }
   );
