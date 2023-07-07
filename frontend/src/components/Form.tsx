@@ -5,9 +5,11 @@ import {
   specialNeedsList,
   languageList,
 } from "@utils/constants";
+import { ButttonVarients } from "@ui/Button";
 import { FormValues } from "@utils/interfaces";
 import { useFormik } from "formik";
 import React from "react";
+import { Heading } from "@ui/Heading";
 
 const Form = () => {
   const { values, handleChange, handleBlur, errors, touched, handleSubmit } =
@@ -28,8 +30,8 @@ const Form = () => {
     });
 
   return (
-    <section className="w-full max-w-full">
-      <h1 className="head_text text-left">Create Story</h1>
+    <section className="w-full max-w-full m-4">
+      <h1 className={Heading({ className: "text-left" })}>Create Story</h1>
       <form
         onSubmit={handleSubmit}
         className="mt-10 w-full max-w-2xl flex-col gap-7"
@@ -179,9 +181,13 @@ const Form = () => {
 
         <button
           type="submit"
-          className="w-full rounded-none bg-sky-500 py-3 mt-5"
+          className={ButttonVarients({
+            intent: "gradiant",
+            size: "large",
+            className: "text-white",
+          })}
         >
-          Create
+          Create &#10024;
         </button>
       </form>
     </section>
