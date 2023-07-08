@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ButttonVarients } from "@ui/Button";
+import { ButttonVariants } from "@ui/Button";
 
 const Nav = () => {
   return (
@@ -23,7 +23,7 @@ const Nav = () => {
         <div className="flex gap-3 md:gap-5">
           <button
             type="button"
-            className={ButttonVarients({ intent: "black", size: "medium" })}
+            className={ButttonVariants({ intent: "black", size: "medium" })}
           >
             Sign in
           </button>
@@ -32,7 +32,7 @@ const Nav = () => {
 
       {/* Mobile Navigation */}
       <div className="sm:hidden flex relative">
-        <button type="button" className={ButttonVarients({ intent: "black" })}>
+        <button type="button" className={ButttonVariants({ intent: "black" })}>
           Sign in
         </button>
       </div>

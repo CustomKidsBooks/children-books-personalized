@@ -1,7 +1,7 @@
 import { cva, type VariantProps } from "class-variance-authority";
 
-export type ButtonProps = VariantProps<typeof ButttonVarients>;
-export const ButttonVarients = cva(["font-semibold", "border", "rounded"], {
+export type ButtonProps = VariantProps<typeof ButttonVariants>;
+export const ButttonVariants = cva(["font-semibold", "border", "rounded"], {
   variants: {
     intent: {
       primary: [

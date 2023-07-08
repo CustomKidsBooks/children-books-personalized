@@ -5,7 +5,7 @@ import {
   specialNeedsList,
   languageList,
 } from "@utils/constants";
-import { ButttonVarients } from "@ui/Button";
+import { ButttonVariants } from "@ui/Button";
 import { FormValues } from "@utils/interfaces";
 import { useFormik } from "formik";
 import React from "react";
@@ -181,7 +181,7 @@ const Form = () => {
 
         <button
           type="submit"
-          className={ButttonVarients({
+          className={ButttonVariants({
             intent: "gradiant",
             size: "large",
             className: "text-white",
