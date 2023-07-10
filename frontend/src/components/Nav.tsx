@@ -16,16 +16,16 @@ const Nav = () => {
         />
         <p className="">Children Book</p>
       </Link>
-
       {/* Desktop Navigation */}
       <div className="sm:flex hidden">
         <div className="flex gap-3 md:gap-5">
-          <button type="button" className="black_btn">
-            Sign in
-          </button>
+          <Link href="/login">
+            <button type="button" className="black_btn">
+              Sign in
+            </button>
+          </Link>
         </div>
       </div>
-
       {/* Mobile Navigation */}
       <div className="sm:hidden flex relative">
         <button type="button" className="black_btn">
