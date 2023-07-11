@@ -5,7 +5,7 @@ import {
   specialNeedsList,
   languageList,
 } from "@utils/constants";
-import { ButttonVariants } from "@ui/Button";
+import { Button } from "@ui/Button";
 import { FormValues } from "@utils/interfaces";
 import { useFormik } from "formik";
 import React from "react";
@@ -31,7 +31,9 @@ const Form = () => {
 
   return (
     <section className="w-full max-w-full m-4">
-      <h1 className={Heading({ className: "text-left" })}>Create Story</h1>
+      <h1 className={Heading({ align: "left", size: "small" })}>
+        Create Story
+      </h1>
       <form
         onSubmit={handleSubmit}
         className="mt-10 w-full max-w-2xl flex-col gap-7"
@@ -179,16 +181,14 @@ const Form = () => {
           </div>
         </div>
 
-        <button
+        <Button
           type="submit"
-          className={ButttonVariants({
-            intent: "gradiant",
-            size: "large",
-            className: "text-white",
-          })}
+          intent="gradiant"
+          size="large"
+          className="text-white"
         >
           Create &#10024;
-        </button>
+        </Button>
       </form>
     </section>
   );
