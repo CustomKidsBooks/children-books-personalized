@@ -5,7 +5,12 @@ const Home = () => {
   return (
     <div>
       <section className="w-full flex-center flex-col">
-        <h1 className={Heading({ size: "small", className: "text-center" })}>
+        <h1
+          className={Heading({
+            size: "small",
+            align: "center",
+          })}
+        >
           Create captivating children&rsquo;s stories for all needs instantly
           using AI
         </h1>
