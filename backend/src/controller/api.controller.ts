@@ -1,16 +1,14 @@
+// openai.controller.ts
+
 import { Request, Response } from "express";
-import initializeOpenAI from "../service/openai.service";
+import { generateBookText } from "../service/openai.service";
+
 export const createBookHandler = async (req: Request, res: Response) => {
   try {
-    // Call your OpenAI API using the initializeOpenAI function
-    const openai = initializeOpenAI();
-    const completion = await openai.createCompletion({
-      model: "text-davinci-003",
-      max_tokens: 512,
-      temperature: 0,
-      prompt: "what is your name",
-    });
-    const response = completion.data.choices[0].text;
+    const prompt =
+      "create a children’s book consisting of two pages and 1 paragraph per page";
+    const response = await generateBookText(prompt);
+
     // Log the response
     console.log(response);
 
