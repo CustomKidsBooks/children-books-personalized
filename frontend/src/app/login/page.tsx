@@ -1,8 +1,10 @@
 "use client";
 
-import { LogInFormValues } from "@utils/interfaces";
-import { useFormik } from "formik";
 import React from "react";
+import { useFormik } from "formik";
+import { LogInFormValues } from "@utils/interfaces";
+import { Heading } from "@ui/Heading";
+import { Button } from "@ui/Button";
 
 const LogInForm = () => {
   const { values, handleChange, handleBlur, errors, touched, handleSubmit } =
@@ -19,8 +21,7 @@ const LogInForm = () => {
 
   return (
     <section className="grid content-center max-w-full">
-      <h1 className="text-center font-bold text-3xl mt-10">Log in</h1>
-
+      <h1 className={Heading({ align: "center", size: "small" })}>Log in</h1>
       <form onSubmit={handleSubmit} className="mt-10 w-96">
         <div>
           <input
@@ -52,12 +53,14 @@ const LogInForm = () => {
             <div>{errors.password}</div>
           ) : null}
         </div>
-        <button
+        <Button
           type="submit"
-          className="w-full rounded-md bg-sky-500 py-3 mt-5"
+          intent="primary"
+          size="medium"
+          className="text-white w-full mt-5"
         >
           Log in
-        </button>
+        </Button>
       </form>
     </section>
   );

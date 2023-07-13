@@ -20,9 +20,11 @@ const Nav = () => {
       {/* Desktop Navigation */}
       <div className="sm:flex hidden">
         <div className="flex gap-3 md:gap-5">
-          <Button type="button" intent="black" size="medium">
-            Sign in
-          </Button>
+          <Link href="/login">
+            <Button type="button" intent="black" size="medium">
+              Sign in
+            </Button>
+          </Link>
         </div>
       </div>
       {/* Mobile Navigation */}
