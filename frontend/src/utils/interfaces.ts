@@ -7,3 +7,8 @@ export interface FormValues {
     specialNeeds?: string;
     language: string;
   }
+  
+export interface LogInFormValues {
+    username: string;
+    password: string;
+  }
