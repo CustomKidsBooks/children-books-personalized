@@ -55,12 +55,7 @@ const LogInForm = () => {
             <div>{errors.password}</div>
           ) : null}
         </div>
-        <Button
-          type="submit"
-          intent="primary"
-          size="medium"
-          className="text-white w-full mt-5"
-        >
+        <Button type="submit" intent="primary" size="large" className="mt-5">
           Log in
         </Button>
       </form>

@@ -71,12 +71,7 @@ const SignUpForm = () => {
             <div>{errors.confirmPassword}</div>
           ) : null}
         </div>
-        <Button
-          type="submit"
-          intent="primary"
-          size="medium"
-          className="text-white w-full mt-5"
-        >
+        <Button type="submit" intent="primary" size="large" className="mt-5">
           Sign up
         </Button>
       </form>
