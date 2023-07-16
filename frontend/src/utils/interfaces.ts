@@ -12,3 +12,9 @@ export interface LogInFormValues {
     username: string;
     password: string;
   }
+
+export interface SignUpFormValues {
+    username: string;
+    password: string;
+    confirmPassword:string;
+  }

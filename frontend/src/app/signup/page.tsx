@@ -3,16 +3,17 @@
 import Link from "next/link";
 import React from "react";
 import { useFormik } from "formik";
-import { LogInFormValues } from "@utils/interfaces";
+import { SignUpFormValues } from "@utils/interfaces";
 import { Heading } from "@ui/Heading";
 import { Button } from "@ui/Button";
 
-const LogInForm = () => {
+const SignUpForm = () => {
   const { values, handleChange, handleBlur, errors, touched, handleSubmit } =
-    useFormik<LogInFormValues>({
+    useFormik<SignUpFormValues>({
       initialValues: {
         username: "",
         password: "",
+        confirmPassword: "",
       },
 
       onSubmit: (values) => {
@@ -22,7 +23,7 @@ const LogInForm = () => {
 
   return (
     <section className="grid content-center max-w-full">
-      <h1 className={Heading({ align: "center", size: "small" })}>Log in</h1>
+      <h1 className={Heading({ align: "center", size: "small" })}>Sign up</h1>
       <p className="mt-10 text-center">Enter your username and password</p>
       <form onSubmit={handleSubmit} className="mt-3 w-96">
         <div>
@@ -55,18 +56,33 @@ const LogInForm = () => {
             <div>{errors.password}</div>
           ) : null}
         </div>
+        <div>
+          <input
+            type="password"
+            name="confirmPassword"
+            id="password"
+            className="form_input"
+            placeholder="Confirm Password"
+            value={values.confirmPassword}
+            onChange={handleChange}
+            onBlur={handleBlur}
+          />
+          {touched.confirmPassword && errors.confirmPassword ? (
+            <div>{errors.confirmPassword}</div>
+          ) : null}
+        </div>
         <Button type="submit" intent="primary" size="large" className="mt-5">
-          Log in
+          Sign up
         </Button>
       </form>
       <p className="mt-5">
-        Don't have an account{" "}
-        <Link href="/signup" className="text-blue-500 hover:text-red-500">
-          Sign up
+        Already have an account{" "}
+        <Link href="/login" className="text-blue-500 hover:text-red-500">
+          Log in
         </Link>
       </p>
     </section>
   );
 };
 
-export default LogInForm;
+export default SignUpForm;
