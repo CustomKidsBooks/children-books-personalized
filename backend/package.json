@@ -1,16 +1,31 @@
 {
-  "dependencies": {
-    "express": "^4.18.2"
-  },
-  "scripts": {
-    "start": "node server.js"
-  },
-  "name": "backend",
+  "name": "yes",
   "version": "1.0.0",
-  "main": "server.js",
-  "devDependencies": {},
-  "keywords": [],
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --config nodemon.json src/app.ts"
+  },
   "author": "",
   "license": "ISC",
-  "description": ""
+  "dependencies": {
+    "@types/pino": "^7.0.5",
+    "config": "^3.3.9",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mysql2": "^3.5.1",
+    "openai": "^3.3.0",
+    "winston": "^3.10.0"
+  },
+  "devDependencies": {
+    "@types/body-parser": "^1.19.2",
+    "@types/config": "^3.3.0",
+    "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.17",
+    "@types/node": "^20.4.1",
+    "nodemon": "^3.0.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6"
+  }
 }
