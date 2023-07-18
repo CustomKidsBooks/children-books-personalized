@@ -3,7 +3,7 @@
 import { Request, Response } from "express";
 import { generateBookText } from "../service/openai.service";
 
-export const createBookHandler = async (req: Request, res: Response) => {
+export const createParagraphHandler = async (req: Request, res: Response) => {
   try {
     const prompt =
       "create a children’s book consisting of two pages and 1 paragraph per page";
