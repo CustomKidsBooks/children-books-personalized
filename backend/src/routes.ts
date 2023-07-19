@@ -43,7 +43,7 @@ export default function (app: Express) {
 
   // Handling DELETE request to delete a book
   // DELETE /api/books/:id
-  //curl -X DELETE http://localhost:5001/api/books/1
+  //curl -X DELETE http://localhost:5001/api/books/7
   app.delete("/api/books/:id", (req: Request, res: Response) => {
     const { id } = req.params;
     deleteBookHandler(Number(id));
