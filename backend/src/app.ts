@@ -18,9 +18,9 @@ app.use(express.urlencoded({ extended: false }));
 async function initialize() {
   try {
     await AppDataSource.initialize(); // Establish the database connection
-    console.log("Database connection established successfully!");
+    log.info("Database connection established successfully!");
   } catch (error) {
-    console.error("Error during database connection initialization:", error);
+    log.error("Error during database connection initialization:", error);
     throw error; // Rethrow the error to be caught in the main catch block
   }
 }
@@ -37,6 +37,6 @@ async function startServer() {
     await initialize();
     await startServer();
   } catch (error) {
-    console.error("Error during server startup:", error);
+    log.error("Error during server startup:", error);
   }
 })();
