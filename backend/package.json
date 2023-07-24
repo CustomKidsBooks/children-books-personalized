@@ -16,6 +16,7 @@
     "express": "^4.18.2",
     "mysql2": "^3.5.1",
     "openai": "^3.3.0",
+    "typeorm": "^0.3.17",
     "winston": "^3.10.0"
   },
   "devDependencies": {

@@ -1,9 +1,29 @@
-import { Express, Request, Response, Router } from "express";
-import { createBookHandler } from "./controller/api.controller";
+import { Express, Request, Response } from "express";
+import {
+  createBookHandler,
+  fetchBooksHandler,
+  deleteBookHandler,
+} from "./controller/book.controller";
+import { createParagraphHandler } from "./controller/api.controller";
+
 export default function (app: Express) {
-  app.get("/healthcheck", (req: Request, res: Response) => res.sendStatus(200));
+  // Handling POST request to create a new book Paragraph
+  app.post("/api/create_paragraph", createParagraphHandler);
 
   // Handling POST request to create a new book
-  //POST /api/create_book
-  app.post("/api/create_book", createBookHandler);
+  app.post("/api/create_book", (req: Request, res: Response) => {
+    const { title, desc, author } = req.body;
+    createBookHandler(title, desc, author);
+    res.sendStatus(201);
+  });
+
+  // Handling GET request to fetch all books
+  app.get("/api/books", fetchBooksHandler);
+
+  // Handling DELETE request to delete a book
+  app.delete("/api/books/:id", (req: Request, res: Response) => {
+    const { id } = req.params;
+    deleteBookHandler(Number(id));
+    res.sendStatus(204);
+  });
 }
