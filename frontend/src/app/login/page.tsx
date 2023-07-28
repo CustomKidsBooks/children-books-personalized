@@ -60,7 +60,7 @@ const LogInForm = () => {
         </Button>
       </form>
       <p className="mt-5">
-        Don't have an account{" "}
+        Don&apos;t have an account{" "}
         <Link href="/signup" className="text-blue-500 hover:text-red-500">
           Sign up
         </Link>

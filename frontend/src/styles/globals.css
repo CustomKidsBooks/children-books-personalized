@@ -14,7 +14,24 @@
   pointer-events: none;
 }
 
-.gradient {
+.font_feature {
+  font-feature-settings: 'clig' off, 'liga' off;
+}
+
+.container {
+  position: relative;
+  text-align: center;
+  color: pink;
+}
+
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* .gradient {
   height: fit-content;
   z-index: 3;
   width: 100%;
@@ -37,7 +54,7 @@
   filter: blur(100px) saturate(150%);
   top: 80px;
   opacity: 0.15;
-}
+} */
 
 .app {
   @apply relative z-10 flex justify-center items-center flex-col max-w-7xl mx-auto sm:px-16 px-6;
