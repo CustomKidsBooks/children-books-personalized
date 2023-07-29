@@ -1,5 +1,4 @@
 import LandingPage from "@components/LandingPage";
-import { Heading } from "@ui/Heading";
 
 const Home = () => {
   return (
