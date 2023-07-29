@@ -12,10 +12,10 @@ export class Page {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column()
+  @Column({ length: 2000 })
   paragraph!: string;
 
-  @Column()
+  @Column({ nullable: true, type: "varchar", default: null })
   image!: string;
 
   @ManyToOne(() => Book, (book) => book.pages)
