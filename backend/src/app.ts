@@ -4,6 +4,7 @@ import log from "./logger";
 import { AppDataSource } from "./db/connect";
 import routes from "./routes";
 import "reflect-metadata";
+import cors from 'cors'
 
 const expressConfig = config.get("express") as {
   port: number;
@@ -12,6 +13,7 @@ const expressConfig = config.get("express") as {
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
