@@ -1,7 +1,32 @@
+"use client";
+import { useState } from "react";
 import Form from "@components/Form";
+import { FormValues } from "@utils/interfaces";
+import axios from "axios";
 
 const CreateStory = () => {
-  return <Form />;
+  const [submitting, setIsSubmitting] = useState<boolean>(false);
+
+  const createPrompt = async (values: FormValues) => {
+    setIsSubmitting(true);
+    try {
+        const response = await axios.post("http://localhost:5001/api/create_paragraph", {
+          subject: values.subject,
+          description: values.description,
+          character: values.character,
+          ageGroup: values.ageGroup,
+        });
+    } catch (error) {
+      console.error("API Error:", error);
+    }
+    setIsSubmitting(false);
+  };
+
+  return (
+    <Form
+      handleSubmit={createPrompt}
+    />
+  );
 };
 
 export default CreateStory;

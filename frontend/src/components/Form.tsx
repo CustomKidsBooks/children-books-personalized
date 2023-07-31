@@ -1,5 +1,4 @@
 "use client";
-
 import {
   characterList,
   specialNeedsList,
@@ -8,11 +7,16 @@ import {
 import { Button } from "@ui/Button";
 import { FormValues } from "@utils/interfaces";
 import { useFormik } from "formik";
+import { createStoryValidationSchema } from "@utils/storyValidation";
 import React from "react";
 import { Heading } from "@ui/Heading";
+interface FormProps {
+  handleSubmit: (values: FormValues) => Promise<void>;
+}
 
-const Form = () => {
-  const { values, handleChange, handleBlur, errors, touched, handleSubmit } =
+const Form: React.FC<FormProps> = ({ handleSubmit }) => {
+
+  const { values, handleChange, handleBlur, errors, touched, handleSubmit: formikSubmit } =
     useFormik<FormValues>({
       initialValues: {
         subject: "",
@@ -23,9 +27,9 @@ const Form = () => {
         specialNeeds: "",
         language: "English",
       },
-
+      validationSchema: createStoryValidationSchema,
       onSubmit: (values) => {
-        alert(JSON.stringify(values, null, 2));
+        handleSubmit(values);
       },
     });
 
@@ -35,7 +39,7 @@ const Form = () => {
         Create Story
       </h1>
       <form
-        onSubmit={handleSubmit}
+        onSubmit={formikSubmit}
         className="mt-10 w-full max-w-2xl flex-col gap-7"
       >
         <div className="flex flex-col mt-5">
@@ -46,7 +50,7 @@ const Form = () => {
             cols={20}
             rows={5}
             className="my-3"
-            placeholder="Ex. A young girl name sara loves exploring a world. And she faces challenges along the way. "
+            placeholder="Ex. A young girl named Sara loves exploring the world and she faces challenges along the way. "
             value={values.subject}
             onChange={handleChange}
             onBlur={handleBlur}
@@ -55,7 +59,6 @@ const Form = () => {
             <div>{errors.subject}</div>
           ) : null}
         </div>
-
         <div className="mt-5 flex-between grid justify-items-stretch">
           <div className="flex flex-col w-2/5 justify-items-start">
             <label htmlFor="character">Choose the character</label>
@@ -106,7 +109,7 @@ const Form = () => {
             cols={20}
             rows={5}
             className="my-3"
-            placeholder="Ex. A young girl with curly brown hair and brown green eyes."
+            placeholder="Ex. A young girl with curly brown hair and green eyes."
             value={values.description}
             onChange={handleChange}
             onBlur={handleBlur}
@@ -180,7 +183,6 @@ const Form = () => {
             ) : null}
           </div>
         </div>
-
         <Button
           type="submit"
           intent="gradiant"
