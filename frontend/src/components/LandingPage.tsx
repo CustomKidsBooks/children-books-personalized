@@ -2,16 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ChangeEvent, useState } from "react";
 
 const LandingPage = () => {
-  const [input, setInput] = useState<string>("");
-
-  const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    event.preventDefault();
-    setInput(event.target.value);
-  };
-
   return (
     <section className="h-96 flex">
       <div className="flex-col relative">
@@ -22,8 +14,8 @@ const LandingPage = () => {
               {/* <Image src="/assets/group.svg" alt="group" width={100} height={100} /> */}
               Love{" "}
             </span>
-            Through Stories <br />
-            <span className="font-bold text-4xl">For kids, by you!</span>
+            Through Stories <br className="md:flex" />
+            <span className="font-bold text-4xl">For kids, by you</span>
           </h1>
         </div>
         <div className="absolute bottom-20 left-10 shadow-lg">
@@ -35,7 +27,7 @@ const LandingPage = () => {
           </Link>
         </div>
       </div>
-      <div className="">
+      <div className="ml-auto pe-20">
         <Image
           src="/assets/group18.svg"
           alt="group18"
