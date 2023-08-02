@@ -14,15 +14,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {/* TO DO: Create component for Session <Provider> */}
-        <div className="main">
-          <div className="gradient" />
-        </div>
-        <main className="app">
+        <div className="main">{/* <div className="gradient" /> */}</div>
+        <main>
           <Nav />
           {children}
         </main>
-        {/* </Provider> */}
       </body>
     </html>
   );
