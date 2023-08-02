@@ -9,7 +9,7 @@ const LandingPage = () => {
       <section className="h-96 flex bg-green">
         <div className="flex-col relative">
           <div className="h-40 py-10 ps-10">
-            <h1 className="text-5xl font-satoshi tracking-widest leading-loose">
+            <h1 className="text-4xl md:text-5xl font-satoshi tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose">
               Unleashing{" "}
               <span className="font-normal font-inter text-pink font_feature">
                 {/* <Image
@@ -27,7 +27,7 @@ const LandingPage = () => {
           <div className="absolute bottom-20 left-10 shadow-lg">
             <Link
               href="/create-story"
-              className="bg-pink p-3 text-white font-satoshi rounded w-40 px-10 text-2xl"
+              className="bg-pink p-4 text-white font-satoshi rounded w-40 px-10 text-2xl"
             >
               Start!
             </Link>
