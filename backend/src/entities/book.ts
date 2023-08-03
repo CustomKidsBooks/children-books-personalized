@@ -15,6 +15,12 @@ export class Book {
   @Column()
   author!: string;
 
-  @OneToMany(() => Page, (page) => page.book)
+  @Column({ nullable: true, type: "double", default: null })
+  page!: number | null; // Use number or null type for the pageNum column
+
+  @Column({ nullable: true, type: "varchar", default: null, length: 500 })
+  image!: string | null;
+
+  @OneToMany(() => Page, (page) => page.book, { cascade: ["remove"] })
   pages!: Page[];
 }

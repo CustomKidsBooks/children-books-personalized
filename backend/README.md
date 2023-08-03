@@ -18,12 +18,16 @@ Handling POST request to create a new book Paragraph
 curl -X POST  http://localhost:5001/api/create_paragraph
   
 Handling POST request to create a new book
-  
-curl -X POST -H "Content-Type: application/json" -d 
-'{"title": "Book1", "desc": "This is a book description for weekend", "author": "Arp Doe"}' http://localhost:5001/api/create_book
+Please create a folder named "images" inside the backend folder, and within the "images" folder, create two more folders, one for "bookCover" and the other for "pages." This should ensure that the necessary folder structure is in place for the image implementation to work correctly.
+
+curl -X POST -H "Content-Type: application/json" -d '{"title": "Book1", "desc": "create a childrens book about a hen that has 3 pages and 1 paragraph per page!", "author": "Arp Doe", "page": 3}'
+http://localhost:5001/api/create_book
 
 Handling request to fetch all books	 
 http://localhost:5001/api/books
+
+Fetch pages for the current clicked book route
+curl http://localhost:5001/books/12/pages
 
 Handling POST request to update existing book
 curl -X PUT -H "Content-Type: application/json" -d 
