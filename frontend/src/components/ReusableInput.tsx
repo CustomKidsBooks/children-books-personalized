@@ -1,11 +1,8 @@
-// ReusableInput.tsx
-
 import React from "react";
-
 interface ReusableInputProps {
   label: string;
   name: string;
-  type: "text" | "password" | "email" | "number" | "select" | "textarea";
+  type: "text" | "number" | "select" | "textarea";
   value: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
   onBlur: (event: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;

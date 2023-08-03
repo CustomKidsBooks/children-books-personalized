@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import Form from "@components/Form";
+import StoryForm from "@components/StoryForm";
 import { FormValues } from "@utils/interfaces";
 import axios from "axios";
 
@@ -23,7 +23,7 @@ const CreateStory = () => {
   };
 
   return (
-    <Form
+    <StoryForm
       handleSubmit={createPrompt}
     />
   );
