@@ -20,12 +20,12 @@ const StoryForm: React.FC<FormProps> = ({ handleSubmit }) => {
     useFormik<FormValues>({
       initialValues: {
         subject: "",
-        character: "boy",
-        message: "",
+        characters: "boy",
+        name: "",
         description: "",
         ageGroup: 0,
-        specialNeeds: "",
-        language: "English",
+        lesson: "",
+        title: "",
       },
       validationSchema: createStoryValidationSchema,
       onSubmit: (values) => {
@@ -50,7 +50,7 @@ const StoryForm: React.FC<FormProps> = ({ handleSubmit }) => {
             value={values.subject}
             onChange={handleChange}
             onBlur={handleBlur}
-            placeholder="Ex. A young girl named Sara loves exploring the world and she faces challenges along the way."
+            placeholder="Ex. A young girl named Arpi loves exploring the world and she faces challenges along the way."
             rows={5}
           />
           {/* <textarea
@@ -74,7 +74,7 @@ const StoryForm: React.FC<FormProps> = ({ handleSubmit }) => {
               label="Choose the character"
               name="character"
               type="select"
-              value={values.character}
+              value={values.characters}
               onChange={handleChange}
               onBlur={handleBlur}
               options={characterList}
@@ -93,25 +93,25 @@ const StoryForm: React.FC<FormProps> = ({ handleSubmit }) => {
                 </option>
               ))}
             </select> */}
-            {touched.character && errors.character ? (
-              <div>{errors.character}</div>
+            {touched.characters && errors.characters ? (
+              <div>{errors.characters}</div>
             ) : null}
           </div>
 
           <div className="flex flex-col w-2/4 justify-self-end">
-            <label htmlFor="message">Message to convey</label>
+            <label htmlFor="message">Name</label>
             <input
               type="text"
-              name="message"
+              name="name"
               id="message"
               className="form_input"
               placeholder="Importance of playing alone and free"
-              value={values.message}
+              value={values.name}
               onChange={handleChange}
               onBlur={handleBlur}
             />
-            {touched.message && errors.message ? (
-              <div>{errors.message}</div>
+            {touched.name && errors.name ? (
+              <div>{errors.name}</div>
             ) : null}
           </div>
         </div>
@@ -150,10 +150,10 @@ const StoryForm: React.FC<FormProps> = ({ handleSubmit }) => {
             onBlur={handleBlur}
           /> */}
           <ReusableInput
-            label="Message to convey"
+            label="Age"
             name="ageGroup"
             type="number"
-            value={values.ageGroup}
+            value={values.ageGroup.toString()}
             onChange={handleChange}
             onBlur={handleBlur}
             placeholder="Please Enter a number"
@@ -170,10 +170,10 @@ const StoryForm: React.FC<FormProps> = ({ handleSubmit }) => {
               Special Needs of Children:
             </label> */}
             <ReusableInput
-              label="Special Needs of Children:"
+              label="Lesson:"
               name="specialNeeds"
               type="select"
-              value={values.specialNeeds}
+              value={values.lesson}
               onChange={handleChange}
               onBlur={handleBlur}
               options={languageList}
@@ -192,8 +192,8 @@ const StoryForm: React.FC<FormProps> = ({ handleSubmit }) => {
                 </option>
               ))}
             </select> */}
-            {touched.specialNeeds && errors.specialNeeds ? (
-              <div>{errors.specialNeeds}</div>
+            {touched.lesson && errors.lesson ? (
+              <div>{errors.lesson}</div>
             ) : null}
           </div>
 
@@ -214,16 +214,15 @@ const StoryForm: React.FC<FormProps> = ({ handleSubmit }) => {
               ))}
             </select> */}
             <ReusableInput
-              label="Choose the Language"
-              name="language"
+              label="Title"
+              name="title"
               type="select"
-              value={values.language}
+              value={values.title}
               onChange={handleChange}
               onBlur={handleBlur}
-              options={languageList}
             />
-            {touched.language && errors.language ? (
-              <div>{errors.language}</div>
+            {touched.title && errors.title ? (
+              <div>{errors.title}</div>
             ) : null}
           </div>
         </div>
@@ -233,7 +232,7 @@ const StoryForm: React.FC<FormProps> = ({ handleSubmit }) => {
           size="large"
           className="text-white"
         >
-          Create &#10024;
+          Write My Book;
         </Button>
       </form>
     </section>

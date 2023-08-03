@@ -3,7 +3,7 @@ interface ReusableInputProps {
   label: string;
   name: string;
   type: "text" | "number" | "select" | "textarea";
-  value: string;
+  value?: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
   onBlur: (event: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
   error?: string;

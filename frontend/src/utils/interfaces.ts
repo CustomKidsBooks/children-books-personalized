@@ -1,11 +1,11 @@
 export interface FormValues {
     subject: string;
-    character: string;
-    message: string;
-    description: string;
+    characters: string;
+    name?: string;
+    description?: string;
     ageGroup: number;
-    specialNeeds?: string;
-    language: string;
+    lesson?: string;
+    title: string;
   }
   
 export interface LogInFormValues {
