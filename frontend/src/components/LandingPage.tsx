@@ -12,12 +12,6 @@ const LandingPage = () => {
             <h1 className="text-4xl md:text-5xl font-satoshi tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose">
               Unleashing{" "}
               <span className="font-normal font-inter text-pink font_feature">
-                {/* <Image
-                  src="/assets/group.svg"
-                  alt="group"
-                  width={100}
-                  height={100}
-                /> */}
                 Love{" "}
               </span>
               Through Stories <br className="lg:block hidden" />
@@ -39,8 +33,6 @@ const LandingPage = () => {
             alt="group18"
             width={313}
             height={388}
-            // fill
-            // sizes="(max-width: 1024px) 313px, (max-width: 1200px) 50vw, 33vw"
           />
         </div>
       </section>
