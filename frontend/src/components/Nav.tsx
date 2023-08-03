@@ -7,7 +7,7 @@ const Nav = () => {
   return (
     <div className="bg-white shadow-md shadow-regal-blue">
       <nav className="flex-between w-full h-120 py-5 px-5 md:px-10">
-        <Link href="/" className="">
+        <Link href="/">
           <Image
             alt="Children Book"
             src="/assets/logo.svg"
