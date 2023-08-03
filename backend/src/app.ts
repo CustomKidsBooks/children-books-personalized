@@ -5,6 +5,7 @@ import { AppDataSource } from "./db/connect";
 import routes from "./routes";
 import "reflect-metadata";
 import path from "path";
+import cors from 'cors'
 
 const expressConfig = config.get("express") as {
   port: number;
@@ -13,9 +14,8 @@ const expressConfig = config.get("express") as {
 
 const app = express();
 app.use("/images", express.static(path.join(__dirname, "../images")));
-const cors = require("cors");
-app.use(cors());
 
+app.use(cors());
 app.use(express.json());
 
 app.use(express.urlencoded({ extended: false }));
