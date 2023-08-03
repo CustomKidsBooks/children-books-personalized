@@ -1,6 +1,7 @@
 import { OpenAIApi, Configuration, CreateCompletionRequest } from "openai";
+import log from "../logger";
 
-export async function generateBookText(prompt: string): Promise<string[]> {
+export async function generateBookText(prompt: string): Promise<string> {
   const config = new Configuration({
     apiKey: process.env.OPENAI_API_KEY,
   });
@@ -17,18 +18,29 @@ export async function generateBookText(prompt: string): Promise<string[]> {
 
   const generatedText = completion.data.choices[0].text as string;
 
-  // Split the generated text into paragraphs and filter out empty paragraphs and "Page X" lines
-  const paragraphs = generatedText
-    .split("\n")
-    .filter(
-      (paragraph) => paragraph.trim() !== "" && !paragraph.startsWith("Page")
-    );
+  return generatedText;
+}
 
-  // If there is only one paragraph, return it as a single-element array
-  if (paragraphs.length === 1) {
-    return [paragraphs[0]];
+export async function generateImage(
+  prompt: string
+): Promise<string | undefined> {
+  const config = new Configuration({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+  const openai = new OpenAIApi(config);
+
+  try {
+    const response = await openai.createImage({
+      prompt,
+      n: 1,
+      size: "512x512",
+    });
+    const generatedImage = response.data.data[0].url;
+
+    return generatedImage;
+  } catch (error) {
+    // Handle the error here if needed
+    log.error("Error generating image:", error);
+    return undefined;
   }
-
-  // Return the array of paragraphs
-  return paragraphs;
 }
