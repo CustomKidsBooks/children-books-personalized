@@ -1,16 +1,5 @@
 import React from "react";
-interface ReusableInputProps {
-  label: string;
-  name: string;
-  type: "text" | "number" | "select" | "textarea";
-  value?: string;
-  onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
-  onBlur: (event: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
-  error?: string;
-  placeholder?: string;
-  options?: string[]; // Only used for select type
-  rows?: number; // Only used for textarea type
-}
+import { ReusableInputProps } from "@utils/interfaces";
 
 const ReusableInput: React.FC<ReusableInputProps> = ({
   label,
@@ -33,7 +22,7 @@ const ReusableInput: React.FC<ReusableInputProps> = ({
           value={value}
           onChange={onChange}
           onBlur={onBlur}
-          className="form_input"
+          className="form_input shadow"
         >
           {options && options.map((option) => (
             <option key={option} value={option}>{option}</option>
@@ -50,7 +39,7 @@ const ReusableInput: React.FC<ReusableInputProps> = ({
           onBlur={onBlur}
           placeholder={placeholder}
           rows={rows}
-          className="form_input"
+          className="form_input shadow"
         />
       );
     } else {
@@ -63,7 +52,7 @@ const ReusableInput: React.FC<ReusableInputProps> = ({
           onChange={onChange}
           onBlur={onBlur}
           placeholder={placeholder}
-          className="form_input"
+          className="form_input shadow"
         />
       );
     }
