@@ -2,7 +2,6 @@ import React from "react";
 import { ReusableInputProps } from "@utils/interfaces";
 
 const ReusableInput: React.FC<ReusableInputProps> = ({
-  id,
   name,
   type,
   value,

@@ -31,6 +31,11 @@ const ButttonVariants = cva(["font-semibold", "border", "rounded"], {
         "hover:from-pink-500",
         "hover:to-yellow-500",
       ],
+      pink: [
+        "bg-pink",
+        "text-white",
+        "border-transparent",
+      ],
     },
     size: {
       small: ["text-sm", "py-1", "px-2"],
@@ -58,7 +63,7 @@ const ButttonVariants = cva(["font-semibold", "border", "rounded"], {
 
 export interface ButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof ButttonVariants> {}
+  VariantProps<typeof ButttonVariants> { }
 
 export const Button: React.FC<ButtonProps> = ({
   className,

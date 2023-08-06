@@ -19,7 +19,16 @@ module.exports = {
       fontFamily:{
         satoshi:['Quicksand', 'Pacifico'],
         inter: ['Pacifico','sans-serif'],
+        quicksand: ['Quicksand', 'sans-serif'],
       },
+      typography: (theme) => ({
+        default: {
+          css: {
+            fontFamily: 'Quicksand, sans-serif',
+            fontFeatureSettings: "'clig' off, 'liga' off",
+          },
+        },
+      }),
       letterSpacing: {
         widest: '.298px'
       },
@@ -31,5 +40,6 @@ module.exports = {
       }
     },
   },
-  plugins: [],
+  plugins: [require('@tailwindcss/typography')],
 }
+
