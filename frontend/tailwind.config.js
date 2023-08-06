@@ -8,9 +8,12 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'green': '#00EAD3',
+        'teal': '#00EAD3',
+        'teal-600':'#0d9488',
+        'teal-400':'#2dd4bf',
         'pink':'#F54298',
         'pink-300': '#F06292',
+        'pink-700':'#be185d',
         'regal-blue': '#004069'
       },
       fontFamily:{
