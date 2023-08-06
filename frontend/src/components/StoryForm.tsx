@@ -53,7 +53,7 @@ const StoryForm: React.FC<StoryFormProps> = ({ handleSubmit, setAdditionalFields
   };
   
   return (
-    <section className="w-full max-w-2xl m-4 bg-sky-300">
+    <section className="w-full max-w-2xl m-4">
       <h1 className={Heading({ align: "left", size: "small" })}>
         Create Story
       </h1>
@@ -61,6 +61,8 @@ const StoryForm: React.FC<StoryFormProps> = ({ handleSubmit, setAdditionalFields
         onSubmit={formikSubmit}
         className="mt-10 w-full max-w-2xl flex-col space-y-0.5 md:flex-row md:space-y-0"
       >
+        <div className="md:grid md:grid-cols-1 gap-px m-3 sm:flex sm:flex-col">
+        <div className="flex flex-col max-w-2xl font-bold text-sm md:w-3/4 md:pr-2">
         <div className="flex flex-col mt-5 font-bold text-sm">
         <div className="flex items-center">
           <label htmlFor="title" className="mr-2">
@@ -80,6 +82,7 @@ const StoryForm: React.FC<StoryFormProps> = ({ handleSubmit, setAdditionalFields
           {touched.title && errors.title ? (
             <div>{errors.title}</div>
           ) : null}
+        </div>
         </div>
         <div className="flex flex-col mt-1 font-bold text-sm md:w-1/2 md:pl-2">
         <div className="flex items-center">
@@ -190,7 +193,7 @@ const StoryForm: React.FC<StoryFormProps> = ({ handleSubmit, setAdditionalFields
         >
           Write My Book!
         </Button>
-        
+        </div>
       </form>
     </section>
   );

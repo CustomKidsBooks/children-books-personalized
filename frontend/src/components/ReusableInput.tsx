@@ -2,7 +2,7 @@ import React from "react";
 import { ReusableInputProps } from "@utils/interfaces";
 
 const ReusableInput: React.FC<ReusableInputProps> = ({
-  label,
+  id,
   name,
   type,
   value,
@@ -60,7 +60,6 @@ const ReusableInput: React.FC<ReusableInputProps> = ({
 
   return (
     <div className="flex flex-col mt-5">
-      <label htmlFor={name}>{label}</label>
       {renderInput()}
       {error && <div>{error}</div>}
     </div>
