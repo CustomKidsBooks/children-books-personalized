@@ -51,55 +51,63 @@ const StoryForm: React.FC<StoryFormProps> = ({ handleSubmit, setAdditionalFields
     updatedFields[index][field] = value;
     setAdditionalFields(updatedFields);
   };
-  const ReusableInputMemo = React.memo(ReusableInput) as React.FC<ReusableInputProps>;
-
-  const FlexLabelInput: React.FC<ReusableInputProps> = ({ label, ...inputProps }) => (
-    <div className="flex items-center">
-      <label className="mr-2">{label}</label>
-      <ReusableInputMemo { ...(inputProps as ReusableInputProps)} />
-    </div>
-  );
+  
   return (
-    <section className="w-full max-w-full m-4">
+    <section className="w-full max-w-2xl m-4 bg-sky-300">
       <h1 className={Heading({ align: "left", size: "small" })}>
         Create Story
       </h1>
       <form
         onSubmit={formikSubmit}
-        className="mt-10 w-full max-w-2xl flex-col gap-7 md:flex-row md:flex-wrap"
+        className="mt-10 w-full max-w-2xl flex-col space-y-0.5 md:flex-row md:space-y-0"
       >
-        <div className="flex flex-col mt-1 mb-1 font-bold md:w-1/2 md:pr-2">
-        <FlexLabelInput
-          label={<><span>Title</span><span className="text-red-500">*</span></>}
-          name="title"
-          type="text"
-          value={values.title}
-          onChange={handleChange}
-          onBlur={handleBlur}
+        <div className="flex flex-col mt-5 font-bold text-sm">
+        <div className="flex items-center">
+          <label htmlFor="title" className="mr-2">
+            <span>Title</span><span className="text-red-500">*</span>
+          </label>
+          <div className="flex items-center max-w-2xl">
+          <ReusableInput
+            id="title"
+            name="title"
+            type="text"
+            value={values.title}
+            onChange={handleChange}
+            onBlur={handleBlur}
           />
+          </div>
+          </div>
           {touched.title && errors.title ? (
             <div>{errors.title}</div>
           ) : null}
         </div>
-        <div className="flex flex-col mt-1 font-bold md:w-1/2 md:pl-2">
-          <FlexLabelInput
-            label={<><span>Age</span><span className="text-red-500">*</span></>}
+        <div className="flex flex-col mt-1 font-bold text-sm md:w-1/2 md:pl-2">
+        <div className="flex items-center">
+          <label htmlFor="ageGroup" className="mr-2">
+            <span>Age</span><span className="text-red-500">*</span>
+          </label>
+          <ReusableInput
+            id="ageGroup"
             name="ageGroup"
             type="select"
-            value={values.ageGroup.toString()}
+            value={values.ageGroup}
             onChange={handleChange}
             onBlur={handleBlur}
-            placeholder="Please choose the range of age"
             options={ageGroupList}
           />
+          </div>
           {touched.ageGroup && errors.ageGroup ? (
             <div>{errors.ageGroup}</div>
           ) : null}
         </div>
-        <label htmlFor="details" className="font-bold font-inter text-pink font_feature text-2xl">Add more details:</label>
-        <div className="flex flex-col mt-5 font-bold">
-          <FlexLabelInput
-            label="Subject of the Story"
+        <label htmlFor="details" className="font-bold font-inter text-pink font_feature text-xl">Add more details:</label>
+        <div className="flex flex-col mt-5 font-bold text-sm">
+        <div className="flex items-center">
+          <label htmlFor="subject" className="mr-2">
+            Subject of the Story
+          </label>
+          <ReusableInput
+            id="subject"
             name="subject"
             type="textarea"
             value={values.subject}
@@ -108,12 +116,13 @@ const StoryForm: React.FC<StoryFormProps> = ({ handleSubmit, setAdditionalFields
             placeholder="Ex. A young girl named Sara loves exploring the world"
             rows={2}
           />
+          </div>
           {touched.subject && errors.subject ? (
             <div>{errors.subject}</div>
           ) : null}
         </div>
 
-        <div className="flex flex-col mt-1 md:w-1/2 md:pr-2">
+        <div className="flex flex-col mt-1 text-sm md:w-1/2 md:pr-2">
           <div className="flex items-center">
             <label htmlFor="characters" className="mr-2 font-bold">Characters</label>
             <div className="relative">
@@ -123,17 +132,26 @@ const StoryForm: React.FC<StoryFormProps> = ({ handleSubmit, setAdditionalFields
             </div>
           </div>
           {additionalFields.map((field, index) => (
-            <div key={index} className="flex flex-col mt-1">
-              <FlexLabelInput
-                label="Name:"
+            <div key={index} className="flex flex-col mt-1"> 
+            <div className="flex items-center">
+              <label htmlFor="subject" className="mr-2">
+                Name:
+              </label>
+              <ReusableInput
+                id="name"
                 name={`name${index}`}
                 type="text"
                 value={field.name}
                 onChange={(e) => handleAdditionalFieldChange(index, "name", e.target.value)}
                 onBlur={handleBlur}
               />
-              <FlexLabelInput
-                label="Description:"
+              </div>
+              <div className="flex items-center">
+              <label htmlFor="subject" className="mr-2">
+                Description:
+              </label>
+              <ReusableInput
+                id="description"
                 name={`description${index}`}
                 type="textarea"
                 value={field.description}
@@ -142,18 +160,24 @@ const StoryForm: React.FC<StoryFormProps> = ({ handleSubmit, setAdditionalFields
                 placeholder={`Ex. Description of the character`}
                 rows={2}
               />
+              </div>
             </div>
           ))}
         </div>
-        <div className="flex flex-col mt-5 font-bold md:w-1/2 md:pl-2">
-          <FlexLabelInput
-            label="Lesson"
+        <div className="flex flex-col mt-5 font-bold text-sm md:w-1/2 md:pl-2">
+        <div className="flex items-center">
+          <label htmlFor="lesson" className="mr-2">
+            Lesson
+          </label>
+          <ReusableInput
+            id="lesson"
             name="lesson"
             type="text"
             value={values.lesson}
             onChange={handleChange}
             onBlur={handleBlur}
           />
+          </div>
           {touched.lesson && errors.lesson ? (
             <div>{errors.lesson}</div>
           ) : null}
@@ -162,10 +186,11 @@ const StoryForm: React.FC<StoryFormProps> = ({ handleSubmit, setAdditionalFields
           type="submit"
           intent="gradiant"
           size="large"
-          className="bg-pink text-white font-satoshi rounded w-96 h-12 p-2 text-xl"
+          className="bg-pink text-white font-satoshi rounded text-xl "
         >
           Write My Book!
         </Button>
+        
       </form>
     </section>
   );

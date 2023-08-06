@@ -21,7 +21,7 @@ export interface SignUpFormValues {
     confirmPassword:string;
   }
 export interface ReusableInputProps {
-    label: string | JSX.Element;
+    id: string;
     name: string;
     type: "text" | "number" | "select" | "textarea";
     value?: string;
