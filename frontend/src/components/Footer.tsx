@@ -19,18 +19,18 @@ const Footer = () => {
           </Link>
         </div>
         <div className="pe-20">
-          <h1 className="uppercase text-center font-bold font-satoshi">
+          <h1 className="uppercase text-center font-bold font-sans-serif">
             contact
           </h1>
           <div className="flex-between gap-1">
             <FontAwesomeIcon icon={faEnvelope} />
-            <a href="mailto:tinytale@mail.com" className="font-satoshi">
+            <a href="mailto:tinytale@mail.com" className="font-sans-serif">
               tinytale@mail.com
             </a>
           </div>
         </div>
       </section>
-      <div className="font-satoshi text-center h-10 bg-pink py-3 opacity-75">
+      <div className="font-sans-serif text-center h-10 bg-pink py-3 opacity-75">
         <h1 className="font-bold text-white">&copy; Tiny Tale. 2023</h1>
       </div>
     </div>

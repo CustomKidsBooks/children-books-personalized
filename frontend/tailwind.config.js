@@ -17,9 +17,9 @@ module.exports = {
         'regal-blue': '#004069'
       },
       fontFamily:{
-        satoshi:['Quicksand', 'Pacifico'],
-        inter: ['Pacifico','sans-serif'],
-        quicksand: ['Quicksand', 'sans-serif'],
+        'sans-serif':['Quicksand', 'Pacifico'],
+        'inter': ['Pacifico','sans-serif'],
+        'quicksand': ['Quicksand', 'sans-serif'],
       },
       typography: (theme) => ({
         default: {

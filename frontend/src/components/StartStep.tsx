@@ -15,7 +15,7 @@ const StartStep = () => {
             key={index}
             className="rounded-full bg-pink w-56 h-56 flex items-center justify-center"
           >
-            <p className="text-xl tracking-wide p-10 font-satoshi text-white font-semibold">
+            <p className="text-xl tracking-wide p-10 font-sans-serif text-white font-semibold">
               {step}
             </p>
           </div>

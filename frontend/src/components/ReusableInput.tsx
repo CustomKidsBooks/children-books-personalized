@@ -1,5 +1,6 @@
 import React from "react";
 import { ReusableInputProps } from "@utils/interfaces";
+import { twMerge } from "tailwind-merge";
 
 const ReusableInput: React.FC<ReusableInputProps> = ({
   name,
@@ -11,6 +12,7 @@ const ReusableInput: React.FC<ReusableInputProps> = ({
   placeholder,
   options,
   rows,
+  className,
 }) => {
   const renderInput = () => {
     if (type === "select") {
@@ -23,9 +25,12 @@ const ReusableInput: React.FC<ReusableInputProps> = ({
           onBlur={onBlur}
           className="form_input shadow"
         >
-          {options && options.map((option) => (
-            <option key={option} value={option}>{option}</option>
-          ))}
+          {options &&
+            options.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
         </select>
       );
     } else if (type === "textarea") {
@@ -38,7 +43,7 @@ const ReusableInput: React.FC<ReusableInputProps> = ({
           onBlur={onBlur}
           placeholder={placeholder}
           rows={rows}
-          className="form_input shadow"
+          className={twMerge(`form_input shadow ${className}`)}
         />
       );
     } else {

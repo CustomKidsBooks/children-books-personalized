@@ -3,7 +3,7 @@ import Link, { LinkProps } from "next/link";
 import { twMerge } from "tailwind-merge";
 
 const LinkVariants = cva(
-  ["font-satoshi", "p-4", "rounded", "font-bold", "tracking-wide"],
+  ["font-sans-serif", "p-4", "rounded", "font-bold", "tracking-wide"],
   {
     variants: {
       intent: {
