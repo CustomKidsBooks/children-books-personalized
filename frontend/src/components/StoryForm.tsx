@@ -7,6 +7,7 @@ import { FormValues, AdditionalField, ReusableInputProps } from "@utils/interfac
 import { useFormik } from "formik";
 import { createStoryValidationSchema } from "@utils/storyValidation";
 import React, { useState } from "react";
+import Image from "next/image";
 import { Heading } from "@ui/Heading";
 import ReusableInput from "./ReusableInput";
 
@@ -63,23 +64,23 @@ const StoryForm: React.FC<StoryFormProps> = ({ handleSubmit, setAdditionalFields
       >
         <div className="md:grid md:grid-cols-1 gap-px m-3 sm:flex sm:flex-col">
           <div className="flex flex-col max-w-2xl md:w-3/4 md:pr-2">
-              <div className="flex items-center">
-                <label htmlFor="title" className="font-bold text-xl md:text-2xl font-quicksand tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose mr-2">
-                  <span>Title</span><span className="text-red-500">*</span>
-                </label>
-                  <ReusableInput
-                    id="title"
-                    name="title"
-                    type="text"
-                    value={values.title}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
+            <div className="flex items-center">
+              <label htmlFor="title" className="font-bold text-xl md:text-2xl font-quicksand tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose mr-2">
+                <span>Title</span><span className="text-red-500">*</span>
+              </label>
+              <ReusableInput
+                id="title"
+                name="title"
+                type="text"
+                value={values.title}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
 
-              </div>
-              {touched.title && errors.title ? (
-                <div>{errors.title}</div>
-              ) : null}  
+            </div>
+            {touched.title && errors.title ? (
+              <div>{errors.title}</div>
+            ) : null}
           </div>
           <div className="flex flex-col">
             <div className="flex items-center">
@@ -125,9 +126,14 @@ const StoryForm: React.FC<StoryFormProps> = ({ handleSubmit, setAdditionalFields
           <div className="flex flex-col text-sm md:w-1/2 md:pr-2">
             <div className="flex items-center">
               <label htmlFor="characters" className="font-bold text-xl md:text-2xl font-quicksand tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose mr-2 ">Characters</label>
-              <div className="relative">
-                <button id="addFieldButton" className="px-1 bg-white font-bold rounded-md shadow" onClick={handleAddField}>
-                  +
+              <div className="flex items-center">
+                <button id="addFieldButton" className="px-1 bg-white font-bold font-quicksand" onClick={handleAddField}>
+                  <Image
+                    src="/assets/pepicons-pop_plus.svg"
+                    alt="Add"
+                    width={60}
+                    height={60}
+                  />
                 </button>
               </div>
             </div>
