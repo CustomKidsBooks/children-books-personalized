@@ -59,7 +59,7 @@ const StoryForm: React.FC<StoryFormProps> = ({
   };
 
   return (
-    <section className="w-full max-w-2xl p-10">
+    <section className="w-full max-w-2xl p-10 bg-gradient-radial md:bg-none">
       <div className="p-10">
         <h1 className={Heading({ align: "left", size: "small" })}>
           Create your Story!
@@ -86,7 +86,9 @@ const StoryForm: React.FC<StoryFormProps> = ({
             />
           </div>
           <div>
-            {touched.title && errors.title ? <div>{errors.title}</div> : null}
+            {touched.title && errors.title ? (
+              <div className="text-red-500">{errors.title}</div>
+            ) : null}
           </div>
 
           <div className="md:flex items-center justify-between p-1">
@@ -106,6 +108,8 @@ const StoryForm: React.FC<StoryFormProps> = ({
               onBlur={handleBlur}
               options={ageGroupList}
             />
+          </div>
+          <div>
             {touched.ageGroup && errors.ageGroup ? (
               <div>{errors.ageGroup}</div>
             ) : null}
@@ -233,9 +237,11 @@ const StoryForm: React.FC<StoryFormProps> = ({
               <div>{errors.lesson}</div>
             ) : null}
           </div>
-          <Button type="submit" intent="pink" size="xl">
-            Write my book!
-          </Button>
+          <div className="pt-10">
+            <Button type="submit" intent="pink" size="xl">
+              Write my book!
+            </Button>
+          </div>
         </form>
       </div>
     </section>

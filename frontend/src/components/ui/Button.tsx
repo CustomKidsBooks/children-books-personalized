@@ -19,14 +19,14 @@ const ButttonVariants = cva(
           "border-gray-400",
           "hover:bg-gray-100",
         ],
-        black: [
-          "bg-black",
+        pink: [
+          "bg-pink",
           "text-white",
-          "transition-all",
-          "hover:bg-white",
-          "hover:text-black",
+          "border-transparent",
+          "shadow-xl",
+          "tracking-wider",
+          "hover:bg-pink-700",
         ],
-        pink: ["bg-pink", "text-white", "border-transparent", "boxShadow"],
       },
       size: {
         small: ["text-sm", "py-1", "px-2"],
@@ -40,11 +40,6 @@ const ButttonVariants = cva(
         intent: "primary",
         size: "medium",
         className: "uppercase",
-      },
-      {
-        intent: "black",
-        size: "medium",
-        className: "border-black",
       },
     ],
     defaultVariants: {

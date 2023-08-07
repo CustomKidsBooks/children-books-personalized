@@ -37,6 +37,9 @@ module.exports = {
       },
       boxShadow: {
         '1xl': '0px 5px 5px 0px rgba(2, 3, 3, 0.04), 0px 3px 14px 0px rgba(2, 3, 3, 0.02), 0px 8px 10px 0px rgba(2, 3, 3, 0.03'
+      },
+      backgroundImage: {
+        'gradient-radial':'radial-gradient(50% 50.00% at 50% 50.00%, #00EAD3 0%, rgba(0, 234, 211, 0.00) 100%)',
       }
     },
   },
