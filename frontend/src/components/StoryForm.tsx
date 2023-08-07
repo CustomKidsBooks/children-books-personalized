@@ -65,7 +65,7 @@ const StoryForm: React.FC<StoryFormProps> = ({ handleSubmit, setAdditionalFields
         <div className="md:grid md:grid-cols-1 gap-px m-3 sm:flex sm:flex-col">
           <div className="flex flex-col max-w-2xl md:w-3/4 md:pr-2">
             <div className="flex items-center">
-              <label htmlFor="title" className="font-bold text-xl md:text-2xl font-quicksand tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose mr-2">
+              <label htmlFor="title" className="font-bold text-lg md:text-xl font-quicksand tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose mr-2">
                 <span>Title</span><span className="text-red-500">*</span>
               </label>
               <ReusableInput
@@ -84,7 +84,7 @@ const StoryForm: React.FC<StoryFormProps> = ({ handleSubmit, setAdditionalFields
           </div>
           <div className="flex flex-col">
             <div className="flex items-center">
-              <label htmlFor="ageGroup" className="font-bold text-xl md:text-2xl font-quicksand tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose mr-2">
+              <label htmlFor="ageGroup" className="font-bold text-lg md:text-xl font-quicksand tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose mr-2">
                 <span>Age</span><span className="text-red-500">*</span>
               </label>
               <ReusableInput
@@ -101,10 +101,10 @@ const StoryForm: React.FC<StoryFormProps> = ({ handleSubmit, setAdditionalFields
               <div>{errors.ageGroup}</div>
             ) : null}
           </div>
-          <label htmlFor="details" className="font-bold font-quicksand text-pink font_feature text-2xl  md:text-3xl tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose">Add more details:</label>
+          <label htmlFor="details" className="font-bold font-quicksand text-pink font_feature text-xl  md:text-2xl tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose">Add more details:</label>
           <div className="flex flex-col">
             <div className="flex items-center">
-              <label htmlFor="subject" className="font-bold text-xl md:text-2xl font-quicksand tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose mr-2">
+              <label htmlFor="subject" className="font-bold text-lg md:text-xl font-quicksand tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose mr-2">
                 Subject of the Story
               </label>
               <ReusableInput
@@ -125,14 +125,14 @@ const StoryForm: React.FC<StoryFormProps> = ({ handleSubmit, setAdditionalFields
 
           <div className="flex flex-col text-sm md:w-1/2 md:pr-2">
             <div className="flex items-center">
-              <label htmlFor="characters" className="font-bold text-xl md:text-2xl font-quicksand tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose mr-2 ">Characters</label>
+              <label htmlFor="characters" className="font-bold text-lg md:text-xl font-quicksand tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose mr-2 ">Characters</label>
               <div className="flex items-center">
                 <button id="addFieldButton" className="px-1 bg-white font-bold font-quicksand" onClick={handleAddField}>
                   <Image
                     src="/assets/pepicons-pop_plus.svg"
                     alt="Add"
-                    width={60}
-                    height={60}
+                    width={50}
+                    height={50}
                   />
                 </button>
               </div>
@@ -140,7 +140,7 @@ const StoryForm: React.FC<StoryFormProps> = ({ handleSubmit, setAdditionalFields
             {additionalFields.map((field, index) => (
               <div key={index} className="flex flex-col mt-1">
                 <div className="flex items-center">
-                  <label htmlFor="subject" className="font-medium text-lg md:text-xl font-quicksand tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose mr-2">
+                  <label htmlFor="subject" className="font-medium text-base md:text-lg font-quicksand tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose mr-2">
                     Name:
                   </label>
                   <ReusableInput
@@ -153,7 +153,7 @@ const StoryForm: React.FC<StoryFormProps> = ({ handleSubmit, setAdditionalFields
                   />
                 </div>
                 <div className="flex items-center">
-                  <label htmlFor="subject" className="font-medium text-lg md:text-xl font-quicksand tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose mr-2">
+                  <label htmlFor="subject" className="font-medium text-base md:text-lg font-quicksand tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose mr-2">
                     Description:
                   </label>
                   <ReusableInput
@@ -172,7 +172,7 @@ const StoryForm: React.FC<StoryFormProps> = ({ handleSubmit, setAdditionalFields
           </div>
           <div className="flex flex-col text-sm md:w-1/2 md:pl-2">
             <div className="flex items-center">
-              <label htmlFor="lesson" className="font-bold text-xl md:text-2xl font-quicksand tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose mr-2">
+              <label htmlFor="lesson" className="font-bold text-lg md:text-xl font-quicksand tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose mr-2">
                 Lesson
               </label>
               <ReusableInput
@@ -191,10 +191,10 @@ const StoryForm: React.FC<StoryFormProps> = ({ handleSubmit, setAdditionalFields
           <Button
             type="submit"
             intent="pink"
-            size="large"
-            className="text-white font-satoshi boxShadow rounded text-xl "
+            size="medium"
+            className="text-white text-lg md:text-xl font-quicksand tracking-normal md:tracking-widest leading-none md:leading-normal boxShadow rounded "
           >
-            Write My Book!
+            Write my book!
           </Button>
         </div>
       </form>
