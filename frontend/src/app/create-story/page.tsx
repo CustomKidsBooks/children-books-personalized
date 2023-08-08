@@ -6,8 +6,9 @@ import { axiosInstance } from "@services/api-client";
 
 const CreateStory = () => {
   const [submitting, setIsSubmitting] = useState<boolean>(false);
-  const [additionalFields, setAdditionalFields] = useState<AdditionalField[]>([]);
-
+  const [additionalFields, setAdditionalFields] = useState<AdditionalField[]>(
+    []
+  );
 
   const createPrompt = async (values: FormValues) => {
     setIsSubmitting(true);
@@ -17,7 +18,7 @@ const CreateStory = () => {
         ageGroup: values.ageGroup,
         subject: values.subject,
         characters: additionalFields,
-        lesson: values.lesson
+        lesson: values.lesson,
       });
     } catch (error) {
       console.error("API Error:", error);
@@ -30,7 +31,6 @@ const CreateStory = () => {
       handleSubmit={createPrompt}
       setAdditionalFields={setAdditionalFields}
       additionalFields={additionalFields}
-
     />
   );
 };

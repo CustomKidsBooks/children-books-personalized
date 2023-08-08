@@ -40,6 +40,7 @@ module.exports = {
       },
       backgroundImage: {
         'gradient-radial':'radial-gradient(50% 50.00% at 50% 50.00%, #00EAD3 0%, rgba(0, 234, 211, 0.00) 100%)',
+        'kid': "url('/assets/kid.svg')",
       }
     },
   },
