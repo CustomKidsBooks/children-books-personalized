@@ -61,12 +61,22 @@ const StoryForm: React.FC<StoryFormProps> = ({
   return (
     <>
       <section className="w-full max-w-2xl p-10">
-        <div className="p-10">
-          <h1 className={Heading({ align: "left", size: "small" })}>
-            Create your Story!
-          </h1>
+        <div className="p-10 relative">
+          <Image
+          src="/assets/create-story.jpg"
+          alt="how-to-start"
+          width={600}
+          height={30}
+        />
+        <div
+          className={`absolute top-1/2 left-10 transform -translate-y-1/2 bg-opacity-70 py-2 px-4`}
+        >
+          <h1 className={`${Heading({ align: "left", size: "small" })} font-normal text-6xl text-black font-quicksand`}>
+              Create your <span className="font-inter">Story!</span>
+            </h1>
+          </div>
         </div>
-        <div className="p-10 flex flex-col bg-gradient-radial md:bg-none">
+      <div className="p-10 flex flex-col bg-gradient-radial md:bg-none">
           <form onSubmit={formikSubmit}>
             <div className="md:flex items-center justify-between p-1">
               <label
@@ -76,7 +86,6 @@ const StoryForm: React.FC<StoryFormProps> = ({
                 Title
                 <span className="text-red-500">*</span>
               </label>
-
               <ReusableInput
                 id="title"
                 name="title"
@@ -91,11 +100,10 @@ const StoryForm: React.FC<StoryFormProps> = ({
                 <div className="text-red-500">{errors.title}</div>
               ) : null}
             </div>
-
             <div className="md:flex items-center justify-between p-1">
               <label
                 htmlFor="ageGroup"
-                className="font-bold text-xl md:text-2xl font-quicksand tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose mr-2"
+                className="font-bold text-lg md:text-xl font-quicksand tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose mr-2"
               >
                 Age
                 <span className="text-red-500">*</span>
@@ -117,11 +125,10 @@ const StoryForm: React.FC<StoryFormProps> = ({
             </div>
             <label
               htmlFor="details"
-              className="font-bold font-quicksand text-pink font_feature text-2xl  md:text-3xl tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose"
+              className="font-bold font-quicksand text-pink text-2xl md:text-3xl tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose"
             >
               Add more details:
             </label>
-
             <div className="items-center justify-between px-1">
               <label
                 htmlFor="subject"
@@ -144,7 +151,6 @@ const StoryForm: React.FC<StoryFormProps> = ({
                 <div>{errors.subject}</div>
               ) : null}
             </div>
-
             <div className="flex flex-col text-sm md:pr-2">
               <div className="flex items-center">
                 <label
