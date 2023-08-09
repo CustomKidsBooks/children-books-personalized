@@ -1,8 +1,8 @@
 "use client";
 
+import { LinkButton } from "@ui/LinkButton";
 import Image from "next/image";
 import StartStep from "./StartStep";
-import { LinkButton } from "@ui/LinkButton";
 
 const LandingPage = () => {
   return (
@@ -53,10 +53,10 @@ const LandingPage = () => {
             <Image
               src="/assets/how-to-start.jpg"
               alt="how-to-start"
-              width={289.713}
+              width={300}
               height={12.5}
             />
-            <h1 className="absolute top-1/3 text-3xl font-satoshi font-medium mx-10">
+            <h1 className="absolute top-1/4 text-4xl font-satoshi font-medium mx-10 tracking-widest">
               How to start?
             </h1>
           </div>
