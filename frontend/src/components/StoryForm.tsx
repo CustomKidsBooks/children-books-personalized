@@ -61,22 +61,22 @@ const StoryForm: React.FC<StoryFormProps> = ({
   return (
     <>
       <section className="w-full max-w-2xl p-10">
-        <div className="p-10 relative">
+        <div className="p-10 relative shrink flex flex-col items-center sm:flex-row sm:items-center justify-center">
           <Image
-          src="/assets/create-story.jpg"
-          alt="how-to-start"
-          width={600}
-          height={30}
-        />
-        <div
-          className={`absolute top-1/2 left-10 transform -translate-y-1/2 bg-opacity-70 py-2 px-4`}
-        >
-          <h1 className={`${Heading({ align: "left", size: "small" })} font-normal text-6xl text-black font-quicksand`}>
-              Create your <span className="font-inter">Story!</span>
+            src="/assets/create-story.jpg"
+            alt="create-story"
+            width={380}
+            height={5}
+          />
+          <div
+            className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-opacity-70 py-2 px-2`}
+          >
+            <h1 className={`${Heading({ align: "center" })} font-normal text-xl md:text-3xl text-black font-quicksand tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose`}>
+              Create your <span className="font-inter font-bold">Story!</span>
             </h1>
           </div>
         </div>
-      <div className="p-10 flex flex-col bg-gradient-radial md:bg-none">
+        <div className="p-10 flex flex-col bg-gradient-radial md:bg-none">
           <form onSubmit={formikSubmit}>
             <div className="md:flex items-center justify-between p-1">
               <label
@@ -120,7 +120,7 @@ const StoryForm: React.FC<StoryFormProps> = ({
             </div>
             <div>
               {touched.ageGroup && errors.ageGroup ? (
-                <div>{errors.ageGroup}</div>
+                <div className="text-red-500">{errors.ageGroup}</div>
               ) : null}
             </div>
             <label
@@ -178,7 +178,7 @@ const StoryForm: React.FC<StoryFormProps> = ({
                 <div key={index} className="flex flex-col mt-1">
                   <div className="md:flex items-center justify-between px-1">
                     <label
-                      htmlFor="subject"
+                      htmlFor="name"
                       className="font-medium text-lg md:text-xl font-quicksand tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose mr-2"
                     >
                       Name:
@@ -201,7 +201,7 @@ const StoryForm: React.FC<StoryFormProps> = ({
                   </div>
                   <div className="md:flex items-center justify-between px-1">
                     <label
-                      htmlFor="subject"
+                      htmlFor="description"
                       className="font-medium text-lg md:text-xl font-quicksand tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose mr-2"
                     >
                       Description:
