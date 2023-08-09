@@ -1,12 +1,13 @@
 "use client";
 
+import { LinkButton } from "@ui/LinkButton";
 import Image from "next/image";
-import Link from "next/link";
+import StartStep from "./StartStep";
 
 const LandingPage = () => {
   return (
     <>
-      <section className="h-96 flex bg-green">
+      <section className="h-96 flex bg-teal">
         <div className="flex-col relative">
           <div className="h-40 py-10 ps-10">
             <h1 className="text-4xl md:text-5xl font-satoshi tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose">
@@ -19,12 +20,9 @@ const LandingPage = () => {
             </h1>
           </div>
           <div className="absolute bottom-20 left-10 shadow-lg">
-            <Link
-              href="/create-story"
-              className="bg-pink p-4 text-white font-satoshi rounded w-40 px-10 text-2xl"
-            >
+            <LinkButton href="/create-story" intent="pink" size="large">
               Start!
-            </Link>
+            </LinkButton>
           </div>
         </div>
         <div className="ml-auto pe-20 shrink invisible lg:visible">
@@ -49,18 +47,21 @@ const LandingPage = () => {
           </h1>
         </div>
       </section>
-      <section className="p-10 h-[500px]">
+      <section className="p-10 lg:h-[600px] sm:h-auto">
         <div className="relative shrink">
-          <Image
-            src="/assets/how-to-start.jpg"
-            alt="how-to-start"
-            width={289.713}
-            height={12.5}
-          />
-          <h1 className="absolute top-1/3 md:text-3xl text-lg font-satoshi font-medium mx-10">
-            How to start?
-          </h1>
+          <div>
+            <Image
+              src="/assets/how-to-start.jpg"
+              alt="how-to-start"
+              width={300}
+              height={12.5}
+            />
+            <h1 className="absolute top-1/4 text-4xl font-satoshi font-medium mx-10 tracking-widest">
+              How to start?
+            </h1>
+          </div>
         </div>
+        <StartStep />
       </section>
     </>
   );
