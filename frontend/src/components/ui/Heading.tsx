@@ -2,7 +2,7 @@ import { cva, VariantProps } from "class-variance-authority";
 import { twMerge } from "tailwind-merge";
 
 const HeadingVariants = cva(
-  ["mt-5", "font-extrabold", "text-5xl", "leading-[1.15]", "text-black"],
+  ["mt-5", "font-extrabold", "text-5xl", "leading-[1.15]", "text-black", "font-sans-serif"],
   {
     variants: {
       align: {

@@ -53,5 +53,5 @@
 }
 
 .form_input {
-  @apply w-full flex rounded-lg my-3 p-3 text-sm text-gray-500 outline-0;
+  @apply w-full md:w-96 flex rounded-lg my-3 p-3 text-xl text-black outline-0;
 }
