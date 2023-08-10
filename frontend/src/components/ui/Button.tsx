@@ -2,7 +2,8 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { ButtonHTMLAttributes } from "react";
 import { twMerge } from "tailwind-merge";
 
-const ButttonVariants = cva(["font-semibold", "border", "rounded", "font-sans-serif"],
+const ButttonVariants = cva(["font-semibold", "p-4", "border", "rounded", "font-quicksand", "tracking-widest", "shadow-3xl",
+  "gap-2"],
   {
     variants: {
       intent: {
@@ -22,8 +23,6 @@ const ButttonVariants = cva(["font-semibold", "border", "rounded", "font-sans-se
           "bg-pink",
           "text-white",
           "border-transparent",
-          "shadow-xl",
-          "tracking-wider",
           "hover:bg-pink-700",
         ],
       },
