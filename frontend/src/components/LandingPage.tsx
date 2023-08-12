@@ -3,6 +3,7 @@
 import { LinkButton } from "@ui/LinkButton";
 import Image from "next/image";
 import StartStep from "./StartStep";
+import Library from "./Library";
 
 const LandingPage = () => {
   return (
@@ -34,7 +35,7 @@ const LandingPage = () => {
           />
         </div>
       </section>
-      <section className="p-10 h-[800px]">
+      <section className="p-10 md:file:h-[800px] sm:h-auto">
         <div className="relative shrink">
           <Image
             src="/assets/library.jpg"
@@ -42,10 +43,11 @@ const LandingPage = () => {
             width={247}
             height={126}
           />
-          <h1 className="absolute top-1/3 md:text-4xl text-3xl font-satoshi font-medium mx-16">
+          <h1 className="absolute top-1/4 md:text-4xl text-3xl font-quicksand font-medium mx-16">
             Library
           </h1>
         </div>
+        <Library />
       </section>
       <section className="p-10 lg:h-[600px] sm:h-auto">
         <div className="relative shrink">

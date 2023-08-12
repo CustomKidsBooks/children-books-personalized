@@ -17,7 +17,7 @@
 }
 
 .font_feature {
-  font-feature-settings: 'clig' off, 'liga' off;
+  font-feature-settings: "clig" off, "liga" off;
 }
 
 .container {
@@ -33,7 +33,6 @@
   transform: translate(-50%, -50%);
 }
 
-
 .app {
   @apply relative z-10 flex justify-center items-center flex-col max-w-7xl mx-auto sm:px-16 px-6;
 }
@@ -42,6 +41,15 @@
   @apply mt-5 text-lg text-gray-600 sm:text-xl max-w-2xl;
 }
 
+.fa-icon {
+  color: theme("colors.pine-green");
+}
+
+.tag-border {
+  border: 0.5px solid #00EAD3;
+  border-radius: 5px;
+  background-color: #fff
+}
 .flex-center {
   @apply flex justify-center items-center;
 }
