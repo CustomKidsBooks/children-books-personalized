@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Pacifico&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -54,4 +55,12 @@
 
 .form_input {
   @apply w-full md:w-96 flex rounded-lg my-3 p-3 text-xl text-black outline-0;
+}
+
+.label-input {
+  @apply text-lg md:text-xl font-quicksand tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose mr-2;
+}
+
+.asterisk {
+  @apply text-red-500;
 }

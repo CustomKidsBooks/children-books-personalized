@@ -78,15 +78,15 @@ const StoryForm: React.FC<StoryFormProps> = ({
             </h1>
           </div>
         </div>
-        <div className="p-10 flex flex-col bg-gradient-radial md:bg-none">
+        <div className="p-10 flex flex-col bg-gradient-radial bg-kid md:bg-none">
           <form onSubmit={formikSubmit}>
             <div className="md:flex items-center justify-between p-1">
               <label
                 htmlFor="title"
-                className="text-lg md:text-xl font-quicksand font-bold tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose mr-2"
+                className="label-input font-bold"
               >
                 Title
-                <span className="text-red-500">*</span>
+                <span className="asterisk">*</span>
               </label>
               <ReusableInput
                 id="title"
@@ -99,16 +99,16 @@ const StoryForm: React.FC<StoryFormProps> = ({
             </div>
             <div>
               {touched.title && errors.title ? (
-                <div className="text-red-500">{errors.title}</div>
+                <div className="asterisk">{errors.title}</div>
               ) : null}
             </div>
             <div className="md:flex items-center justify-between p-1">
               <label
                 htmlFor="ageGroup"
-                className="font-bold text-lg md:text-xl font-quicksand tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose mr-2"
+                className="label-input font-bold"
               >
                 Age
-                <span className="text-red-500">*</span>
+                <span className="asterisk">*</span>
               </label>
               <ReusableInput
                 id="ageGroup"
@@ -122,7 +122,7 @@ const StoryForm: React.FC<StoryFormProps> = ({
             </div>
             <div>
               {touched.ageGroup && errors.ageGroup ? (
-                <div className="text-red-500">{errors.ageGroup}</div>
+                <div className="asterisk">{errors.ageGroup}</div>
               ) : null}
             </div>
             <label
@@ -157,7 +157,7 @@ const StoryForm: React.FC<StoryFormProps> = ({
               <div className="flex items-center">
                 <label
                   htmlFor="characters"
-                  className="font-bold text-lg md:text-xl font-quicksand tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose mr-2 "
+                  className="label-input font-bold"
                 >
                   Characters
                 </label>
@@ -176,7 +176,7 @@ const StoryForm: React.FC<StoryFormProps> = ({
                   <div className="md:flex items-center justify-between px-1">
                     <label
                       htmlFor="name"
-                      className="font-medium text-lg md:text-xl font-quicksand tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose mr-2"
+                      className="label-input font-medium"
                     >
                       Name:
                     </label>
@@ -199,7 +199,7 @@ const StoryForm: React.FC<StoryFormProps> = ({
                   <div className="md:flex items-center justify-between px-1">
                     <label
                       htmlFor="description"
-                      className="font-medium text-lg md:text-xl font-quicksand tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose mr-2"
+                      className="label-input font-medium"
                     >
                       Description:
                     </label>
@@ -228,7 +228,7 @@ const StoryForm: React.FC<StoryFormProps> = ({
               <div className="md:flex items-center justify-between px-1">
                 <label
                   htmlFor="lesson"
-                  className="font-bold text-lg md:text-xl font-quicksand tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose mr-2"
+                  className="label-input font-bold"
                 >
                   Lesson
                 </label>
