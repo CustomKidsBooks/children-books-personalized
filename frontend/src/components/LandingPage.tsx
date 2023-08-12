@@ -12,7 +12,7 @@ const LandingPage = () => {
           <div className="h-40 py-10 ps-10">
             <h1 className="text-4xl md:text-5xl font-satoshi tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose">
               Unleashing{" "}
-              <span className="font-normal font-inter text-pink font_feature">
+              <span className="font-normal font-pacifico text-pink font_feature">
                 Love{" "}
               </span>
               Through Stories <br className="lg:block hidden" />
