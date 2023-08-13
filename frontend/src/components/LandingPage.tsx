@@ -3,7 +3,7 @@
 import { LinkButton } from "@ui/LinkButton";
 import Image from "next/image";
 import StartStep from "./StartStep";
-import Library from "./Library";
+import LibraryCard from "@components/Library/LibraryCard";
 
 const LandingPage = () => {
   return (
@@ -47,7 +47,7 @@ const LandingPage = () => {
             Library
           </h1>
         </div>
-        <Library />
+        <LibraryCard />
       </section>
       <section className="p-10 lg:h-[600px] sm:h-auto">
         <div className="relative shrink">
