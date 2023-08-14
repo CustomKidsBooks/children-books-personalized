@@ -9,7 +9,7 @@ const StartStep = () => {
 
   return (
     <>
-      <div className="md:grid md:grid-cols-3 gap-12 m-20 sm:flex sm:flex-col">
+      <div className="md:grid md:grid-cols-3 place-items-center gap-12 m-20 sm:flex sm:flex-col">
         {Object.values(startSteps).map((step, index) => (
           <div
             key={index}
