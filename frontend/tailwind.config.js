@@ -63,7 +63,7 @@ module.exports = {
       addComponents({
         ".card": {
           width: "248px",
-          height: "300px",
+          height: "248px",
           borderRadius: "0.6rem",
           backgroundColor: "var(--background-light-primary, #FFF);",
           boxShadow:

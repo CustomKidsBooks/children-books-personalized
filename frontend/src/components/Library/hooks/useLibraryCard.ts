@@ -11,7 +11,7 @@ interface BookValues {
 }
 
 const useLibraryCard = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
   const [bookData, setBookData] = useState<BookValues[]>([]);
 
@@ -19,7 +19,6 @@ const useLibraryCard = () => {
     axiosInstance
       .get("/api/books")
       .then((res) => {
-        setIsLoading(true);
         setBookData(res.data);
       })
       .catch((err) => {
