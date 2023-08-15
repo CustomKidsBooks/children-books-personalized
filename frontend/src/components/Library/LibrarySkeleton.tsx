@@ -2,10 +2,12 @@ import React from "react";
 
 const LibrarySkeleton = () => {
   return (
-    <section className="py-10 place-items-center grid lg:grid-cols-4 gap-4 w-full md:grid-cols-2 sm:grid-cols-1">
-      {[0, 1, 2, 3, 4, 5, 6, 7].map((n, i) => (
-        <div key={i} className="card"></div>
-      ))}
+    <section className="py-10">
+      <div className="place-items-center lg:grid lg:grid-cols-4 gap-4 flex overflow-x-auto">
+        {[0, 1, 2, 3, 4, 5, 6, 7].map((n, i) => (
+          <div key={i} className="card"></div>
+        ))}
+      </div>
     </section>
   );
 };
