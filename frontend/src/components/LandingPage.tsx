@@ -35,7 +35,7 @@ const LandingPage = () => {
           />
         </div>
       </section>
-      <section className="p-10 md:file:h-[800px] sm:h-auto">
+      <section className="p-10 h-auto">
         <div className="relative shrink">
           <Image
             src="/assets/library.jpg"

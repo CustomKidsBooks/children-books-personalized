@@ -9,8 +9,6 @@ const LibraryCard = () => {
   const { isLoading, isError, bookData } = useLibraryCard();
   let tag: string[] = ["family", "divorce", "love"];
 
-  console.log("book data", bookData);
-
   if (isLoading) {
     return <LibrarySkeleton />;
   }
