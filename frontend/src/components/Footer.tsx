@@ -6,7 +6,7 @@ import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 
 const Footer = () => {
   return (
-    <div className="h-36 shadow-pink shadow-inner ">
+    <div className="h-36 shadow-pink shadow-inner mt-auto">
       <section className=" px-5 py-10 flex gap-10 flex-between">
         <div className="items-center">
           <Link href="/">

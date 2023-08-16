@@ -14,12 +14,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <div className="main">{/* <div className="gradient" /> */}</div>
-        <main>
-          <Nav />
-          {children}
-        </main>
-        <Footer />
+        <div className="flex flex-col min-h-screen h-auto">
+          <main className="">
+            <Nav />
+            {children}
+          </main>
+          <Footer />
+        </div>
       </body>
     </html>
   );

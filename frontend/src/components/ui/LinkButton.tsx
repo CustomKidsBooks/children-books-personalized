@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge";
 
 const LinkVariants = cva(
   [
-    "font-satoshi",
+    "font-quicksand",
     "p-4",
     "rounded",
     "font-bold",
