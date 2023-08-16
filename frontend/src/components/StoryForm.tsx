@@ -3,7 +3,7 @@ import React from "react";
 import { useFormik } from "formik";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Button } from "@ui/Button";
 import { Heading } from "@ui/Heading";
 import { ageGroupList } from "@utils/constants";
@@ -73,12 +73,17 @@ const StoryForm: React.FC<StoryFormProps> = ({
           <div
             className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-opacity-70 p-2 whitespace-nowrap`}
           >
-            <h1 className={`${Heading({ align: "center" })} font-normal text-xl md:text-3xl text-black font-quicksand tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose`}>
-              Create your <span className="font-pacifico font-bold">Story!</span>
+            <h1
+              className={`${Heading({
+                align: "center",
+              })} font-normal text-xl md:text-3xl text-black font-quicksand tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose`}
+            >
+              Create your{" "}
+              <span className="font-pacifico font-bold">Story!</span>
             </h1>
           </div>
         </div>
-        <div className="p-10 flex flex-col bg-gradient-radial md:bg-none">
+        <div className="p-10 flex flex-col bg-teal-gradient-radial md:bg-none">
           <form onSubmit={formikSubmit}>
             <div className="md:flex items-center justify-between p-1">
               <label

@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const Nav = () => {
   return (
-    <div className="bg-white shadow-md shadow-regal-blue">
+    <div className="bg-white shadow-3xl">
       <nav className="flex-between w-full h-120 py-5 px-5 md:px-10">
         <Link href="/">
           <Image

@@ -4,18 +4,8 @@
 @tailwind components;
 @tailwind utilities;
 
-.main {
-  width: 100vw;
-  /* min-height: 100vh; */
-  position: fixed;
-  display: flex;
-  justify-content: center;
-  padding: 120px 24px 160px 24px;
-  pointer-events: none;
-}
-
 .font_feature {
-  font-feature-settings: 'clig' off, 'liga' off;
+  font-feature-settings: "clig" off, "liga" off;
 }
 
 .container {
@@ -31,6 +21,15 @@
   transform: translate(-50%, -50%);
 }
 
+.yellow-background_radial {
+  border-radius: 1212.828px;
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    #fff5b7 0%,
+    rgba(255, 245, 183, 0) 100%
+  );
+  background-position: bottom 0px right 0px;
+}
 
 .app {
   @apply relative z-10 flex justify-center items-center flex-col max-w-7xl mx-auto sm:px-16 px-6;
