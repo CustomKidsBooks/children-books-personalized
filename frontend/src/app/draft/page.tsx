@@ -1,31 +1,12 @@
 "use client";
 
-import { axiosInstance } from "@services/api-client";
-import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Heading } from "@ui/Heading";
 import { LinkButton } from "@ui/LinkButton";
 
-interface dataValues {
-  id: number;
-  title: string;
-  desc: string;
-  author: string;
-}
-
 const Draft = () => {
-  const [data, setData] = useState([]);
-  useEffect(() => {
-    async function getBooks() {
-      const response = await axiosInstance.get("/api/books/10/pages");
-      setData(response.data);
-    }
-    getBooks();
-  }, []);
-
   return (
-    <section className="w-full py-10 mt-5 bg-[url('/assets/bg_ellipse.png')] bg-no-repeat bg-cover bg-right">
+    <section className="w-full py-10 mt-5 bg-ellipse bg-no-repeat bg-contain bg-right">
       <div className="w-4/6 mx-auto">
         <div className="relative">
           <Image
@@ -53,12 +34,13 @@ const Draft = () => {
         <h2 className="text-xl mt-3 font-semibold">
           Back to{" "}
           <Link href="/create-story" className="text-pink">
-            Create your <i>Story!</i>
+            Create your{" "}
+            <span className="font-pacifico font-normal">Story!</span>
           </Link>
         </h2>
       </div>
 
-      <div className="h-[300px] bg-[url('/assets/bg_flower.png')] bg-no-repeat bg-contain bg-[center_right_20rem]"></div>
+      <div className="h-[300px] bg-flower bg-no-repeat bg-contain bg-[center_right_20rem]"></div>
 
       <div className="w-4/6 mx-auto">
         <div className="flex flex-col md:flex-row md:space-x-10 md:justify-center">
@@ -89,8 +71,8 @@ const Draft = () => {
             Done
           </LinkButton>
         </div>
-        <div className="mt-5 w-3/4 md:w-full text-center">
-          <Link href="#" className="underline underline-offset-3 font-bold">
+        <div className="mt-5 w-3/4 md:w-full text-center font-quicksand">
+          <Link href="#" className="underline underline-offset-3 font-semibold">
             Try Again!
           </Link>
         </div>

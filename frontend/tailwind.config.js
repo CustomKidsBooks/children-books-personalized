@@ -52,9 +52,9 @@ module.exports = {
       backgroundImage: {
         "gradient-radial":
           "radial-gradient(50% 50.00% at 50% 50.00%, #00EAD3 0%, rgba(0, 234, 211, 0.00) 100%)",
-        kid: "url('/assets/kid.svg')",
-        "bg-ellipse": "url('/assets/bg_ellipse.png')",
-        "bg-flower": "url('/assets/bg_flower.png')",
+        kid: "url(/assets/kid.svg)",
+        ellipse: "url(/assets/bg_ellipse.png)",
+        flower: "url(/assets/bg_flower.png)",
       },
     },
   },
