@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+const plugin = require("tailwindcss/plugin");
+
 module.exports = {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -14,7 +16,9 @@ module.exports = {
         pink: "#F54298",
         "pink-300": "#F06292",
         "pink-700": "#be185d",
+        "pine-green": "#00695E",
         "regal-blue": "#004069",
+        "light-primary": "var(--background-light-primary, #FFF);",
       },
       fontFamily: {
         satoshi: ["Quicksand", "Pacifico"],
@@ -54,5 +58,27 @@ module.exports = {
       },
     },
   },
-  plugins: [require("@tailwindcss/typography")],
+  plugins: [
+    require("@tailwindcss/typography"),
+    plugin(function ({ addUtilities, addComponents }) {
+      addComponents({
+        ".card": {
+          width: "248px",
+          height: "248px",
+          borderRadius: "0.6rem",
+          backgroundColor: "var(--background-light-primary, #FFF);",
+          boxShadow:
+            "0px 5px 5px 0px rgba(2, 3, 3, 0.04), 0px 3px 14px 0px rgba(2, 3, 3, 0.02), 0px 8px 10px 0px rgba(2, 3, 3, 0.03);",
+        },
+        ".text": {
+          fontFamily: "quicksand",
+          fontSize: "24px",
+          fontStyle: "normal",
+          fontWeight: "500px",
+          lineHeight: "normal",
+          letterSpacing: "0.393px",
+        },
+      });
+    }),
+  ],
 };

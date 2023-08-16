@@ -1,4 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Quicksand&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Pacifico&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -15,7 +17,7 @@
 }
 
 .font_feature {
-  font-feature-settings: 'clig' off, 'liga' off;
+  font-feature-settings: "clig" off, "liga" off;
 }
 
 .container {
@@ -31,7 +33,6 @@
   transform: translate(-50%, -50%);
 }
 
-
 .app {
   @apply relative z-10 flex justify-center items-center flex-col max-w-7xl mx-auto sm:px-16 px-6;
 }
@@ -40,6 +41,15 @@
   @apply mt-5 text-lg text-gray-600 sm:text-xl max-w-2xl;
 }
 
+.fa-icon {
+  color: theme("colors.pine-green");
+}
+
+.tag-border {
+  border: 0.5px solid #00EAD3;
+  border-radius: 5px;
+  background-color: #fff
+}
 .flex-center {
   @apply flex justify-center items-center;
 }
