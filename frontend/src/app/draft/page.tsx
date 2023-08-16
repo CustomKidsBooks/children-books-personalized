@@ -3,8 +3,22 @@
 import Image from "next/image";
 import Link from "next/link";
 import { LinkButton } from "@ui/LinkButton";
+import useDraft from "@services/useDraft";
 
 const Draft = () => {
+  const { isLoading, isError, bookData } = useDraft();
+  let tag: string[] = ["family", "divorce", "love"];
+
+  let lastBook = bookData[bookData.length - 1];
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+
+  if (isError) {
+    return <div>Error...</div>;
+  }
+
   return (
     <section className="w-full py-10 mt-5">
       <div className="w-4/6 mx-auto">
@@ -25,11 +39,10 @@ const Draft = () => {
       <div className="bg-flower bg-no-repeat bg-right bg-contain">
         <div className="w-4/6 my-10 mx-auto">
           <h2 className="text-xl">
-            <span className="font-semibold">Title :</span> Our Family{" "}
+            <span className="font-semibold">Title :</span> {lastBook.title}{" "}
           </h2>
           <h2 className="text-xl mt-3">
-            <span className="font-semibold">Story :</span> The story that was
-            written in the create page{" "}
+            <span className="font-semibold">Story :</span> {lastBook.desc}{" "}
           </h2>
           <h2 className="text-xl mt-3 font-semibold">
             Back to{" "}
