@@ -7,7 +7,6 @@ import useDraft from "@services/useDraft";
 
 const Draft = () => {
   const { isLoading, isError, bookData } = useDraft();
-  let tag: string[] = ["family", "divorce", "love"];
 
   let lastBook = bookData[bookData.length - 1];
 
