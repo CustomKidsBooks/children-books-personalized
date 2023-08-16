@@ -4,27 +4,51 @@ import { LinkButton } from "@ui/LinkButton";
 import Image from "next/image";
 import StartStep from "./StartStep";
 import LibraryCard from "@components/Library/LibraryCard";
+import { useState } from "react";
 
 const LandingPage = () => {
+  const [isLogin, setIsLogin] = useState<boolean>(true);
+
   return (
     <>
       <section className="h-96 flex bg-teal">
         <div className="flex-col relative">
-          <div className="h-40 py-10 ps-10">
-            <h1 className="text-4xl md:text-5xl font-satoshi tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose">
-              Unleashing{" "}
-              <span className="font-normal font-pacifico text-pink font_feature">
-                Love{" "}
-              </span>
-              Through Stories <br className="lg:block hidden" />
-              <span className="font-bold text-4xl ">For kids, by you!</span>
-            </h1>
+          <div className="h-40 py-10 ps-20">
+            {isLogin ? (
+              <div>
+                <h1 className="text-4xl md:text-5xl font-quicksand tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose">
+                  Hi,
+                </h1>
+                <div className="relative shrink">
+                  <Image
+                    src="/assets/user.svg"
+                    alt="user"
+                    width={247}
+                    height={126}
+                  />
+                  <h1 className="absolute top-1/4 md:text-4xl text-3xl font-pacifico font-medium mx-16">
+                    adam
+                  </h1>
+                </div>
+              </div>
+            ) : (
+              <h1 className="text-4xl md:text-5xl font-quicksand tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose">
+                Unleashing{" "}
+                <span className="font-normal font-pacifico text-pink font_feature">
+                  Love{" "}
+                </span>
+                Through Stories <br className="lg:block hidden" />
+                <span className="font-bold text-4xl ">For kids, by you!</span>
+              </h1>
+            )}
           </div>
-          <div className="absolute bottom-20 left-10 shadow-lg">
-            <LinkButton href="/create-story" intent="pink" size="large">
-              Start!
-            </LinkButton>
-          </div>
+          {!isLogin && (
+            <div className="absolute bottom-20 left-10 shadow-lg">
+              <LinkButton href="/create-story" intent="pink" size="large">
+                Start!
+              </LinkButton>
+            </div>
+          )}
         </div>
         <div className="ml-auto pe-20 shrink invisible lg:visible">
           <Image
