@@ -25,73 +25,75 @@ const Draft = () => {
   }, []);
 
   return (
-    // <div>
-    //   {data.map((d) => (
-    //     <div key={d.id}>
-    //       <h1>{d.title}</h1>
-    //       <p>{d.desc}</p>
-    //     </div>
-    //   ))}
-    // </div>
-    <section className="w-full p-10">
-      <div className="w-full max-w-2xl p-10">
-        <div className="p-1 relative shrink flex flex-col items-center sm:flex-row sm:items-center justify-center">
+    <section className="w-full py-10 mt-5 bg-[url('/assets/bg_ellipse.png')] bg-no-repeat bg-cover bg-right">
+      <div className="w-4/6 mx-auto">
+        <div className="relative">
           <Image
             src="/assets/draft.png"
             alt="book-title"
-            width={250}
+            width={200}
             height={3}
           />
-          <div
-            className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-opacity-70 p-2 whitespace-nowrap`}
-          >
-            <h1
-              className={`${Heading({
-                align: "center",
-              })} font-normal text-xl md:text-3xl text-black font-quicksand tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose`}
-            >
+          <div className="absolute top-1/2 left-20 transform -translate-x-1/2 -translate-y-1/2 bg-opacity-70 p-2 whitespace-nowrap">
+            <h1 className="mt-0 font-normal text-3xl md:text-4xl text-green font-quicksand tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose">
               Draft{" "}
             </h1>
           </div>
         </div>
       </div>
 
-      <div className="w-full my-5 flex justify-center">
-        <div className="w-2/6"></div>
-        <div className="w-2/6"></div>
+      <div className="w-4/6 my-10 mx-auto">
+        <h2 className="text-xl">
+          <span className="font-semibold">Title :</span> Our Family{" "}
+        </h2>
+        <h2 className="text-xl mt-3">
+          <span className="font-semibold">Story :</span> The story that was
+          written in the create page{" "}
+        </h2>
+        <h2 className="text-xl mt-3 font-semibold">
+          Back to{" "}
+          <Link href="/create-story" className="text-pink">
+            Create your <i>Story!</i>
+          </Link>
+        </h2>
       </div>
-      <div className="w-full flex space-x-10 justify-center">
-        <LinkButton
-          className="w-2/6 text-center"
-          href="#"
-          intent="teal"
-          size="medium"
-        >
-          Edit Paragraph
-        </LinkButton>
-        <LinkButton
-          className="w-2/6 text-center"
-          href="#"
-          intent="teal"
-          size="medium"
-        >
-          Edit Image
-        </LinkButton>
-      </div>
-      <div className="mt-5 w-full flex space-x-10 justify-center">
-        <LinkButton
-          className="w-1/4 text-center capitalize"
-          href="#"
-          intent="pink"
-          size="medium"
-        >
-          Done
-        </LinkButton>
-      </div>
-      <div className="mt-5 w-full flex space-x-10 justify-center">
-        <Link href="#" className="underline underline-offset-4 font-bold">
-          Try Again!
-        </Link>
+
+      <div className="h-[300px] bg-[url('/assets/bg_flower.png')] bg-no-repeat bg-contain bg-[center_right_20rem]"></div>
+
+      <div className="w-4/6 mx-auto">
+        <div className="flex flex-col md:flex-row md:space-x-10 md:justify-center">
+          <LinkButton
+            className="w-3/4 text-center font-quicksand"
+            href="#"
+            intent="teal"
+            size="medium"
+          >
+            Edit Paragraph
+          </LinkButton>
+          <LinkButton
+            className="w-3/4 text-center mt-3 md:mt-0 font-quicksand"
+            href="#"
+            intent="teal"
+            size="medium"
+          >
+            Edit Image
+          </LinkButton>
+        </div>
+        <div className="mt-7 md:mt-5 flex flex-col md:flex-row md:space-x-10 md:justify-center">
+          <LinkButton
+            className="w-3/4 md:w-2/4 text-center capitalize font-quicksand"
+            href="#"
+            intent="pink"
+            size="medium"
+          >
+            Done
+          </LinkButton>
+        </div>
+        <div className="mt-5 w-3/4 md:w-full text-center">
+          <Link href="#" className="underline underline-offset-3 font-bold">
+            Try Again!
+          </Link>
+        </div>
       </div>
     </section>
   );
