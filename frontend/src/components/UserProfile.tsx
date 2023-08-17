@@ -18,7 +18,7 @@ const UserProfile = () => {
                 height={100}
               />
               <h1 className="text font-normal font-pacifico text-pink font_feature absolute top-1/4 md:text-6xl text-3xl mx-10">
-                adam
+                adam jacksom
               </h1>
             </div>
           </div>
@@ -48,17 +48,17 @@ const UserProfile = () => {
       </section>
       <section className="p-10 lg:h-96 h-auto bg-pink">
         <div className="flex flex-col place-items-center gap-12 p-20">
-          <div className="h-14">
-            <h1 className="text text-white">
+          <div>
+            <h1 className="text text-white text-5xl">
               What story would you like to tell today?
             </h1>
           </div>
-          <div>
+          <div className="px-8 py-4 gap-2 items-center flex justify-items-center w-3/6">
             <LinkButton
               href="/create-story"
               intent="teal"
               size="large"
-              className=""
+              className="tracking-widest text-center text-base md:text-2xl"
             >
               Start my new book!
             </LinkButton>
