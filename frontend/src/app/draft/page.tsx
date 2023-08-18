@@ -3,9 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { LinkButton } from "@ui/LinkButton";
-import useDraft from "@services/useDraft";
+import useDraft from "@components/hooks/useDraft";
 
 const Draft = () => {
+  // TODO: update a hook API to get a single book once API is ready!.
+
   const { isLoading, isError, bookData } = useDraft();
 
   let lastBook = bookData[bookData.length - 1];
@@ -35,8 +37,8 @@ const Draft = () => {
           </div>
         </div>
       </div>
-      <div className="bg-flower bg-no-repeat bg-right bg-contain">
-        <div className="w-4/6 my-10 mx-auto">
+      <div className="sm:bg-flower bg-no-repeat bg-right bg-contain">
+        <div className="w-4/6 my-10 mx-auto font-quicksand">
           <h2 className="text-xl">
             <span className="font-semibold">Title :</span> {lastBook.title}{" "}
           </h2>
@@ -52,12 +54,12 @@ const Draft = () => {
           </h2>
         </div>
 
-        <div className="h-[300px] bg-ellipse bg-no-repeat bg-contain bg-[center_right_18rem]"></div>
+        <div className="h-[300px] sm:bg-ellipse bg-no-repeat bg-contain bg-[center_right_18rem]"></div>
 
         <div className="w-4/6 mx-auto">
           <div className="flex flex-col md:flex-row md:space-x-10 md:justify-center">
             <LinkButton
-              className="w-3/4 text-center font-quicksand"
+              className="sm:w-3/4 text-center font-quicksand"
               href="#"
               intent="teal"
               size="medium"
@@ -65,7 +67,7 @@ const Draft = () => {
               Edit Paragraph
             </LinkButton>
             <LinkButton
-              className="w-3/4 text-center mt-3 md:mt-0 font-quicksand"
+              className="sm:w-3/4 text-center mt-3 md:mt-0 font-quicksand"
               href="#"
               intent="teal"
               size="medium"
@@ -75,7 +77,7 @@ const Draft = () => {
           </div>
           <div className="mt-7 md:mt-5 flex flex-col md:flex-row md:space-x-10 md:justify-center">
             <LinkButton
-              className="w-3/4 md:w-2/4 text-center capitalize font-quicksand"
+              className="sm:w-3/4 md:w-2/4 text-center capitalize font-quicksand"
               href="#"
               intent="pink"
               size="medium"
@@ -83,7 +85,7 @@ const Draft = () => {
               Done
             </LinkButton>
           </div>
-          <div className="mt-5 w-3/4 md:w-full text-center font-quicksand">
+          <div className="mt-5 sm:w-3/4 md:w-full text-center font-quicksand">
             <Link
               href="#"
               className="underline underline-offset-3 font-semibold"
