@@ -52,16 +52,15 @@ module.exports = {
       height: {
         "229": "229.978px",
         "113.12": "113.12px",
-        "550": "550px",
       },
       width: {
-        "500": "500px",
+        "350": "350px",
       },
       borderRadius: {
         "1337.728": "1337.728px"
       },
       backgroundColor: {
-        'kid': 'rgba(255, 255, 255, 0.80)',
+        'kid-opacity': 'rgba(255, 255, 255, 0.80)',
       },
       backgroundImage: {
         "gradient-radial":

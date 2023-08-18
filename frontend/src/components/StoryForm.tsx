@@ -138,133 +138,134 @@ const StoryForm: React.FC<StoryFormProps> = ({
                     <div className="asterisk">{errors.ageGroup}</div>
                   ) : null}
                 </div>
-                <div className="bg-gradient-radial rounded-l-1337.728 lg:bg-none lg:rounded-none  absolute right-[-150px] top-[800px] opacity-40 w-500 h-550"></div>
-                <label
-                  htmlFor="details"
-                  className="font-bold font-quicksand text-pink sm:text-2xl lg:text-3xl tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose"
-                >
-                  Add more details:
-                </label>
-                <div className="md:flex items-center justify-between">
+                <div className="relative">
+                  <div className="bg-gradient-radial rounded-l-1337.728 absolute right-[-150px] opacity-40 w-350 h-full lg:bg-none lg:rounded-none"></div>
                   <label
-                    htmlFor="subject"
-                    className="label-input font-bold"
+                    htmlFor="details"
+                    className="font-bold font-quicksand text-pink sm:text-2xl lg:text-3xl tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose"
                   >
-                    Subject
+                    Add more details:
                   </label>
-                  <ReusableInput
-                    id="subject"
-                    name="subject"
-                    type="textarea"
-                    value={values.subject}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    placeholder="Ex. A young girl named Sara loves exploring the world"
-                    rows={2}
-                    className="w-full"
-                  />
-                  {touched.subject && errors.subject ? (
-                    <div>{errors.subject}</div>
-                  ) : null}
-                </div>
-                <div className="flex flex-col text-sm md:pr-2">
-                  <div className="flex items-center">
+                  <div className="md:flex items-center justify-between">
                     <label
-                      htmlFor="characters"
+                      htmlFor="subject"
                       className="label-input font-bold"
                     >
-                      Characters
-                    </label>
-                    <div className="flex items-center">
-                      <button
-                        id="addFieldButton"
-                        className="px-1 sm:px-0.5 bg-white font-bold font-quicksand shadow-xl sm:shadow-md"
-                        onClick={handleAddField}
-                      >
-                        <FontAwesomeIcon icon={faPlus} />
-                      </button>
-                    </div>
-                  </div>
-                  {additionalFields.map((field, index) => (
-                    <div key={index} className="flex flex-col mt-1">
-                      <div className="md:flex items-center justify-between px-1">
-                        <label
-                          htmlFor="name"
-                          className="label-input font-medium"
-                        >
-                          Name:
-                        </label>
-                        <ReusableInput
-                          id="name"
-                          name={`name${index}`}
-                          type="text"
-                          value={field.name}
-                          onChange={(e) =>
-                            handleAdditionalFieldChange(
-                              index,
-                              "name",
-                              e.target.value
-                            )
-                          }
-                          onBlur={handleBlur}
-                          className="w-full"
-                        />
-                      </div>
-                      <div className="md:flex items-center justify-between px-1">
-                        <label
-                          htmlFor="description"
-                          className="label-input font-medium"
-                        >
-                          Description:
-                        </label>
-                        <ReusableInput
-                          id="description"
-                          name={`description${index}`}
-                          type="textarea"
-                          value={field.description}
-                          onChange={(e) =>
-                            handleAdditionalFieldChange(
-                              index,
-                              "description",
-                              e.target.value
-                            )
-                          }
-                          onBlur={handleBlur}
-                          placeholder={`Ex. Description of the character`}
-                          rows={2}
-                        />
-                      </div>
-                      <hr className="bg-pink h-0.5 mx-10" />
-                    </div>
-                  ))}
-                </div>
-                <div className="flex flex-col text-sm">
-                  <div className="md:flex items-center justify-between px-1">
-                    <label
-                      htmlFor="lesson"
-                      className="label-input font-bold"
-                    >
-                      Lesson
+                      Subject
                     </label>
                     <ReusableInput
-                      id="lesson"
-                      name="lesson"
-                      type="text"
-                      value={values.lesson}
+                      id="subject"
+                      name="subject"
+                      type="textarea"
+                      value={values.subject}
                       onChange={handleChange}
                       onBlur={handleBlur}
+                      placeholder="Ex. A young girl named Sara loves exploring the world"
+                      rows={2}
+                      className="w-full"
                     />
+                    {touched.subject && errors.subject ? (
+                      <div>{errors.subject}</div>
+                    ) : null}
                   </div>
-                  {touched.lesson && errors.lesson ? (
-                    <div>{errors.lesson}</div>
-                  ) : null}
+                  <div className="flex flex-col text-sm md:pr-2">
+                    <div className="flex items-center">
+                      <label
+                        htmlFor="characters"
+                        className="label-input font-bold"
+                      >
+                        Characters
+                      </label>
+                      <div className="flex items-center">
+                        <button
+                          id="addFieldButton"
+                          className="px-1 sm:px-0.5 bg-white font-bold font-quicksand shadow-xl sm:shadow-md"
+                          onClick={handleAddField}
+                        >
+                          <FontAwesomeIcon icon={faPlus} />
+                        </button>
+                      </div>
+                    </div>
+                    {additionalFields.map((field, index) => (
+                      <div key={index} className="flex flex-col mt-1">
+                        <div className="md:flex items-center justify-between px-1">
+                          <label
+                            htmlFor="name"
+                            className="label-input font-medium"
+                          >
+                            Name:
+                          </label>
+                          <ReusableInput
+                            id="name"
+                            name={`name${index}`}
+                            type="text"
+                            value={field.name}
+                            onChange={(e) =>
+                              handleAdditionalFieldChange(
+                                index,
+                                "name",
+                                e.target.value
+                              )
+                            }
+                            onBlur={handleBlur}
+                            className="w-full"
+                          />
+                        </div>
+                        <div className="md:flex items-center justify-between px-1">
+                          <label
+                            htmlFor="description"
+                            className="label-input font-medium"
+                          >
+                            Description:
+                          </label>
+                          <ReusableInput
+                            id="description"
+                            name={`description${index}`}
+                            type="textarea"
+                            value={field.description}
+                            onChange={(e) =>
+                              handleAdditionalFieldChange(
+                                index,
+                                "description",
+                                e.target.value
+                              )
+                            }
+                            onBlur={handleBlur}
+                            placeholder={`Ex. Description of the character`}
+                            rows={2}
+                          />
+                        </div>
+                        <hr className="bg-pink h-0.5 mx-10" />
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex flex-col text-sm">
+                    <div className="md:flex items-center justify-between px-1">
+                      <label
+                        htmlFor="lesson"
+                        className="label-input font-bold"
+                      >
+                        Lesson
+                      </label>
+                      <ReusableInput
+                        id="lesson"
+                        name="lesson"
+                        type="text"
+                        value={values.lesson}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                    </div>
+                    {touched.lesson && errors.lesson ? (
+                      <div>{errors.lesson}</div>
+                    ) : null}
+                  </div>
+                  <div className="pt-10">
+                    <Button type="submit" intent="pink" size="xl">
+                      Write my book!
+                    </Button>
+                  </div>
                 </div>
-                <div className="pt-10">
-                  <Button type="submit" intent="pink" size="xl">
-                    Write my book!
-                  </Button>
-                </div>
-
               </form>
             </div>
           </div>

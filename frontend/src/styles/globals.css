@@ -65,5 +65,5 @@
 }
 
 .background {
-  @apply bg-no-repeat bg-opacity-0 lg:bg-none lg:h-0;
+  @apply bg-no-repeat bg-blend-overlay bg-kid-opacity lg:bg-none lg:h-0;
 }
