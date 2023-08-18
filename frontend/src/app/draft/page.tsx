@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { LinkButton } from "@ui/LinkButton";
 import useDraft from "@components/hooks/useDraft";
+import Book from "@components/Book";
 
 const Draft = () => {
   // TODO: update a hook API to get a single book once API is ready!.
@@ -54,7 +55,9 @@ const Draft = () => {
           </h2>
         </div>
 
-        <div className="h-[300px] "></div>
+        <div className="h-[300px] ">
+          <Book />
+        </div>
 
         <div className="w-4/6 mx-auto">
           <div className="flex flex-col md:flex-row md:space-x-10 md:justify-center">
