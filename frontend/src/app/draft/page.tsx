@@ -21,7 +21,7 @@ const Draft = () => {
   }
 
   return (
-    <section className="w-full py-10 mt-5">
+    <section className="w-full py-10 mt-5 sm:bg-ellipse bg-no-repeat bg-auto bg-right-bottom">
       <div className="w-4/6 mx-auto">
         <div className="relative">
           <Image
@@ -54,7 +54,7 @@ const Draft = () => {
           </h2>
         </div>
 
-        <div className="h-[300px] sm:bg-ellipse bg-no-repeat bg-contain bg-[center_right_18rem]"></div>
+        <div className="h-[300px] "></div>
 
         <div className="w-4/6 mx-auto">
           <div className="flex flex-col md:flex-row md:space-x-10 md:justify-center">
