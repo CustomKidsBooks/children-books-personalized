@@ -49,12 +49,27 @@ module.exports = {
         "3xl":
           "0px 5px 5px 0px rgba(2, 3, 3, 0.04), 0px 3px 14px 0px rgba(2, 3, 3, 0.02), 0px 8px 10px 0px rgba(2, 3, 3, 0.03)",
       },
+      height: {
+        "229": "229.978px",
+        "113.12": "113.12px",
+        "550": "550px",
+      },
+      width: {
+        "500": "500px",
+      },
+      borderRadius: {
+        "1337.728": "1337.728px"
+      },
+      backgroundColor: {
+        'kid': 'rgba(255, 255, 255, 0.80)',
+      },
       backgroundImage: {
         "gradient-radial":
           "radial-gradient(50% 50.00% at 50% 50.00%, #00EAD3 0%, rgba(0, 234, 211, 0.00) 100%)",
         kid: "url(/assets/kid.svg)",
         ellipse: "url(/assets/bg_ellipse.png)",
         flower: "url(/assets/bg_flower.png)",
+        education: "url('/assets/education.svg')",
       },
     },
   },

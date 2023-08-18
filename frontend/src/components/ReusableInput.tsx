@@ -56,14 +56,14 @@ const ReusableInput: React.FC<ReusableInputProps> = ({
           onChange={onChange}
           onBlur={onBlur}
           placeholder={placeholder}
-          className="form_input shadow"
+          className="form_input shadow w-full"
         />
       );
     }
   };
 
   return (
-    <div className="flex flex-col mt-5">
+    <div className="flex flex-col w-full">
       {renderInput()}
       {error && <div>{error}</div>}
     </div>
