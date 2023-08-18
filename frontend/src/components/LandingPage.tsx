@@ -8,7 +8,7 @@ import { useState } from "react";
 import UserProfile from "./UserProfile";
 
 const LandingPage = () => {
-  const [isLogin, setIsLogin] = useState<boolean>(true);
+  const [isLogin, setIsLogin] = useState<boolean>(false);
 
   if (isLogin) {
     return <UserProfile />;

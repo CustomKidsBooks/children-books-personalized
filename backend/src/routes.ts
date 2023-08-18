@@ -4,6 +4,7 @@ import {
   fetchBooksHandler,
   deleteBookHandler,
   fetchPagesForBookHandler,
+  fetchBookHandler,
 } from "./controller/book.controller";
 
 export default function (app: Express) {
@@ -16,6 +17,8 @@ export default function (app: Express) {
   });
 
   app.get("/api/books", fetchBooksHandler);
+
+  app.get('/api/books/:id', fetchBookHandler)
 
   app.delete("/api/books/:id", (req: Request, res: Response) => {
     const { id } = req.params;

@@ -10,22 +10,23 @@ interface BookValues {
   image?: string;
 }
 
-const useDraft = () => {
+const useBook = (id: number) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
-  const [bookData, setBookData] = useState<BookValues[]>([]);
+  const [bookData, setBookData] = useState<BookValues>();
 
   useEffect(() => {
     axiosInstance
-      .get("/api/books")
+      .get(`/api/books/${id}`)
       .then((res) => {
         setBookData(res.data);
+        console.log("use book", res.data);
       })
       .catch((err) => {
         setIsError(true);
       })
       .finally(() => setIsLoading(false));
-  }, []);
+  }, [id]);
 
   return {
     isLoading,
@@ -34,4 +35,4 @@ const useDraft = () => {
   };
 };
 
-export default useDraft;
+export default useBook;

@@ -110,6 +110,29 @@ export async function fetchBooksHandler(req: Request, res: Response) {
   }
 }
 
+// Fetch a single book
+export async function fetchBookHandler(req: Request, res: Response) {
+  try {
+    const bookRepository = AppDataSource.getRepository(Book);
+    const { id } = req.params;
+    const book = await bookRepository
+      .createQueryBuilder("book")
+      .leftJoinAndSelect("book.pages", "page")
+      .where("book.id = :id", { id })
+      .getOne();
+
+    if (!book) {
+      log.error("Book not found");
+      return;
+    }
+
+    res.json(book);
+  } catch (error) {
+    log.error("Error retrieving book:", error);
+    res.status(500).json({ error: "An error occurred while retrieving book" });
+  }
+}
+
 export async function fetchPagesForBookHandler(req: Request, res: Response) {
   try {
     const bookId = Number(req.params.bookId);
