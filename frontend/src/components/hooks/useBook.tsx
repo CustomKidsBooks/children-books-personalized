@@ -20,7 +20,6 @@ const useBook = (id: number) => {
       .get(`/api/books/${id}`)
       .then((res) => {
         setBookData(res.data);
-        console.log("use book", res.data);
       })
       .catch((err) => {
         setIsError(true);
