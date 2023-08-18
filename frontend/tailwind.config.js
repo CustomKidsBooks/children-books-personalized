@@ -10,13 +10,13 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'teal': "#00EAD3",
+        teal: "#00EAD3",
         "teal-600": "#0d9488",
         "teal-400": "#2dd4bf",
-        'pink': "#F54298",
+        pink: "#F54298",
         "pink-300": "#F06292",
         "pink-700": "#be185d",
-        'pine-green': "#00695E",
+        "pine-green": "#00695E",
         "regal-blue": "#004069",
         "light-primary": "var(--background-light-primary, #FFF);",
       },
@@ -52,11 +52,12 @@ module.exports = {
       backgroundImage: {
         "gradient-radial":
           "radial-gradient(50% 50.00% at 50% 50.00%, #00EAD3 0%, rgba(0, 234, 211, 0.00) 100%)",
-        kid: "url('/assets/kid.svg')",
+        kid: "url(/assets/kid.svg)",
+        ellipse: "url(/assets/bg_ellipse.png)",
+        flower: "url(/assets/bg_flower.png)",
       },
     },
   },
-
   plugins: [
     require("@tailwindcss/typography"),
     plugin(function ({ addUtilities, addComponents }) {
