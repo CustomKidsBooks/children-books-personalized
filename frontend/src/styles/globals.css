@@ -53,5 +53,17 @@
 }
 
 .form_input {
-  @apply w-full md:w-96 flex rounded-lg my-3 p-3 text-xl text-black outline-0;
+  @apply w-full flex rounded-lg my-3 p-3 sm:text-lg lg:text-xl text-black outline-0;
+}
+
+.label-input {
+  @apply sm:text-xl lg:text-2xl font-quicksand tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose mr-2;
+}
+
+.asterisk {
+  @apply text-red-500;
+}
+
+.background {
+  @apply bg-no-repeat bg-blend-overlay bg-kid-opacity lg:bg-none lg:h-0;
 }
