@@ -55,7 +55,7 @@ const Draft = () => {
           </h2>
         </div>
 
-        <div className="h-[300px] ">
+        <div>
           <Book />
         </div>
 

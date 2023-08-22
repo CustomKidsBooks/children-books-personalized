@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 
 interface BookContentValues {
   id: number;
-  image?: string;
-  paragraph?: string;
+  image: string;
+  paragraph: string;
 }
 
 const useBook = () => {
@@ -12,11 +12,17 @@ const useBook = () => {
   const [isError, setIsError] = useState<boolean>(false);
   const [bookContent, setBookContent] = useState<BookContentValues[]>([]);
 
+  let [pageNumber, setPageNumber] = useState(0);
+  let [image, setImage] = useState("");
+  let [paragraph, setParagraph] = useState("");
+
   useEffect(() => {
     axiosInstance
-      .get("/api/books/16/pages")
+      .get("/api/books/17/pages")
       .then((res) => {
         setBookContent(res.data);
+        setImage(res.data[0].image);
+        setParagraph(res.data[0].paragraph);
       })
       .catch((err) => {
         setIsError(true);
@@ -29,6 +35,12 @@ const useBook = () => {
     isLoading,
     isError,
     bookContent,
+    image,
+    setImage,
+    paragraph,
+    setParagraph,
+    pageNumber,
+    setPageNumber,
   };
 };
 
