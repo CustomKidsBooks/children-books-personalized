@@ -22,13 +22,23 @@ export const BookController = {
   /** ======== Create a Book ======== **/
 
   createBook: async (req: Request, res: Response) => {
-    const { title, desc, author, page } = req.body;
+    const {
+      userId,
+      title,
+      age,
+      subject,
+      charName,
+      charDesc,
+      lesson,
+      page,
+      privacy,
+    } = req.body;
     let newBook: Book | undefined;
 
     try {
       const bookRepository = AppDataSource.getRepository(Book);
 
-      const imageDesc = `paint a graphic or choose image for book cover based on this given description ${desc}`;
+      const imageDesc = `for a story book for kids age ${age} about ${subject} the character can be ${charName} and character description ${charDesc}`;
       const imageUrl = await generateImage(imageDesc);
 
       // Check if imageUrl is not undefined before proceeding
@@ -37,14 +47,21 @@ export const BookController = {
         const localImagePath = await downloadCoverImageLocally(imageUrl);
 
         newBook = bookRepository.create({
+          userId,
           title,
-          desc,
-          author,
+          age,
+          subject,
+          charName,
+          charDesc,
+          lesson,
           page,
+          privacy,
           image: localImagePath,
         });
 
         await bookRepository.save(newBook);
+
+        const desc = `create a ${page} page story book 1 paragraph per pagefor kids age ${age} about ${subject}`;
         // Generate book content using OpenAI
         const bookContent = await generateBookText(desc);
 
@@ -107,7 +124,7 @@ export const BookController = {
       // Define options for findOne
       const options: FindOneOptions<Book> = {
         where: { id: bookId },
-        relations: ["pages"], // Add any other desired relations
+        relations: ["pages"],
       };
 
       const book = await bookRepository.findOne(options);
@@ -118,7 +135,7 @@ export const BookController = {
 
       res.json({ success: true, data: book });
     } catch (error) {
-      console.error("Error retrieving book:", error);
+      log.error("Error retrieving book:", error);
       res
         .status(500)
         .json({ error: "An error occurred while retrieving book" });
@@ -129,7 +146,7 @@ export const BookController = {
 
   fetchPagesForBook: async (req: Request, res: Response) => {
     try {
-      const bookId = Number(req.params.bookId); // Convert bookId to a number
+      const bookId = Number(req.params.bookId);
       const pageRepository = AppDataSource.getRepository(Page);
       const pages = await pageRepository.find({
         where: { book: { id: bookId } },
@@ -147,7 +164,7 @@ export const BookController = {
 
   updateBookHandler: async (req: Request, res: Response) => {
     const id = parseInt(req.params.id);
-    const { title, desc, author } = req.body;
+    const { title, subject, charName, charDesc, lesson, privacy } = req.body;
 
     try {
       const bookRepository = AppDataSource.getRepository(Book);
@@ -189,8 +206,11 @@ export const BookController = {
 
       // Update book fields
       book.title = title;
-      book.desc = desc;
-      book.author = author;
+      book.subject = subject;
+      book.charDesc = charDesc;
+      book.charName = charName;
+      book.lesson = lesson;
+      book.privacy = privacy;
 
       // Save changes
       await bookRepository.save(book);
@@ -209,7 +229,7 @@ export const BookController = {
   /** ======== Update Specific page ======== **/
 
   updatePageHandler: async (req: Request, res: Response) => {
-    const pageId = parseInt(req.params.pageId); // Convert pageId to a number
+    const pageId = parseInt(req.params.pageId);
     const { paragraph, image } = req.body;
 
     try {
@@ -237,7 +257,7 @@ export const BookController = {
         }
 
         // Save the new image locally in the page folder
-        const newImageName = `${pageId}_${Date.now()}.jpg`; // You can customize the image name as needed
+        const newImageName = `${pageId}_${Date.now()}.jpg`;
         const newImagePath = path.join(
           __dirname,
           `../../images/page/${newImageName}`
@@ -418,7 +438,7 @@ async function savePagesToDatabase(pages: PageData[], bookId: number) {
     if (!imageUrl) {
       const error = new Error(`Image URL is missing for page ${index + 1}`);
       errors.push(error);
-      return null; // Skip this page
+      return null;
     }
 
     const localImagePath = await downloadPagesImageLocally(imageUrl);
@@ -430,23 +450,18 @@ async function savePagesToDatabase(pages: PageData[], bookId: number) {
     };
   });
 
-  // Wait for all async operations to complete
   const resolvedPages = await Promise.all(newPages);
 
-  // Filter out null values from newPages
   const validNewPages = resolvedPages.filter((page) => page !== null);
 
   try {
-    // Batch insert the valid pages
     await pageRepository.save(validNewPages as DeepPartial<Page>[]);
   } catch (err: any) {
-    // Use 'any' for the catch clause
     log.error("Error inserting pages into the database:", err);
     errors.push(err);
   }
 
   if (errors.length > 0) {
-    // Handle errors here or return them for further processing
     log.error("Errors occurred during page insertion:", errors);
   }
 }
