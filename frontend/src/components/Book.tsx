@@ -57,7 +57,7 @@ const Book = () => {
             onClick={displayPreviousPage}
           />
         </div>
-        <div className="h-96 w-4/6 flex rounded-lg overflow-hidden drop-shadow-xl before:content-[''] before:block before:absolute before:z-[10] before:top-0 before:bottom-0 before:inset-x-2/4 before:border">
+        <div className="h-96 w-4/6 flex rounded-lg overflow-hidden drop-shadow-xl display_book">
           <div className="w-3/4">
             <div className="relative h-full w-full">
               <img

@@ -7,6 +7,8 @@ interface BookContentValues {
   paragraph: string;
 }
 
+// TODO: update API to insert dynamic bookID.
+
 const useBook = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
