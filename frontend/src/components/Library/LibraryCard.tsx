@@ -12,7 +12,6 @@ const LibraryCard = () => {
 
   if (isLoading) {
     return <LibrarySkeleton />;
-    // return <LoadindSpinner />;
   }
 
   if (isError) {
