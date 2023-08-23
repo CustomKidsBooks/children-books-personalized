@@ -1,9 +1,9 @@
 "use client";
 
+import useDraft from "@components/hooks/useDraft";
+import { LinkButton } from "@ui/LinkButton";
 import Image from "next/image";
 import Link from "next/link";
-import { LinkButton } from "@ui/LinkButton";
-import useDraft from "@components/hooks/useDraft";
 
 const Draft = () => {
   // TODO: update a hook API to get a single book once API is ready!.
@@ -40,7 +40,7 @@ const Draft = () => {
       <div className="sm:bg-flower bg-no-repeat bg-right bg-contain">
         <div className="w-4/6 my-10 mx-auto font-quicksand">
           <h2 className="text-xl">
-            <span className="font-semibold">Title :</span> {lastBook.title}{" "}
+            <span className="font-semibold">Title :</span> {lastBook.title}
           </h2>
           <h2 className="text-xl mt-3">
             <span className="font-semibold">Story :</span> {lastBook.desc}{" "}
