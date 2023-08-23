@@ -67,3 +67,6 @@
 .background {
   @apply bg-no-repeat bg-blend-overlay bg-kid-opacity lg:bg-none lg:h-0;
 }
+.border-bg {
+  @apply border-0.2 border-custom border-opacity-10 bg-lt-primary shadow-3xl;
+}

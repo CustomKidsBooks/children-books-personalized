@@ -8,15 +8,15 @@ export interface FormValues {
   characters?: string[];
 }
 
-export interface LogInFormValues {
-  username: string;
+export interface LoginFormValues {
+  email: string;
   password: string;
 }
 
 export interface SignUpFormValues {
-  username: string;
+  name: string;
+  email: string;
   password: string;
-  confirmPassword: string;
 }
 
 export interface AdditionalField {
@@ -27,7 +27,7 @@ export interface AdditionalField {
 export interface ReusableInputProps {
   id: string;
   name: string;
-  type: "text" | "number" | "select" | "textarea";
+  type: "text" | "number" | "select" | "textarea" | "password" | "email";
   value?: string;
   onChange: (
     event: React.ChangeEvent<
