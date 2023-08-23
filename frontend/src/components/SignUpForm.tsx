@@ -41,10 +41,10 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
             Sign In
           </h1>
           <form onSubmit={formikSubmit} className="flex flex-col justify-center">
-              <div className="flex flex-col justify-end items-start gap-px">
+              <div className="place-item gap-px">
                 <label
                   htmlFor="name"
-                  className="text-lg font-bold font-quicksand"
+                  className="label-text"
                 >
                   Name
                   <span className="asterisk">*</span>
@@ -61,10 +61,10 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
                   <div className="asterisk">{errors.name}</div>
                 ) : null}
               </div>
-              <div className="flex flex-col justify-end items-start gap-px">
+              <div className="place-item gap-px">
                 <label
                   htmlFor="email"
-                  className="text-lg font-bold font-quicksand"
+                  className="label-text"
                 >
                   Email
                   <span className="asterisk">*</span>
@@ -81,10 +81,10 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
                   <div className="asterisk">{errors.email}</div>
                 ) : null}
               </div>
-              <div className="flex flex-col justify-end items-start">
+              <div className="place-item">
                 <label
                   htmlFor="password"
-                  className="text-lg font-bold font-quicksand"
+                  className="label-text"
                 >
                   Password
                   <span className="asterisk">*</span>
@@ -101,13 +101,13 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
                   <div className="asterisk">{errors.password}</div>
                 ) : null}
               </div>   
-            <div className="flex flex-col justify-center items-center mt-4">
+            <div className="place-div mt-4">
               <LinkButton href="/" intent="pink" size="small">
                 Create my account
               </LinkButton>
             </div>
           </form>
-          <div className="flex flex-col justify-center items-center text-base font-quicksand font-semibold">
+          <div className="place-div text-base font-quicksand font-semibold">
             <p>Already have an account?{" "}
               <Link href="/login" className="text-pink font-bold">
                 Login<span className="text-black">!</span>

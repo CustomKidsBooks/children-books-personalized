@@ -23,6 +23,18 @@
   transform: translate(-50%, -50%);
 }
 
+.display_book::before {
+  content: "";
+  position: absolute;
+  display: block;
+  z-index: 1;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  right: 50%;
+  border: 1px solid rgb(203 213 225);
+}
+
 .app {
   @apply relative z-10 flex justify-center items-center flex-col max-w-7xl mx-auto sm:px-16 px-6;
 }
@@ -36,9 +48,9 @@
 }
 
 .tag-border {
-  border: 0.5px solid #00EAD3;
+  border: 0.5px solid #00ead3;
   border-radius: 5px;
-  background-color: #fff
+  background-color: #fff;
 }
 .flex-center {
   @apply flex justify-center items-center;
@@ -69,4 +81,16 @@
 }
 .border-bg {
   @apply border-0.2 border-custom border-opacity-10 bg-lt-primary shadow-3xl;
+}
+
+.place-item {
+  @apply flex flex-col justify-end items-start;
+}
+
+.label-text {
+  @apply text-lg font-bold font-quicksand;
+}
+
+.place-div {
+  @apply flex flex-col justify-center items-center
 }

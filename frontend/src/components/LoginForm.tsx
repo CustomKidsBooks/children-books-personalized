@@ -41,10 +41,10 @@ const LoginForm: React.FC<LoginFormProps> = ({
           </h1>
           <form onSubmit={formikSubmit} className="flex flex-col justify-center">
             <div className="flex flex-col gap-4">
-              <div className="flex flex-col justify-end items-start gap-px">
+              <div className="place-item gap-px">
                 <label
                   htmlFor="email"
-                  className="text-lg font-bold font-quicksand"
+                  className="label-text"
                 >
                   Email
                   <span className="asterisk">*</span>
@@ -61,10 +61,10 @@ const LoginForm: React.FC<LoginFormProps> = ({
                   <div className="asterisk">{errors.email}</div>
                 ) : null}
               </div>
-              <div className="flex flex-col justify-end items-start gap-px">
+              <div className="place-item gap-px">
                 <label
                   htmlFor="password"
-                  className="text-lg font-bold font-quicksand"
+                  className="label-text"
                 >
                   Password
                   <span className="asterisk">*</span>
@@ -86,13 +86,13 @@ const LoginForm: React.FC<LoginFormProps> = ({
               <input id="default-checkbox" type="checkbox" value="" className="w-4 h-4 rounded-md border-bg" />
               <label htmlFor="default-checkbox" className="ml-2 mr-4 font-medium text-black tracking-widest text-base">Remember me</label>
             </div>
-            <div className="flex flex-col justify-center items-center mt-8">
+            <div className="place-div mt-8">
               <LinkButton href="/" intent="pink" size="small" className="flex items-center justify-center w-full">
                 Login
               </LinkButton>
             </div>
           </form>
-          <div className="flex flex-col justify-center items-center text-base font-quicksand font-semibold">
+          <div className="place-div text-base font-quicksand font-semibold">
             <p>Doesn&apos;t have an account?{" "}
               <Link href="/signup" className="text-pink font-bold">
                 Sign in<span className="text-black">!</span>
