@@ -12,9 +12,10 @@ const useBook = () => {
   const [isError, setIsError] = useState<boolean>(false);
   const [bookContent, setBookContent] = useState<BookContentValues[]>([]);
 
-  let [pageNumber, setPageNumber] = useState(0);
-  let [image, setImage] = useState("");
-  let [paragraph, setParagraph] = useState("");
+  let [page, setPage] = useState(0);
+  let [pageNumber, setPageNumber] = useState(1);
+  let [image, setImage] = useState<String>("");
+  let [paragraph, setParagraph] = useState<String>("");
 
   useEffect(() => {
     axiosInstance
@@ -41,6 +42,8 @@ const useBook = () => {
     setParagraph,
     pageNumber,
     setPageNumber,
+    page,
+    setPage,
   };
 };
 

@@ -14,23 +14,27 @@ const Book = () => {
     setImage,
     paragraph,
     setParagraph,
+    page,
+    setPage,
   } = useBook();
 
   let totalPages = bookContent.length;
   const displayNextPage = () => {
-    if (pageNumber < totalPages - 1) {
-      setPageNumber(++pageNumber);
-      setImage(bookContent[pageNumber].image);
-      setParagraph(bookContent[pageNumber].paragraph);
-      console.log("current Page", pageNumber);
+    if (page < totalPages - 1) {
+      setPage(++page);
+      setPageNumber(pageNumber + 2);
+      setImage(bookContent[page].image);
+      setParagraph(bookContent[page].paragraph);
+      console.log("current Page", page);
     }
   };
   const displayPreviousPage = () => {
-    if (pageNumber > 0) {
-      setPageNumber(--pageNumber);
-      setImage(bookContent[pageNumber].image);
-      setParagraph(bookContent[pageNumber].paragraph);
-      console.log("current Page", pageNumber);
+    if (page > 0) {
+      setPage(--page);
+      setPageNumber(pageNumber - 2);
+      setImage(bookContent[page].image);
+      setParagraph(bookContent[page].paragraph);
+      console.log("current Page", page);
     }
   };
 
@@ -45,38 +49,35 @@ const Book = () => {
   return (
     <section className="my-10 py-10">
       <div className="flex justify-around items-center">
-        <div className="w-1/6 flex justify-center">
+        <div className="w-1/6 flex justify-center fill-amber-100">
           <Image
             src="/assets/backward-arrow.svg"
             alt="backward-arrow"
             width={25}
             height={10}
-            className="hover:cursor-pointer"
+            className="hover:cursor-pointer fill-amber-100"
             onClick={displayPreviousPage}
           />
         </div>
-        <div className="h-96 w-4/6 flex border rounded-lg overflow-hidden drop-shadow-xl">
-          <div
-            className="bg-cover bg-center bg-no-repeat w-3/4"
-            style={{
-              backgroundImage: `url(http://localhost:5001/${image})`,
-            }}
-          >
-            <div className="w-4/6 border-r-2 h-full drop-shadow-lg"></div>
+        <div className="h-96 w-4/6 flex rounded-lg overflow-hidden drop-shadow-xl before:content-[''] before:block before:absolute before:z-[10] before:top-0 before:bottom-0 before:inset-x-2/4 before:border">
+          <div className="w-3/4">
+            <div className="relative h-full w-full">
+              <img
+                src={`http://localhost:5001/${image}`}
+                alt=""
+                className="h-full w-full"
+              />
+              <p className="absolute bottom-3 left-5 font-bold">{pageNumber}</p>
+            </div>
           </div>
-
-          {/* <img
-            src={`http://localhost:5001/${image}`}
-            alt=""
-            className="w-3/4"
-          /> */}
-          <div className="w-1/4 bg-yellow-200 flex items-center font-quicksand font-semibold">
-            <p className="m-2 leading-10 text-2xl tracking-widest">
+          <div className="w-1/4 bg-yellow-200 relative flex items-center font-quicksand font-semibold">
+            <p className="m-4 leading-10 text-xl tracking-widest">
               {paragraph}
             </p>
+            <div className="absolute bottom-3 right-5">{pageNumber + 1}</div>
           </div>
         </div>
-        <div className="w-1/6 flex justify-center">
+        <div className="w-1/6 flex justify-center text-green-500">
           <Image
             src="/assets/forward-arrow.svg"
             alt="forward-arrow"
