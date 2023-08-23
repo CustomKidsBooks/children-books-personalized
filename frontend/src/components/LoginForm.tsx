@@ -31,6 +31,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
       handleSubmit(values);
     },
   });
+  //TODO comment: add functionalities to the login form once the login API is done
 
   return (
     <>
@@ -86,13 +87,13 @@ const LoginForm: React.FC<LoginFormProps> = ({
               <input id="default-checkbox" type="checkbox" value="" className="w-4 h-4 rounded-md border-bg" />
               <label htmlFor="default-checkbox" className="ml-2 mr-4 font-medium text-black tracking-widest text-base">Remember me</label>
             </div>
-            <div className="place-div mt-8">
+            <div className="flex-center mt-8">
               <LinkButton href="/" intent="pink" size="small" className="flex items-center justify-center w-full">
                 Login
               </LinkButton>
             </div>
           </form>
-          <div className="place-div text-base font-quicksand font-semibold">
+          <div className="flex-center text-base font-quicksand font-semibold">
             <p>Doesn&apos;t have an account?{" "}
               <Link href="/signup" className="text-pink font-bold">
                 Sign in<span className="text-black">!</span>

@@ -90,7 +90,3 @@
 .label-text {
   @apply text-lg font-bold font-quicksand;
 }
-
-.place-div {
-  @apply flex flex-col justify-center items-center
-}

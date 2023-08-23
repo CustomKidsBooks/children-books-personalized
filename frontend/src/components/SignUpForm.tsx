@@ -32,6 +32,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
       handleSubmit(values);
     },
   });
+  //TODO comment: add functionalities to the signup form once the signup API is done
 
   return (
     <>
@@ -101,13 +102,13 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
                   <div className="asterisk">{errors.password}</div>
                 ) : null}
               </div>   
-            <div className="place-div mt-4">
+            <div className="flex-center mt-4">
               <LinkButton href="/" intent="pink" size="small">
                 Create my account
               </LinkButton>
             </div>
           </form>
-          <div className="place-div text-base font-quicksand font-semibold">
+          <div className="flex-center text-base font-quicksand font-semibold">
             <p>Already have an account?{" "}
               <Link href="/login" className="text-pink font-bold">
                 Login<span className="text-black">!</span>
