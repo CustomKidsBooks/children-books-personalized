@@ -25,7 +25,6 @@ const Book = () => {
       setPageNumber(pageNumber + 2);
       setImage(bookContent[page].image);
       setParagraph(bookContent[page].paragraph);
-      console.log("current Page", page);
     }
   };
   const displayPreviousPage = () => {
@@ -34,7 +33,6 @@ const Book = () => {
       setPageNumber(pageNumber - 2);
       setImage(bookContent[page].image);
       setParagraph(bookContent[page].paragraph);
-      console.log("current Page", page);
     }
   };
 
