@@ -5,8 +5,11 @@ import Tag from "@components/Tag";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
+import { ChangeEvent, useState } from "react";
 
 const UserLibrary = () => {
+  const [search, setSearch] = useState("");
+
   const tag: string[] = [
     "family",
     "divorce",
@@ -35,16 +38,19 @@ const UserLibrary = () => {
           <input
             type="text"
             placeholder="Search here"
+            value={search}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              setSearch(e.target.value.toLocaleLowerCase())
+            }
             className="w-full focus:outline-none focus:ring focus:border-pink-300"
           />
           <FontAwesomeIcon
             icon={faMagnifyingGlass}
             className="text-pink ms-3"
-            onClick={() => alert("clicked")}
           />
         </div>
       </div>
-      <LibraryCard />
+      <LibraryCard search={search} />
     </section>
   );
 };
