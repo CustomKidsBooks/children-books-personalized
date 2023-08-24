@@ -1,6 +1,6 @@
 import { Express } from "express";
 import { BookController } from "./controller/book.controller";
-import { UserController } from "./controller/user.controller"; // Import your UserController
+import { UserController } from "./controller/user.controller";
 
 export default function (app: Express) {
   /*
@@ -12,7 +12,7 @@ export default function (app: Express) {
   "password": "password"
 }' http://localhost:5001/api/create_user
 */
-  app.post("/api/create_user", UserController.createUser); // Use the createUser function from UserController
+  app.post("/api/create_user", UserController.createUser);
 
   // Fetch pages for the current clicked book route
   //curl http://localhost:5001/books/12/pages
@@ -57,7 +57,7 @@ curl -X PUT http://localhost:5001/api/books/2 -H "Content-Type: application/json
 
   // Handling DELETE request to delete a book
   // DELETE /api/books/:id
-  //curl -X DELETE http://localhost:5001/api/books/7
+  //curl -X DELETE http://localhost:5001/api/books/1
   app.delete("/api/books/:id", BookController.deleteBookHandler);
 
   // Handling DELETE request to delete a specific page

@@ -6,13 +6,7 @@ export class User extends BaseEntity {
   id!: number;
 
   @Column({ type: "varchar", length: 50 })
-  firstName!: string;
-
-  @Column({ type: "varchar", length: 50 })
-  lastName!: string;
-
-  @Column({ type: "date" })
-  dob!: Date;
+  name!: string;
 
   @Column({ type: "varchar", length: 100, unique: true })
   email!: string;

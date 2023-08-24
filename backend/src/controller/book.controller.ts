@@ -49,7 +49,6 @@ export const BookController = {
         newBook = bookRepository.create({
           userId,
           title,
-          age,
           subject,
           charName,
           charDesc,

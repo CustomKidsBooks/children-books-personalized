@@ -13,9 +13,6 @@ export class Book {
   title!: string;
 
   @Column()
-  age!: string;
-
-  @Column()
   subject!: string;
 
   @Column({ nullable: true })
