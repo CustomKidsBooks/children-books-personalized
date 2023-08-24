@@ -34,7 +34,7 @@ const UserLibrary = () => {
       </div>
       <div className="p-10 md:flex justify-between items-center grid gap-3">
         <Tag tag={tag} />
-        <div className="flex place-items-center shadow-3xl px-2 py-4 md:w-[479px]">
+        <div className="flex place-items-center shadow-3xl px-2 md:w-[479px]">
           <input
             type="text"
             placeholder="Search here"
@@ -42,7 +42,7 @@ const UserLibrary = () => {
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               setSearch(e.target.value.toLocaleLowerCase())
             }
-            className="w-full focus:outline-none focus:ring focus:border-pink-300"
+            className="w-full text font-bold tracking-widest p-2 focus:outline-none focus:ring focus:border-pink-300"
           />
           <FontAwesomeIcon
             icon={faMagnifyingGlass}
