@@ -1,3 +1,5 @@
+"use client";
+
 import { faChildReaching } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
@@ -25,7 +27,7 @@ const LibraryCard = () => {
               <Image
                 src={
                   book.image
-                    ? `/assets/images/shark.jpg`
+                    ? `/assets/images/family.jpg`
                     : "/assets/images/family.jpg"
                 }
                 alt="book_cover"
