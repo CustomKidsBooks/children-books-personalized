@@ -239,23 +239,21 @@ const StoryForm: React.FC<StoryFormProps> = ({
                       </div>
                     ))}
                   </div>
-                  <div className="flex flex-col text-sm">
-                    <div className="md:flex items-center justify-between px-1">
-                      <label
-                        htmlFor="lesson"
-                        className="label-input font-bold"
-                      >
-                        Lesson
-                      </label>
-                      <ReusableInput
-                        id="lesson"
-                        name="lesson"
-                        type="text"
-                        value={values.lesson}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                      />
-                    </div>
+                  <div className="md:flex items-center justify-between">
+                    <label
+                      htmlFor="lesson"
+                      className="label-input font-bold"
+                    >
+                      Lesson
+                    </label>
+                    <ReusableInput
+                      id="lesson"
+                      name="lesson"
+                      type="text"
+                      value={values.lesson}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                    />
                     {touched.lesson && errors.lesson ? (
                       <div>{errors.lesson}</div>
                     ) : null}

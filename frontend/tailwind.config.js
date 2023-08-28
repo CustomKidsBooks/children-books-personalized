@@ -16,6 +16,7 @@ module.exports = {
         pink: "#F54298",
         "pink-300": "#F06292",
         "pink-700": "#be185d",
+        "pink-deep": "#FF449F",
         "pine-green": "#00695E",
         "regal-blue": "#004069",
         "light-primary": "var(--background-light-primary, #FFF);",
@@ -61,6 +62,16 @@ module.exports = {
       },
       backgroundColor: {
         'kid-opacity': 'rgba(255, 255, 255, 0.80)',
+        'lt-primary': 'var(--background-light-primary, #FFF)',
+      },
+      borderWidth: {
+        '0.2': '0.2px',
+      },
+      borderColor: {
+        'custom': 'rgba(0, 0, 0, 0.10)',
+      },
+      opacity: {
+        '10': '0.1',
       },
       backgroundImage: {
         "gradient-radial":
@@ -91,6 +102,12 @@ module.exports = {
           fontWeight: "500px",
           lineHeight: "normal",
           letterSpacing: "0.393px",
+        },
+        ".form-card": {
+          width: "420px",
+          height: "600px",
+          padding: "48px 64px 68px 64px",
+          gap: "10px",  
         },
       });
     }),
