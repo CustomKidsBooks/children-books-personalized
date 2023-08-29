@@ -7,9 +7,9 @@ interface BookContentValues {
   paragraph: string;
 }
 
-// TODO: update API to insert dynamic bookID.
+// TODO: update API to insert dynamic bookID. update function name to useBookPage
 
-const useBook = () => {
+const useBookPages = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
   const [bookContent, setBookContent] = useState<BookContentValues[]>([]);
@@ -49,4 +49,4 @@ const useBook = () => {
   };
 };
 
-export default useBook;
+export default useBookPages;

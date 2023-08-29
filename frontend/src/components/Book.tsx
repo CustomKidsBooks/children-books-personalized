@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import useBook from "./hooks/useBook";
+import useBookPages from "./hooks/useBookPages";
 
 const Book = () => {
   let {
@@ -16,7 +16,7 @@ const Book = () => {
     setParagraph,
     page,
     setPage,
-  } = useBook();
+  } = useBookPages();
 
   let totalPages = bookContent.length;
   const displayNextPage = () => {
