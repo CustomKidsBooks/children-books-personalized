@@ -1,25 +1,32 @@
-import { Express, Request, Response } from "express";
-import {
-  createBookHandler,
-  fetchBooksHandler,
-  deleteBookHandler,
-  fetchPagesForBookHandler,
-} from "./controller/book.controller";
+import { Express } from "express";
+import { BookController } from "./controller/book.controller";
+import { UserController } from "./controller/user.controller";
 
 export default function (app: Express) {
-  app.get("/api/books/:bookId/pages", fetchPagesForBookHandler);
+  // create user
+  app.post("/api/create_user", UserController.createUser);
 
-  app.post("/api/create_book", (req: Request, res: Response) => {
-    const { title, desc, author, page, image } = req.body;
-    createBookHandler(title, desc, author, page, image);
-    res.sendStatus(201);
-  });
+  // Fetch pages for the current clicked book route
+  app.get("/api/books/:bookId/pages", BookController.fetchPagesForBook);
 
-  app.get("/api/books", fetchBooksHandler);
+  // Handling POST request to create a new book
+  app.post("/api/create_book", BookController.createBook);
 
-  app.delete("/api/books/:id", (req: Request, res: Response) => {
-    const { id } = req.params;
-    deleteBookHandler(Number(id));
-    res.sendStatus(204);
-  });
+  // Handling GET request to fetch all books
+  app.get("/api/books", BookController.fetchBooks);
+
+  // Handling GET request to fetch a book with it's related pages
+  app.get("/api/book/:id", BookController.fetchCoverAndPagesById);
+
+  // Handling PUT request to update a book Cover details
+  app.put("/api/books/:id", BookController.updateBookHandler);
+
+  // Define a route to update a specific page by ID
+  app.put("/api/pages/:id", BookController.updatePageHandler);
+
+  // Handling DELETE request to delete a book
+  app.delete("/api/books/:id", BookController.deleteBookHandler);
+
+  // Handling DELETE request to delete a specific page
+  app.delete("/api/pages/:pageId", BookController.deletePageHandler);
 }

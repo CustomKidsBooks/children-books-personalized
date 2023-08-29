@@ -3,23 +3,33 @@
 import { LinkButton } from "@ui/LinkButton";
 import Image from "next/image";
 import StartStep from "./StartStep";
+import LibraryCard from "@components/Library/LibraryCard";
+import { useState } from "react";
+import UserProfile from "./UserProfile";
+import LoginForm from "./LoginForm";
 
 const LandingPage = () => {
+  const [isLogin, setIsLogin] = useState<boolean>(true);
+  
+  if (isLogin) {
+    return <UserProfile />;
+  }
+
   return (
     <>
       <section className="h-96 flex bg-teal">
-        <div className="flex-col relative">
-          <div className="h-40 py-10 ps-10">
-            <h1 className="text-4xl md:text-5xl font-satoshi tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose">
+        <div className="flex-col relative ps-20">
+          <div className="h-40 py-10">
+            <h1 className="text-4xl md:text-5xl font-quicksand tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose">
               Unleashing{" "}
-              <span className="font-normal font-inter text-pink font_feature">
+              <span className="font-normal font-pacifico text-pink font_feature">
                 Love{" "}
               </span>
               Through Stories <br className="lg:block hidden" />
               <span className="font-bold text-4xl ">For kids, by you!</span>
             </h1>
           </div>
-          <div className="absolute bottom-20 left-10 shadow-lg">
+          <div className="absolute bottom-20 left-20">
             <LinkButton href="/create-story" intent="pink" size="large">
               Start!
             </LinkButton>
@@ -34,7 +44,7 @@ const LandingPage = () => {
           />
         </div>
       </section>
-      <section className="p-10 h-[800px]">
+      <section className="p-10 h-auto">
         <div className="relative shrink">
           <Image
             src="/assets/library.jpg"
@@ -42,10 +52,11 @@ const LandingPage = () => {
             width={247}
             height={126}
           />
-          <h1 className="absolute top-1/3 md:text-4xl text-3xl font-satoshi font-medium mx-16">
+          <h1 className="absolute top-1/4 md:text-4xl text-3xl font-quicksand font-medium mx-16">
             Library
           </h1>
         </div>
+        <LibraryCard />
       </section>
       <section className="p-10 lg:h-[600px] sm:h-auto">
         <div className="relative shrink">

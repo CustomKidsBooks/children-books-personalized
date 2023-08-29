@@ -8,7 +8,7 @@ const HeadingVariants = cva(
     "text-5xl",
     "leading-[1.15]",
     "text-black",
-    "font-sans-serif",
+    "font-quicksand",
   ],
   {
     variants: {
