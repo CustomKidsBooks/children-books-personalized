@@ -9,7 +9,7 @@ import UserProfile from "./UserProfile";
 import LoginForm from "./LoginForm";
 
 const LandingPage = () => {
-  const [isLogin, setIsLogin] = useState<boolean>(true);
+  const [isLogin, setIsLogin] = useState<boolean>(false);
   
   if (isLogin) {
     return <UserProfile />;
@@ -73,6 +73,7 @@ const LandingPage = () => {
           </div>
         </div>
         <StartStep />
+        {isLogin && <div className="absolute inset-0 bg-black bg-opacity-50 z-10"></div>}
       </section>
     </>
   );
