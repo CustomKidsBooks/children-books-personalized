@@ -22,6 +22,11 @@ export const BookController = {
   /** ======== Create a Book ======== **/
 
   createBook: async (req: Request, res: Response) => {
+    const characters = [
+      { name: "1", description: "for character 1" },
+      { name: "2", description: "for character 2" },
+    ];
+
     const {
       userId,
       title,
@@ -38,8 +43,18 @@ export const BookController = {
     try {
       const bookRepository = AppDataSource.getRepository(Book);
 
-      const imageDesc = `for a story book for kids age ${age} about ${subject} the character can be ${charName} and character description ${charDesc}`;
+      let imageDesc = `for a story book for kids age ${age}`;
+      imageDesc += subject ? ` about ${subject}` : "";
+      if (characters.length > 0) {
+        characters.forEach((character) => {
+          imageDesc += `, ${character.name}: ${character.description}`;
+        });
+      }
       const imageUrl = await generateImage(imageDesc);
+
+      const tagDesc = `create three tags based on information below ${imageDesc}`;
+      const tags = await generateBookText(tagDesc);
+      // 1. Honey Bee Adventure  2. Sweet Honey Production  3. Young Bee's Journey
 
       // Check if imageUrl is not undefined before proceeding
       if (imageUrl) {
@@ -55,12 +70,24 @@ export const BookController = {
           lesson,
           page,
           privacy,
+          tag: tags,
           image: localImagePath,
         });
 
         await bookRepository.save(newBook);
 
-        const desc = `create a ${page} page story book 1 paragraph per pagefor kids age ${age} about ${subject}`;
+        let desc = `create a ${page} page story book with ${age}-year-old readers`;
+
+        desc += subject ? ` about ${subject}` : "";
+
+        if (characters.length > 0) {
+          characters.forEach((character) => {
+            desc += `, ${character.name}: ${character.description}`;
+          });
+        }
+
+        desc += lesson ? ` with a lesson: ${lesson}` : "";
+
         // Generate book content using OpenAI
         const bookContent = await generateBookText(desc);
 
@@ -73,7 +100,6 @@ export const BookController = {
       } else {
         log.error("Error: Image URL is missing.");
       }
-
       if (newBook) {
         return res.status(201).json({
           success: 1,

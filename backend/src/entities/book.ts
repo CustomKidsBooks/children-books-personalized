@@ -24,6 +24,9 @@ export class Book {
   @Column({ nullable: true })
   lesson!: string;
 
+  @Column()
+  tag!: string;
+
   @Column({ nullable: true, type: "double", default: null })
   page!: number | null;
 
