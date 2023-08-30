@@ -2,8 +2,9 @@ import { faChildReaching } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Tag from "../Tag";
-import LibrarySkeleton from "./LibrarySkeleton";
+import LibrarySkeleton from "./LibraryCard.skeleton";
 import useLibraryCard from "./hooks/useLibraryCard";
+import LoadindSpinner from "@components/ui/LoadindSpinner";
 
 const LibraryCard = () => {
   const { isLoading, isError, bookData } = useLibraryCard();
