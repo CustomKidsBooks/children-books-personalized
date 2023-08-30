@@ -76,7 +76,7 @@ export const BookController = {
 
         await bookRepository.save(newBook);
 
-        let desc = `create a ${page} page story book with ${age}-year-old readers`;
+        let desc = `create a ${page} page story book with ${age}-year-old readers, with one paragraph per page`;
 
         desc += subject ? ` about ${subject}` : "";
 
