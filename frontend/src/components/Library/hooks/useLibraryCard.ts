@@ -1,7 +1,7 @@
 import { axiosInstance } from "@services/api-client";
 import { useEffect, useState } from "react";
 
-interface BookValues {
+export interface BookValues {
   id: number;
   title: string;
   desc?: string;
