@@ -24,7 +24,7 @@ const LinkVariants = cva(
         teal: ["bg-teal", "border-gray-400", "hover:bg-teal-400"],
       },
       size: {
-        small: ["text-sm", "py-1", "px-2"],
+        small: ["text-xl", "py-3", "px-6", "w-full"],
         medium: ["text-base", "py-2", "px-4"],
         large: ["w-full", "text-2xl", "py-3", "px-10"],
       },
@@ -45,7 +45,7 @@ const LinkVariants = cva(
 
 export interface LinkButtonProps
   extends LinkProps,
-    VariantProps<typeof LinkVariants> {
+  VariantProps<typeof LinkVariants> {
   children: React.ReactNode;
   className?: string;
 }

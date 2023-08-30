@@ -41,7 +41,7 @@ const Draft = () => {
       <div className="sm:bg-flower bg-no-repeat bg-right bg-contain">
         <div className="w-4/6 my-10 mx-auto font-quicksand">
           <h2 className="text-xl">
-            <span className="font-semibold">Title :</span> {lastBook.title}{" "}
+            <span className="font-semibold">Title :</span> {lastBook.title}
           </h2>
           <h2 className="text-xl mt-3">
             <span className="font-semibold">Story :</span> {lastBook.desc}{" "}
