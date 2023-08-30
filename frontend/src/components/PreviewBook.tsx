@@ -14,7 +14,10 @@ interface PreviewBookValues {
 
 const PreviewBook = ({ id }: PreviewBookValues) => {
   const { bookData: book, isLoading, isError } = useBook(id);
+
+  // TODO: Remove tag const and retrive tags from database when API ready
   const tag = ["family", "love", "Divorce"];
+
   return (
     <section className="mt-10">
       <div className="p-2 mb-3 grid grid-cols-2 w-[506.622px]">

@@ -23,7 +23,7 @@ const LibraryCard = () => {
       <div className="place-items-center lg:grid lg:grid-cols-4 gap-4 flex overflow-x-auto">
         {bookData.map((book) => (
           <div
-            className="card snap-center"
+            className="card snap-center transition duration-300 ease-in-out hover:scale-110"
             key={book.id}
             onClick={() => router.push(`/preview-book/${book.id}`)}
           >
