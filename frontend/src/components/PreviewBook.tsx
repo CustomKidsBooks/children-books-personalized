@@ -1,12 +1,13 @@
 "use client";
 
-import Image from "next/image";
-import useBook from "./hooks/useBook";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChildReaching } from "@fortawesome/free-solid-svg-icons";
-import Tag from "./Tag";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Image from "next/image";
 import DownloadBook from "./DownloadBook";
 import SendBook from "./SendBook";
+import Tag from "./Tag";
+import useBook from "./hooks/useBook";
+import PreviewBookSkeleton from "./skeleton/PreviewBook.skeleton";
 
 interface PreviewBookValues {
   id: number;
@@ -17,6 +18,14 @@ const PreviewBook = ({ id }: PreviewBookValues) => {
 
   // TODO: Remove tag const and retrive tags from database when API ready
   const tag = ["family", "love", "Divorce"];
+
+  if (isLoading) {
+    return <PreviewBookSkeleton />;
+  }
+
+  if (isError) {
+    return "Error";
+  }
 
   return (
     <section className="mt-10">
