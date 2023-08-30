@@ -9,42 +9,60 @@ import UserProfile from "./UserProfile";
 import LoginForm from "./LoginForm";
 
 const LandingPage = () => {
-  const [isLogin, setIsLogin] = useState<boolean>(true);
-  
+  const [isLogin, setIsLogin] = useState<boolean>(false);
+
   if (isLogin) {
     return <UserProfile />;
   }
 
   return (
     <>
-      <section className="h-96 flex bg-teal">
-        <div className="flex-col relative ps-20">
-          <div className="h-40 py-10">
-            <h1 className="text-4xl md:text-5xl font-quicksand tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose">
-              Unleashing{" "}
-              <span className="font-normal font-pacifico text-pink font_feature">
-                Love{" "}
-              </span>
-              Through Stories <br className="lg:block hidden" />
-              <span className="font-bold text-4xl ">For kids, by you!</span>
-            </h1>
+      <section className="h-96 bg-teal">
+        <div className="w-5/6 mx-auto flex justify-between">
+          <div className="flex flex-col justify-evenly h-96">
+            <div className="">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-quicksand">
+                Unleashing{" "}
+                <div className="relative inline px-5">
+                  <span className=" relative z-10 font-normal font-pacifico text-pink font_feature">
+                    Love{" "}
+                  </span>
+                  <img
+                    src="assets/love_landing_page.png"
+                    alt=""
+                    width={300}
+                    className="absolute top-[-25px] right-0 z-0"
+                  />
+                </div>
+                Through Stories <br className="lg:block hidden" />
+                <span className="font-bold text-2xl md:text-3xl lg:text-4xl block mt-7">
+                  For kids, by you!
+                </span>
+              </h1>
+            </div>
+            <div className="flex sm:block">
+              <LinkButton
+                href="/create-story"
+                intent="pink"
+                size="large"
+                className="text-center"
+              >
+                Start!
+              </LinkButton>
+            </div>
           </div>
-          <div className="absolute bottom-20 left-20">
-            <LinkButton href="/create-story" intent="pink" size="large">
-              Start!
-            </LinkButton>
+          <div className="shrink hidden lg:block">
+            <Image
+              src="/assets/group18.svg"
+              alt="group18"
+              width={313}
+              height={388}
+            />
           </div>
-        </div>
-        <div className="ml-auto pe-20 shrink invisible lg:visible">
-          <Image
-            src="/assets/group18.svg"
-            alt="group18"
-            width={313}
-            height={388}
-          />
         </div>
       </section>
-      <section className="p-10 h-auto">
+
+      <section className="py-10 w-5/6 mx-auto h-auto">
         <div className="relative shrink">
           <Image
             src="/assets/library.jpg"
@@ -58,21 +76,23 @@ const LandingPage = () => {
         </div>
         <LibraryCard />
       </section>
-      <section className="p-10 lg:h-[600px] sm:h-auto">
-        <div className="relative shrink">
-          <div>
-            <Image
-              src="/assets/how-to-start.jpg"
-              alt="how-to-start"
-              width={300}
-              height={12.5}
-            />
-            <h1 className="absolute top-1/4 text-4xl font-satoshi font-medium mx-10 tracking-widest">
-              How to start?
-            </h1>
+      <section className="bg-ellipse-landing-page bg-no-repeat bg-right sm:bg-none">
+        <div className="py-10 w-5/6 mx-auto lg:h-[600px] sm:h-auto">
+          <div className="relative shrink">
+            <div>
+              <Image
+                src="/assets/how-to-start.jpg"
+                alt="how-to-start"
+                width={300}
+                height={12.5}
+              />
+              <h1 className="absolute top-1/4 text-4xl font-satoshi font-medium mx-10 tracking-widest">
+                How to start?
+              </h1>
+            </div>
           </div>
+          <StartStep />
         </div>
-        <StartStep />
       </section>
     </>
   );
