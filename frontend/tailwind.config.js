@@ -54,27 +54,27 @@ module.exports = {
           "0px 5px 5px 0px rgba(2, 3, 3, 0.04), 0px 3px 14px 0px rgba(2, 3, 3, 0.02), 0px 8px 10px 0px rgba(2, 3, 3, 0.03)",
       },
       height: {
-        "229": "229.978px",
-        "113.12": "113.12px",
+        229: "229.978px",
+        113.12: "113.12px",
       },
       width: {
-        "350": "350px",
+        350: "350px",
       },
       borderRadius: {
-        "1337.728": "1337.728px"
+        1337.728: "1337.728px",
       },
       backgroundColor: {
-        'kid-opacity': 'rgba(255, 255, 255, 0.80)',
-        'lt-primary': 'var(--background-light-primary, #FFF)',
+        "kid-opacity": "rgba(255, 255, 255, 0.80)",
+        "lt-primary": "var(--background-light-primary, #FFF)",
       },
       borderWidth: {
-        '0.2': '0.2px',
+        0.2: "0.2px",
       },
       borderColor: {
-        'custom': 'rgba(0, 0, 0, 0.10)',
+        custom: "rgba(0, 0, 0, 0.10)",
       },
       opacity: {
-        '10': '0.1',
+        10: "0.1",
       },
       backgroundImage: {
         "gradient-radial":
@@ -83,7 +83,8 @@ module.exports = {
         ellipse: "url(/assets/bg_ellipse.png)",
         flower: "url(/assets/bg_flower.png)",
         education: "url('/assets/education.svg')",
-        readingBook :"url('/assets/undraw_reading_book.svg')"
+        readingBook :"url('/assets/undraw_reading_book.svg')",
+        "ellipse-landing-page": "url('/assets/ellipse_landing_page.svg')",
       },
     },
   },
@@ -121,7 +122,7 @@ module.exports = {
           width: "420px",
           height: "600px",
           padding: "48px 64px 68px 64px",
-          gap: "10px",  
+          gap: "10px",
         },
       });
     }),
