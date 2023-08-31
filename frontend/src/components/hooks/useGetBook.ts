@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { BookValues } from "./useDraft";
 
 
-const useBook = (id: number) => {
+const useGetBook = (id: number) => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [isError, setIsError] = useState<boolean>(false);
     const [bookData, setBookData] = useState<BookValues>();
@@ -28,4 +28,4 @@ const useBook = (id: number) => {
 
 }
 
-export default useBook;
+export default useGetBook;

@@ -1,22 +1,25 @@
 "use client";
 
-import { faChildReaching } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
+import useGetBook from "./hooks/useGetBook";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChildReaching } from "@fortawesome/free-solid-svg-icons";
+import Tag from "./Tag";
 import DownloadBook from "./DownloadBook";
 import SendBook from "./SendBook";
-import Tag from "./Tag";
-import useBook from "./hooks/useBook";
+import LoadindSpinner from "./ui/LoadindSpinner";
 import PreviewBookSkeleton from "./skeleton/PreviewBook.skeleton";
 
 interface PreviewBookValues {
   id: number;
 }
 
-const PreviewBook = ({ id }: PreviewBookValues) => {
-  const { bookData: book, isLoading, isError } = useBook(id);
+// TODO: Remove tag const and retrive tags from database when API ready
+// TODO: Add functionality to the page
 
-  // TODO: Remove tag const and retrive tags from database when API ready
+const PreviewBook = ({ id }: PreviewBookValues) => {
+  const { bookData: book, isLoading, isError } = useGetBook(id);
+
   const tag = ["family", "love", "Divorce"];
 
   if (isLoading) {
@@ -40,7 +43,7 @@ const PreviewBook = ({ id }: PreviewBookValues) => {
         </div>
       </div>
       <Tag tag={tag} />
-      <div className="pt-10 grid grid-cols-2 gap-10 ">
+      <div className="pt-10 lg:grid lg:grid-cols-2 inline-grid lg:h-auto gap-10 place-content-evenly shrink">
         <div className="preview-card object-contain relative">
           <Image
             src={
@@ -53,7 +56,7 @@ const PreviewBook = ({ id }: PreviewBookValues) => {
           />
         </div>
         <div className="p-4">
-          <div className="flex flex-col w-52 gap-24">
+          <div className="flex lg:flex-col flex-row  gap-24 w-full">
             <DownloadBook />
             <SendBook />
           </div>
