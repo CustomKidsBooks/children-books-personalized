@@ -1,13 +1,25 @@
+"use client";
+
 import { faChildReaching } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Tag from "../Tag";
-import LibrarySkeleton from "./LibrarySkeleton";
-import useLibraryCard from "./hooks/useLibraryCard";
+import LibrarySkeleton from "./LibraryCard.skeleton";
+import useLibraryCard, { BookValues } from "./hooks/useLibraryCard";
 
-const LibraryCard = () => {
+interface LibraryValues {
+  search?: string;
+}
+
+const LibraryCard = ({ search }: LibraryValues) => {
   const { isLoading, isError, bookData } = useLibraryCard();
   let tag: string[] = ["family", "divorce", "love"];
+
+  const books: BookValues[] = search
+    ? bookData.filter((book) =>
+        book.title.toLowerCase().includes(search.trim())
+      )
+    : bookData;
 
   if (isLoading) {
     return <LibrarySkeleton />;
@@ -16,16 +28,17 @@ const LibraryCard = () => {
   if (isError) {
     return <div>Error...</div>;
   }
+
   return (
     <section className="py-10">
       <div className="place-items-center lg:grid lg:grid-cols-4 gap-4 flex overflow-x-auto">
-        {bookData.map((book) => (
+        {books.map((book) => (
           <div className="card snap-center" key={book.id}>
             <div className="object-contain h-[164px] w-[247.324px] relative">
               <Image
                 src={
                   book.image
-                    ? `/assets/images/shark.jpg`
+                    ? `/assets/images/family.jpg`
                     : "/assets/images/family.jpg"
                 }
                 alt="book_cover"

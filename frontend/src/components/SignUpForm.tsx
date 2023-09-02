@@ -1,16 +1,15 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useFormik } from "formik";
 import Link from "next/link";
 import { signUpValidationSchema } from "@utils/signUpValidation";
 import ReusableInput from "./ReusableInput";
 import { SignUpFormValues } from "@utils/interfaces";
 import { LinkButton } from "@ui/LinkButton";
-import Modal from "@components/Modal";
-import LoginForm from "@components/LoginForm";
+import { ModalContext } from "./ModalProvider";
 
 interface SignUpFormProps {
-  handleSubmit: (values: SignUpFormValues) => Promise<void>;
+  handleSubmit: (values: SignUpFormValues, formType: 'login' | 'signup') => Promise<void>;
 }
 
 const SignUpForm: React.FC<SignUpFormProps> = ({
@@ -31,16 +30,21 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
     },
     validationSchema: signUpValidationSchema,
     onSubmit: (values) => {
-      handleSubmit(values);
+      handleSubmit(values, 'signup');
     },
   });
   //TODO comment: add functionalities to the signup form once the signup API is done
+  const { openModal, closeModal, setToken } = useContext(ModalContext);
+  const [errorMessage, setErrorMessage] = useState("")
 
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-
-  const openLoginModal = () => {
-    setIsLoginModalOpen(true);
-  };
+  const handleSignIn = async () => {
+    if (!values.name || !values.email || !values.password) {
+      return setErrorMessage("Please fill all the fields");
+    }
+    setErrorMessage("");
+    closeModal('signUpModal');
+    setToken('xyz');
+  }
 
   return (
     <>
@@ -110,28 +114,25 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
                 <div className="asterisk">{errors.password}</div>
               ) : null}
             </div>
+            {errorMessage && (
+              <p className="place-item asterisk text-sm">{errorMessage}</p>
+            )}
             <div className="flex-center mt-4">
-              <LinkButton href="/" intent="pink" size="small">
+              <LinkButton href="/" onClick={handleSignIn} intent="pink" size="small">
                 Create my account
               </LinkButton>
             </div>
           </form>
           <div className="flex-center text-base font-quicksand font-semibold">
             <p>Already have an account?{" "}
-              <Link href="#" onClick={(e) => {
-              e.preventDefault();
-              openLoginModal();
-            }} className="text-pink font-bold">
+              <Link href="#" onClick={() => {
+                openModal('loginModal');
+              }} className="text-pink font-bold">
                 Login<span className="text-black">!</span>
               </Link></p>
           </div>
-        </div>
-      </div>
-      {isLoginModalOpen && (
-        <Modal isVisible={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)}>
-          <LoginForm handleSubmit={handleSubmit} />
-        </Modal>
-      )}
+        </div >
+      </div >
     </>
   );
 };

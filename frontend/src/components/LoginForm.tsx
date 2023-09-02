@@ -1,16 +1,15 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useFormik } from "formik";
 import Link from "next/link";
 import { loginValidationSchema } from "@utils/loginValidation";
 import ReusableInput from "./ReusableInput";
 import { LoginFormValues } from "@utils/interfaces";
 import { LinkButton } from "@ui/LinkButton";
-import Modal from "@components/Modal";
-import SignUpForm from "@components/SignUpForm";
+import { ModalContext } from "./ModalProvider";
 
 interface LoginFormProps {
-  handleSubmit: (values: LoginFormValues) => Promise<void>;
+  handleSubmit: (values: LoginFormValues, formType: 'login' | 'signup') => Promise<void>;
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({
@@ -30,16 +29,22 @@ const LoginForm: React.FC<LoginFormProps> = ({
     },
     validationSchema: loginValidationSchema,
     onSubmit: (values) => {
-      handleSubmit(values);
+      handleSubmit(values, 'login');
     },
   });
   //TODO comment: add functionalities to the login form once the login API is done
 
-  const [isSigUpModalOpen, setIsSignUpModalOpen] = useState(false);
+  const { openModal, closeModal, setToken } = useContext(ModalContext);
+  const [errorMessage, setErrorMessage] = useState("")
 
-  const openSignUpModal = () => {
-    setIsSignUpModalOpen(true);
-  };
+  const handleLogin = async () => {
+    if (!values.email || !values.password) {
+      return setErrorMessage("Please fill all the fields");
+    }
+    setErrorMessage("");
+    closeModal('loginModal');
+    setToken('xyz');
+  }
 
   return (
     <>
@@ -90,31 +95,31 @@ const LoginForm: React.FC<LoginFormProps> = ({
               ) : null}
             </div>
           </div>
+          {errorMessage && (
+            <p className="place-item asterisk text-sm">{errorMessage}</p>
+          )}{errorMessage && (
+            <p className="place-item asterisk text-sm">{errorMessage}</p>
+          )}
           <div className="flex items-center h-5">
             <input id="default-checkbox" type="checkbox" value="" className="w-4 h-4 rounded-md border-bg" />
             <label htmlFor="default-checkbox" className="ml-2 mr-4 font-medium text-black tracking-widest text-base">Remember me</label>
           </div>
           <div className="flex-center mt-8">
-            <LinkButton href="/" intent="pink" size="small" className="flex items-center justify-center w-full">
+            <LinkButton href="/" onClick={handleLogin} intent="pink" size="small" className="flex items-center justify-center w-full">
               Login
             </LinkButton>
           </div>
-        </form>
+        </form >
         <div className="flex-center text-base font-quicksand font-semibold">
           <p>Doesn&apos;t have an account?{" "}
-            <Link href="#" onClick={(e) => {
-              e.preventDefault();
-              openSignUpModal();
+            <Link href="#" onClick={() => {
+              openModal('signUpModal');
             }} className="text-pink font-bold">
               Sign in<span className="text-black">!</span>
-            </Link></p>
+            </Link>
+          </p>
         </div>
-      </div>
-      {isSigUpModalOpen && (
-        <Modal isVisible={isSigUpModalOpen} onClose={() => setIsSignUpModalOpen(false)}>
-          <SignUpForm handleSubmit={handleSubmit} />
-        </Modal>
-      )}
+      </div >
     </>
   );
 };
