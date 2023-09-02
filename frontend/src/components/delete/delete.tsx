@@ -1,17 +1,7 @@
 "use client";
 import React from 'react';
 import Modal from './delModal';
-
-interface DeleteModalProps {
-  onClose: () => void;
-  title: string;
-  text: string;
-  buttonText: string;
-  cancel?: boolean;
-  onConfirm: () => void;
-  height?: string;
-  isVisible: boolean;
-}
+import { DeleteModalProps } from "@utils/interfaces";
 
 const DeleteModal: React.FC<DeleteModalProps> = ({
   onClose,

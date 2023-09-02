@@ -1,7 +1,6 @@
 "use client";
 
 import React, { createContext, useState } from "react";
-import DeleteModal from "./delete/delete";
 
 export const ModalContext = createContext({
   showModal: {

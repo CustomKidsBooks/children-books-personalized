@@ -45,3 +45,30 @@ export interface ReusableInputProps {
   rows?: number;
   className?: string;
 }
+
+export interface ModalProps {
+  isVisible: boolean;
+  onClose: () => void;
+  children: React.ReactNode;
+}
+
+export interface DelModalProps {
+  title: string;
+  width?: string;
+  height?: string;
+  children: React.ReactNode;
+  extra?: React.ReactNode;
+  close?: () => void;
+  isVisible?: boolean;
+}
+
+export interface DeleteModalProps {
+  onClose: () => void;
+  title: string;
+  text: string;
+  buttonText: string;
+  cancel?: boolean;
+  onConfirm: () => void;
+  height?: string;
+  isVisible: boolean;
+}

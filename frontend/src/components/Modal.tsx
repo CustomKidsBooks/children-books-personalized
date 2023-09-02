@@ -1,10 +1,5 @@
 import React, { useState } from "react";
-
-interface ModalProps {
-  isVisible: boolean;
-  onClose: () => void;
-  children: React.ReactNode;
-}
+import { ModalProps } from "@utils/interfaces";
 
 const Modal: React.FC<ModalProps> = ({ isVisible, onClose, children }) => {
   if (!isVisible) return null;

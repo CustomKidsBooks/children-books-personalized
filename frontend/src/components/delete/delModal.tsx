@@ -1,16 +1,7 @@
 import React from "react";
+import { DelModalProps } from "@utils/interfaces";
 
-interface ModalProps {
-  title: string;
-  width?: string;
-  height?: string;
-  children: React.ReactNode;
-  extra?: React.ReactNode;
-  close?: () => void;
-  isVisible?: boolean;
-}
-
-const Modal: React.FC<ModalProps> = ({ title, width, height, children, extra, close, isVisible}) => {
+const Modal: React.FC<DelModalProps> = ({ title, width, height, children, extra, close, isVisible}) => {
   if (!isVisible) return null;
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-opacity-50 bg-teal z-50">
