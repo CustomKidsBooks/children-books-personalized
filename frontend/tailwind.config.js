@@ -22,7 +22,6 @@ module.exports = {
         "light-primary": "var(--background-light-primary, #FFF);",
       },
       fontFamily: {
-        satoshi: ["Quicksand", "Pacifico"],
         pacifico: ["Pacifico", "sans-serif"],
         quicksand: ["Quicksand", "sans-serif"],
       },

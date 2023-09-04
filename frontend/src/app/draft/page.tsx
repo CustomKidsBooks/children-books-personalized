@@ -5,6 +5,7 @@ import Link from "next/link";
 import { LinkButton } from "@ui/LinkButton";
 import useDraft from "@components/hooks/useDraft";
 import Book from "@components/Book";
+import { Button } from "@components/ui/Button";
 
 const Draft = () => {
   // TODO: update a hook API to get a single book once API is ready!.
@@ -61,32 +62,32 @@ const Draft = () => {
 
         <div className="w-4/6 mx-auto">
           <div className="flex flex-col md:flex-row md:space-x-10 md:justify-center">
-            <LinkButton
-              className="sm:w-3/4 text-center font-quicksand"
-              href="#"
+            <Button
+              className="sm:w-3/4 text-center"
               intent="teal"
               size="medium"
+              onClick={() => {}}
             >
               Edit Paragraph
-            </LinkButton>
-            <LinkButton
-              className="sm:w-3/4 text-center mt-3 md:mt-0 font-quicksand"
-              href="#"
+            </Button>
+            <Button
+              className="sm:w-3/4 text-center mt-3 md:mt-0"
               intent="teal"
               size="medium"
+              onClick={() => {}}
             >
               Edit Image
-            </LinkButton>
+            </Button>
           </div>
           <div className="mt-7 md:mt-5 flex flex-col md:flex-row md:space-x-10 md:justify-center">
-            <LinkButton
-              className="sm:w-3/4 md:w-2/4 text-center capitalize font-quicksand"
-              href="#"
+            <Button
+              className="sm:w-3/4 md:w-2/4 text-center capitalize"
               intent="pink"
               size="medium"
+              onClick={() => {}}
             >
               Done
-            </LinkButton>
+            </Button>
           </div>
           <div className="mt-5 sm:w-3/4 md:w-full text-center font-quicksand">
             <Link

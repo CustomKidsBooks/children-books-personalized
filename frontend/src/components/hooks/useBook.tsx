@@ -7,9 +7,19 @@ interface BookContentValues {
   paragraph: string;
 }
 
+interface GetBookValues {
+  isLoading: boolean;
+  isError: boolean;
+  image: String;
+  paragraph: String;
+  pageNumber: number;
+  displayNextPage: () => void;
+  displayPreviousPage: () => void;
+}
+
 // TODO: update API to insert dynamic bookID.
 
-const useBook = () => {
+const useBook = (): GetBookValues => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
   const [bookContent, setBookContent] = useState<BookContentValues[]>([]);
@@ -21,7 +31,7 @@ const useBook = () => {
 
   useEffect(() => {
     axiosInstance
-      .get("/api/books/17/pages")
+      .get("/api/books/4/pages")
       .then((res) => {
         setBookContent(res.data);
         setImage(res.data[0].image);
@@ -34,18 +44,34 @@ const useBook = () => {
       .finally(() => setIsLoading(false));
   }, []);
 
+  const totalPages = bookContent.length;
+
+  const displayNextPage = () => {
+    if (page < totalPages - 1) {
+      setPage(++page);
+      setPageNumber(pageNumber + 2);
+      setImage(bookContent[page].image);
+      setParagraph(bookContent[page].paragraph);
+    }
+  };
+
+  const displayPreviousPage = () => {
+    if (page > 0) {
+      setPage(--page);
+      setPageNumber(pageNumber - 2);
+      setImage(bookContent[page].image);
+      setParagraph(bookContent[page].paragraph);
+    }
+  };
+
   return {
     isLoading,
     isError,
-    bookContent,
     image,
-    setImage,
     paragraph,
-    setParagraph,
     pageNumber,
-    setPageNumber,
-    page,
-    setPage,
+    displayNextPage,
+    displayPreviousPage,
   };
 };
 

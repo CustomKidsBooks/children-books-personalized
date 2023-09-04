@@ -2,39 +2,18 @@
 
 import Image from "next/image";
 import useBook from "./hooks/useBook";
+import Link from "next/link";
 
 const Book = () => {
   let {
-    isError,
     isLoading,
-    bookContent,
-    pageNumber,
-    setPageNumber,
+    isError,
     image,
-    setImage,
     paragraph,
-    setParagraph,
-    page,
-    setPage,
+    pageNumber,
+    displayNextPage,
+    displayPreviousPage,
   } = useBook();
-
-  let totalPages = bookContent.length;
-  const displayNextPage = () => {
-    if (page < totalPages - 1) {
-      setPage(++page);
-      setPageNumber(pageNumber + 2);
-      setImage(bookContent[page].image);
-      setParagraph(bookContent[page].paragraph);
-    }
-  };
-  const displayPreviousPage = () => {
-    if (page > 0) {
-      setPage(--page);
-      setPageNumber(pageNumber - 2);
-      setImage(bookContent[page].image);
-      setParagraph(bookContent[page].paragraph);
-    }
-  };
 
   if (isLoading) {
     return <p>Loading...</p>;
