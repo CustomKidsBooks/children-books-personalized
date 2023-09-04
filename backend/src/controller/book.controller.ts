@@ -22,34 +22,29 @@ export const BookController = {
   /** ======== Create a Book ======== **/
 
   createBook: async (req: Request, res: Response) => {
-    const characters = [
-      { name: "1", description: "for character 1" },
-      { name: "2", description: "for character 2" },
-    ];
-
-    const {
-      userId,
-      title,
-      age,
-      subject,
-      charName,
-      charDesc,
-      lesson,
-      page,
-      privacy,
-    } = req.body;
+    const { userId, title, age, subject, characters, lesson, page, privacy } =
+      req.body;
     let newBook: Book | undefined;
 
     try {
       const bookRepository = AppDataSource.getRepository(Book);
 
-      let imageDesc = `for a story book for kids age ${age}`;
+      // Query to call OpenAi api to create book cover
+      let imageDesc = `for a story book "${title}" for kids age ${age}`;
       imageDesc += subject ? ` about ${subject}` : "";
+
+      let charactersInfo = ""; // Initialize an empty string to store character information
+
       if (characters.length > 0) {
-        characters.forEach((character) => {
-          imageDesc += `, ${character.name}: ${character.description}`;
-        });
+        characters.forEach(
+          (character: { name: string; description: string }) => {
+            charactersInfo += `, ${character.name}: ${character.description}`;
+          }
+        );
       }
+
+      imageDesc += charactersInfo; // Append the characters' information to the main description
+
       const imageUrl = await generateImage(imageDesc);
 
       const tagDesc = `create three tags based on information below ${imageDesc}`;
@@ -65,8 +60,7 @@ export const BookController = {
           userId,
           title,
           subject,
-          charName,
-          charDesc,
+          characters: charactersInfo,
           lesson,
           page,
           privacy,
@@ -76,14 +70,16 @@ export const BookController = {
 
         await bookRepository.save(newBook);
 
-        let desc = `create a ${page} page story book with ${age}-year-old readers, with one paragraph per page`;
-
+        //Query to create the requested book content
+        let desc = `create a ${page} page story book titled "${title}" with ${age}-year-old readers, with one paragraph per page`;
         desc += subject ? ` about ${subject}` : "";
 
         if (characters.length > 0) {
-          characters.forEach((character) => {
-            desc += `, ${character.name}: ${character.description}`;
-          });
+          characters.forEach(
+            (character: { name: string; description: string }) => {
+              desc += `, ${character.name}: ${character.description}`;
+            }
+          );
         }
 
         desc += lesson ? ` with a lesson: ${lesson}` : "";
@@ -232,8 +228,6 @@ export const BookController = {
       // Update book fields
       book.title = title;
       book.subject = subject;
-      book.charDesc = charDesc;
-      book.charName = charName;
       book.lesson = lesson;
       book.privacy = privacy;
 
