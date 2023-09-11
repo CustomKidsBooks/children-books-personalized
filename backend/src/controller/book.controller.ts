@@ -150,6 +150,8 @@ export const BookController = {
       const pages = await pageRepository.find({
         where: { book: { id: bookId } },
       });
+      console.log('pages', pages);
+      
       res.json(pages);
     } catch (error) {
       log.error("Error retrieving pages for the book:", error);
@@ -200,7 +202,7 @@ export const BookController = {
         fs.writeFileSync(newImagePath, image, "base64");
 
         // Update the book's image field with the new image path
-        book.image = newImagePath;
+        book.image = `images/page/${newImageName}`;
       }
 
       // Update book fields
@@ -228,7 +230,7 @@ export const BookController = {
   /** ======== Update Specific page ======== **/
 
   updatePageHandler: async (req: Request, res: Response) => {
-    const pageId = parseInt(req.params.pageId);
+    const pageId = parseInt(req.params.pageId);    
     const { paragraph, image } = req.body;
 
     try {
@@ -262,17 +264,21 @@ export const BookController = {
           `../../images/page/${newImageName}`
         );
 
+
         // Save the image file
         fs.writeFileSync(newImagePath, image, "base64");
 
         // Update the image path in the database
-        page.image = newImageName;
+        page.image = newImagePath;
       }
 
       // Update page content
       if (paragraph) {
         page.paragraph = paragraph;
       }
+
+      console.log('save page', page);
+      
 
       // Save changes
       await pageRepository.save(page);

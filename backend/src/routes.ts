@@ -22,7 +22,7 @@ export default function (app: Express) {
   app.put("/api/books/:id", BookController.updateBookHandler);
 
   // Define a route to update a specific page by ID
-  app.put("/api/pages/:id", BookController.updatePageHandler);
+  app.put("/api/pages/:pageId", BookController.updatePageHandler);
 
   // Handling DELETE request to delete a book
   app.delete("/api/books/:id", BookController.deleteBookHandler);
