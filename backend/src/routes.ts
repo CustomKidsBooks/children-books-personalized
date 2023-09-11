@@ -11,7 +11,6 @@ export default function (app: Express) {
 
   // Handling POST request to create a new book
   app.post("/api/create_book", BookController.createBook);
-
   // Handling GET request to fetch all books
   app.get("/api/books", BookController.fetchBooks);
 

@@ -15,14 +15,14 @@ export class Book {
   @Column()
   subject!: string;
 
-  @Column({ nullable: true })
-  charName!: string;
-
-  @Column({ nullable: true })
-  charDesc!: string;
+  @Column({ nullable: true, length: 500 })
+  characters!: string;
 
   @Column({ nullable: true })
   lesson!: string;
+
+  @Column()
+  tag!: string;
 
   @Column({ nullable: true, type: "double", default: null })
   page!: number | null;

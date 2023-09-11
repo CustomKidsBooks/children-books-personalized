@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRef } from "react";
 import useBook from "./hooks/useBook";
 import { Button } from "./ui/Button";
+import useGetBookPages from "./hooks/useGetBookPages";
 
 const Book = () => {
   let {
