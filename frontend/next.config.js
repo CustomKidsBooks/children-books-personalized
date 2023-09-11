@@ -2,15 +2,11 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "api.slingacademy.com",
-        port: "",
-        pathname: "/public/sample-photos/**",
-      },
-    ],
+    domains: ['127.0.0.1']
   },
 };
 
 module.exports = nextConfig;
+
+
+//http://localhost:5001/

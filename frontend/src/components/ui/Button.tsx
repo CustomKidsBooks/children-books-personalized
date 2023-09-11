@@ -2,23 +2,22 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { ButtonHTMLAttributes } from "react";
 import { twMerge } from "tailwind-merge";
 
-const ButttonVariants = cva(["font-semibold", "p-4", "border", "rounded", "font-quicksand", "tracking-widest", "shadow-3xl",
-  "gap-2"],
+const ButttonVariants = cva(
+  [
+    "font-semibold",
+    "p-4",
+    "border",
+    "rounded",
+    "font-quicksand",
+    "tracking-widest",
+    "shadow-3xl",
+    "gap-2",
+  ],
   {
     variants: {
       intent: {
-        primary: [
-          "bg-blue-500",
-          "text-white",
-          "border-transparent",
-          "hover:bg-blue-600",
-        ],
-        secondary: [
-          "bg-white",
-          "text-gray-800",
-          "border-gray-400",
-          "hover:bg-gray-100",
-        ],
+        primary: ["bg-teal", "text-black", "hover:bg-teal-400"],
+        secondary: ["bg-bright-turquoise", "text-black", "hover:bg-teal-400"],
         pink: [
           "bg-pink",
           "text-white",
@@ -44,11 +43,12 @@ const ButttonVariants = cva(["font-semibold", "p-4", "border", "rounded", "font-
       intent: "primary",
       size: "medium",
     },
-  });
+  }
+);
 
 export interface ButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement>,
-  VariantProps<typeof ButttonVariants> { }
+    VariantProps<typeof ButttonVariants> {}
 
 export const Button: React.FC<ButtonProps> = ({
   className,

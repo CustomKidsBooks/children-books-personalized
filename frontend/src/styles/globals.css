@@ -35,6 +35,16 @@
   border: 1px solid rgb(203 213 225);
 }
 
+@media only screen and (min-width: 922px) {
+  .bg-reading-book {
+    flex-shrink: 0;
+    background-image: theme("backgroundImage.readingBook");
+    background-blend-mode: overlay;
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+}
+
 .app {
   @apply relative z-10 flex justify-center items-center flex-col max-w-7xl mx-auto sm:px-16 px-6;
 }
