@@ -89,15 +89,11 @@ const StoryForm: React.FC<StoryFormProps> = ({
         <div className="grid sm:grid-cols-1 lg:grid-cols-12 gap-x-8">
           <div className="col-span-7">
             <div className="bg-kid h-229 background"></div>
-            <div className="inline-flex pt-3 pr-4 pb-px pl-3 flex-col justify-end items-start bg-education h-113.12 background">
-            </div>
+            <div className="inline-flex pt-3 pr-4 pb-px pl-3 flex-col justify-end items-start bg-education h-113.12 background"></div>
             <div className="px-10 flex flex-col -mt-28 lg:-mt-0">
               <form onSubmit={formikSubmit}>
                 <div className="md:flex items-center justify-between">
-                  <label
-                    htmlFor="title"
-                    className="label-input font-bold"
-                  >
+                  <label htmlFor="title" className="label-input font-bold">
                     Title
                     <span className="asterisk">*</span>
                   </label>
@@ -116,10 +112,7 @@ const StoryForm: React.FC<StoryFormProps> = ({
                   ) : null}
                 </div>
                 <div className="md:flex items-center">
-                  <label
-                    htmlFor="ageGroup"
-                    className="label-input font-bold"
-                  >
+                  <label htmlFor="ageGroup" className="label-input font-bold">
                     Age
                     <span className="asterisk">*</span>
                   </label>
@@ -147,10 +140,7 @@ const StoryForm: React.FC<StoryFormProps> = ({
                     Add more details:
                   </label>
                   <div className="md:flex items-center justify-between">
-                    <label
-                      htmlFor="subject"
-                      className="label-input font-bold"
-                    >
+                    <label htmlFor="subject" className="label-input font-bold">
                       Subject
                     </label>
                     <ReusableInput
@@ -240,10 +230,7 @@ const StoryForm: React.FC<StoryFormProps> = ({
                     ))}
                   </div>
                   <div className="md:flex items-center justify-between">
-                    <label
-                      htmlFor="lesson"
-                      className="label-input font-bold"
-                    >
+                    <label htmlFor="lesson" className="label-input font-bold">
                       Lesson
                     </label>
                     <ReusableInput
