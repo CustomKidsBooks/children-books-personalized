@@ -1,6 +1,8 @@
 import Footer from "@components/Footer";
 import Nav from "@components/Nav";
 import "@styles/globals.css";
+import React from "react";
+import { ModalProvider } from "../components/ModalProvider";
 
 export const metadata = {
   title: "Children's Book",
@@ -12,6 +14,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
+    <ModalProvider>
     <html lang="en">
       <body>
         <div className="flex flex-col min-h-screen h-auto">
@@ -22,6 +25,7 @@ export default function RootLayout({
           <Footer />
         </div>
       </body>
-    </html>
+    </html>  
+    </ModalProvider>
   );
 }
