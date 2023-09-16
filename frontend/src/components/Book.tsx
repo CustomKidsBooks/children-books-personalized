@@ -1,11 +1,11 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRef } from "react";
-import useBook from "./hooks/useBook";
-import { Button } from "./ui/Button";
+import { useRef, useState } from "react";
 import useGetBookPages from "./hooks/useGetBookPages";
+import { Button } from "./ui/Button";
 
 const Book = () => {
   let {
@@ -13,16 +13,22 @@ const Book = () => {
     isError,
     message,
     image,
+    previewImage,
+    setPreviewImage,
     paragraph,
     editParagraph,
     setEditParagraph,
+    editImage,
+    setEditImage,
     pageNumber,
     displayNextPage,
     displayPreviousPage,
     updateBookPages,
-  } = useBook();
+  } = useGetBookPages();
 
   const paragraphRef = useRef<HTMLTextAreaElement>(null);
+
+  const [selectedImage, setSelectedImage] = useState<File>();
 
   if (isLoading) {
     return <p>Loading...</p>;
@@ -31,6 +37,12 @@ const Book = () => {
   if (isError) {
     return <div>{message}</div>;
   }
+
+  const selectImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles = event.target.files as FileList;
+    setSelectedImage(selectedFiles?.[0]);
+    setPreviewImage(URL.createObjectURL(selectedFiles?.[0]));
+  };
 
   return (
     <section className="my-10 py-10">
@@ -46,14 +58,33 @@ const Book = () => {
             />
           </Button>
         </div>
-        <div className="h-96 w-4/6 flex rounded-lg overflow-hidden drop-shadow-xl display_book">
+        <div className="h-[480px] w-4/6 flex rounded-lg overflow-hidden drop-shadow-xl display_book">
           <div className="w-3/4">
             <div className="relative h-full w-full">
-              <img
-                src={`http://localhost:5001/${image}`}
-                alt=""
-                className="h-full w-full"
-              />
+              {previewImage && (
+                <div>
+                  <Image
+                    className="preview"
+                    src={previewImage}
+                    alt=""
+                    fill={true}
+                  />
+                </div>
+              )}
+              {!!editImage && !previewImage ? (
+                <input
+                  type="file"
+                  className="h-full w-full"
+                  name="image"
+                  onChange={selectImage}
+                />
+              ) : (
+                <img
+                  src={`http://localhost:5001/${image}`}
+                  alt=""
+                  className="h-full w-full"
+                />
+              )}
               <p className="absolute bottom-3 left-5 font-bold">{pageNumber}</p>
             </div>
           </div>
@@ -93,7 +124,7 @@ const Book = () => {
             className="sm:w-3/4 text-center"
             intent="teal"
             size="medium"
-            onClick={() => setEditParagraph(!editParagraph)}
+            onClick={() => setEditParagraph(true)}
           >
             Edit Paragraph
           </Button>
@@ -101,7 +132,7 @@ const Book = () => {
             className="sm:w-3/4 text-center mt-3 md:mt-0"
             intent="teal"
             size="medium"
-            onClick={() => {}}
+            onClick={() => setEditImage(true)}
           >
             Edit Image
           </Button>
@@ -111,9 +142,14 @@ const Book = () => {
             className="sm:w-3/4 md:w-2/4 text-center capitalize"
             intent="pink"
             size="medium"
-            onClick={() => {
-              updateBookPages(image, paragraphRef.current?.value);
-            }}
+            // disabled={!editImage || !editParagraph}
+            onClick={() =>
+              editParagraph === true
+                ? updateBookPages(paragraphRef.current?.value, undefined)
+                : editImage == true
+                ? updateBookPages(undefined, selectedImage)
+                : undefined
+            }
           >
             Done
           </Button>

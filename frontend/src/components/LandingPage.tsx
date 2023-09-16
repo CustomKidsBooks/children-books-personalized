@@ -1,12 +1,11 @@
 "use client";
 
+import LibraryCard from "@components/Library/LibraryCard";
 import { LinkButton } from "@ui/LinkButton";
 import Image from "next/image";
-import StartStep from "./StartStep";
-import LibraryCard from "@components/Library/LibraryCard";
 import { useState } from "react";
+import StartStep from "./StartStep";
 import UserProfile from "./UserProfile";
-import LoginForm from "./LoginForm";
 
 const LandingPage = () => {
   const [isLogin, setIsLogin] = useState<boolean>(false);
@@ -27,10 +26,11 @@ const LandingPage = () => {
                   <span className=" relative z-10 font-normal font-pacifico text-pink font_feature">
                     Love{" "}
                   </span>
-                  <img
-                    src="assets/love_landing_page.png"
+                  <Image
+                    src="/assets/love_landing_page.png"
                     alt=""
                     width={300}
+                    height={44.206}
                     className="absolute top-[-25px] right-0 z-0"
                   />
                 </div>

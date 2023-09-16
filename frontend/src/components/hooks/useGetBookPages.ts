@@ -12,39 +12,44 @@ interface GetBookValues {
   isError: boolean;
   message: string;
   image: string;
+  previewImage: string | null;
+  setPreviewImage: Dispatch<SetStateAction<string | null>>;
   paragraph: string;
-  editParagraph: boolean;
-  setEditParagraph: Dispatch<SetStateAction<boolean>>;
+  editParagraph: boolean | null;
+  setEditParagraph: Dispatch<SetStateAction<boolean | null>>;
+  editImage: boolean | null;
+  setEditImage: Dispatch<SetStateAction<boolean | null>>;
   pageNumber: number;
   displayNextPage: () => void;
   displayPreviousPage: () => void;
-  updateBookPages: (image: string, paragraph?: string) => void;
+  updateBookPages: (paragraph?: string, image?: File) => void;
 }
 
 // TODO: update API to insert dynamic bookID.
 
-const useBook = (): GetBookValues => {
+const useGetBookPages = (): GetBookValues => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
   const [bookContent, setBookContent] = useState<BookContentValues[]>([]);
 
   const [page, setPage] = useState<number>(0);
-  const [pageId, setPageId] = useState<number|null>(null)
+  const [pageId, setPageId] = useState<number | null>(null);
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [image, setImage] = useState<string>("");
   const [paragraph, setParagraph] = useState<string>("");
 
-  const [editParagraph, setEditParagraph] = useState<boolean>(false);
+  const [editParagraph, setEditParagraph] = useState<boolean | null>(null);
+  const [editImage, setEditImage] = useState<boolean | null>(false);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+
   const [message, setMessage] = useState<string>("");
 
   useEffect(() => {
     axiosInstance
-      .get("/api/books/5/pages")
+      .get("/api/books/7/pages")
       .then((res) => {
-        setBookContent(res.data); 
-        setPageId(res.data[page].id)   
-        // console.log('pageId', pageId);
-            
+        setBookContent(res.data);
+        setPageId(res.data[page].id);
         setImage(res.data[page].image);
         setParagraph(res.data[page].paragraph);
       })
@@ -53,7 +58,7 @@ const useBook = (): GetBookValues => {
         console.log(err);
       })
       .finally(() => setIsLoading(false));
-  }, [page, pageNumber, image, paragraph, pageId]);
+  }, [page, pageNumber, image, paragraph, pageId, editParagraph, editImage]);
 
   const totalPages = bookContent.length;
 
@@ -75,17 +80,24 @@ const useBook = (): GetBookValues => {
     }
   };
 
-  console.log('book content', bookContent);
-  
+  const updateBookPages = async (paragraph?: string, image?: File) => {
+    const formData = new FormData();
 
-  const updateBookPages = async (image: string, paragraph?: string) => {
+    paragraph
+      ? formData.append("paragraph", paragraph)
+      : image
+      ? formData.append("image", image)
+      : undefined;
+
     await axiosInstance
-      .put(`/api/pages/${pageId}`, { paragraph, image })
+      .put(`/api/pages/${pageId}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
       .then((res) => {
         setMessage(res.data.message);
-        console.log(res.data);
-
-        setEditParagraph(false);
+        setEditParagraph(null);
+        setEditImage(false)
+        setPreviewImage(null);
       })
       .catch((err) => {
         setMessage(err.message);
@@ -99,14 +111,18 @@ const useBook = (): GetBookValues => {
     isError,
     message,
     image,
+    previewImage,
+    setPreviewImage,
     paragraph,
     pageNumber,
     editParagraph,
     setEditParagraph,
+    editImage,
+    setEditImage,
     displayNextPage,
     displayPreviousPage,
-    updateBookPages
+    updateBookPages,
   };
 };
 
-export default useBook;
+export default useGetBookPages;
