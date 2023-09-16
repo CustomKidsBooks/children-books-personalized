@@ -8,7 +8,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
   title,
   text,
   buttonText,
-  cancel = false,
+  cancel = true,
   onConfirm,
   height,
   isVisible,
@@ -25,8 +25,9 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
       title={title}
       width="510px"
       height={height}
-      close={close}
+      onClose={close}
       isVisible={isVisible}
+      onConfirm={confirm}
     >
       <div className="p-4">
         <p className="mb-8">
@@ -37,12 +38,12 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
         </p>
         <div className="mt-4 flex justify-end">
           {cancel && (
-            <button onClick={close} className="btn-text-black me-5">
+            <button onClick={close} className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow float-right mt-0 me-5">
               Cancel
             </button>
           )}
           <button
-            className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow float--right mt-0"
+            className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow float-right mt-0"
             onClick={confirm}
           >
             {buttonText}

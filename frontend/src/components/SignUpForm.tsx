@@ -48,90 +48,88 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
 
   return (
     <>
-      <div className="flex justify-center items-center h-screen">
-        <div className="inline-flex flex-col justify-center items-center form-card border-bg">
-          <h1 className="font-extrabold text-pink-deep label-input text-2xl -mt-10">
-            Sign In
-          </h1>
-          <form onSubmit={formikSubmit} className="flex flex-col justify-center">
-            <div className="place-item gap-px">
-              <label
-                htmlFor="name"
-                className="label-text"
-              >
-                Name
-                <span className="asterisk">*</span>
-              </label>
-              <ReusableInput
-                id="name"
-                name="name"
-                type="text"
-                value={values.name}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-              {touched.name && errors.name ? (
-                <div className="asterisk">{errors.name}</div>
-              ) : null}
-            </div>
-            <div className="place-item gap-px">
-              <label
-                htmlFor="email"
-                className="label-text"
-              >
-                Email
-                <span className="asterisk">*</span>
-              </label>
-              <ReusableInput
-                id="email"
-                name="email"
-                type="email"
-                value={values.email}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-              {touched.email && errors.email ? (
-                <div className="asterisk">{errors.email}</div>
-              ) : null}
-            </div>
-            <div className="place-item">
-              <label
-                htmlFor="password"
-                className="label-text"
-              >
-                Password
-                <span className="asterisk">*</span>
-              </label>
-              <ReusableInput
-                id="password"
-                name="password"
-                type="password"
-                value={values.password}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-              {touched.password && errors.password ? (
-                <div className="asterisk">{errors.password}</div>
-              ) : null}
-            </div>
-            {errorMessage && (
-              <p className="place-item asterisk text-sm">{errorMessage}</p>
-            )}
-            <div className="flex-center mt-4">
-              <LinkButton href="/" onClick={handleSignIn} intent="pink" size="small">
-                Create my account
-              </LinkButton>
-            </div>
-          </form>
-          <div className="flex-center text-base font-quicksand font-semibold">
-            <p>Already have an account?{" "}
-              <Link href="#" onClick={() => {
-                openModal('loginModal');
-              }} className="text-pink font-bold">
-                Login<span className="text-black">!</span>
-              </Link></p>
+      <div className="inline-flex flex-col justify-center items-center form-card border-bg">
+        <h1 className="font-extrabold text-pink-deep label-input text-2xl -mt-10">
+          Sign In
+        </h1>
+        <form onSubmit={formikSubmit} className="flex flex-col justify-center">
+          <div className="place-item gap-px">
+            <label
+              htmlFor="name"
+              className="label-text"
+            >
+              Name
+              <span className="asterisk">*</span>
+            </label>
+            <ReusableInput
+              id="name"
+              name="name"
+              type="text"
+              value={values.name}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+            {touched.name && errors.name ? (
+              <div className="asterisk">{errors.name}</div>
+            ) : null}
           </div>
-        </div >
+          <div className="place-item gap-px">
+            <label
+              htmlFor="email"
+              className="label-text"
+            >
+              Email
+              <span className="asterisk">*</span>
+            </label>
+            <ReusableInput
+              id="email"
+              name="email"
+              type="email"
+              value={values.email}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+            {touched.email && errors.email ? (
+              <div className="asterisk">{errors.email}</div>
+            ) : null}
+          </div>
+          <div className="place-item">
+            <label
+              htmlFor="password"
+              className="label-text"
+            >
+              Password
+              <span className="asterisk">*</span>
+            </label>
+            <ReusableInput
+              id="password"
+              name="password"
+              type="password"
+              value={values.password}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+            {touched.password && errors.password ? (
+              <div className="asterisk">{errors.password}</div>
+            ) : null}
+          </div>
+          {errorMessage && (
+            <p className="place-item asterisk text-sm">{errorMessage}</p>
+          )}
+          <div className="flex-center mt-4">
+            <LinkButton href="/" onClick={handleSignIn} intent="pink" size="small" className="text-sm md:text-xl">
+              Create my account
+            </LinkButton>
+          </div>
+        </form>
+        <div className="flex-center text-base font-quicksand font-semibold">
+          <p>Already have an account?{" "}
+            <Link href="#" onClick={() => {
+              openModal('loginModal');
+            }} className="text-pink font-bold">
+              Login<span className="text-black">!</span>
+            </Link></p>
+        </div>
       </div >
     </>
   );

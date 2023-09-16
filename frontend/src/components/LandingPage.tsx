@@ -9,6 +9,7 @@ import UserProfile from "./UserProfile";
 
 const LandingPage = () => {
   const [isLogin, setIsLogin] = useState<boolean>(false);
+
   if (isLogin) {
     return <UserProfile />;
   }
@@ -25,10 +26,11 @@ const LandingPage = () => {
                   <span className=" relative z-10 font-normal font-pacifico text-pink font_feature">
                     Love{" "}
                   </span>
-                  <img
-                    src="assets/love_landing_page.png"
+                  <Image
+                    src="/assets/love_landing_page.png"
                     alt=""
                     width={300}
+                    height={50}
                     className="absolute top-[-25px] right-0 z-0"
                   />
                 </div>
@@ -91,7 +93,6 @@ const LandingPage = () => {
           </div>
           <StartStep />
         </div>
-        <StartStep />
       </section>
     </>
   );

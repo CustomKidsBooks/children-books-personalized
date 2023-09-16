@@ -49,26 +49,16 @@ export interface ReusableInputProps {
 export interface ModalProps {
   isVisible: boolean;
   onClose: () => void;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
-export interface DelModalProps {
+export interface DeleteModalProps extends ModalProps {
   title: string;
-  width?: string;
-  height?: string;
-  children: React.ReactNode;
+  text?: string;
+  buttonText?: string;
   extra?: React.ReactNode;
-  close?: () => void;
-  isVisible?: boolean;
-}
-
-export interface DeleteModalProps {
-  onClose: () => void;
-  title: string;
-  text: string;
-  buttonText: string;
   cancel?: boolean;
-  onConfirm: () => void;
   height?: string;
-  isVisible: boolean;
+  width?: string;
+  onConfirm: () => void;
 }

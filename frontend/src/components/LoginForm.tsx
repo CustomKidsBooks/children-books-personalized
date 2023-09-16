@@ -48,7 +48,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
 
   return (
     <>
-      <div className="inline-flex flex-col justify-center items-center form-card border-bg">
+      <div className="inline-flex flex-col justify-center items-center form-card border-bg">    
         <h1 className="font-bold text-pink-deep label-input text-2xl -mt-4">
           Login
         </h1>
@@ -102,10 +102,10 @@ const LoginForm: React.FC<LoginFormProps> = ({
           )}
           <div className="flex items-center h-5">
             <input id="default-checkbox" type="checkbox" value="" className="w-4 h-4 rounded-md border-bg" />
-            <label htmlFor="default-checkbox" className="ml-2 mr-4 font-medium text-black tracking-widest text-base">Remember me</label>
+            <label htmlFor="default-checkbox" className="ml-2 mr-4 font-medium text-black tracking-widest text-sm md:text-base">Remember me</label>
           </div>
           <div className="flex-center mt-8">
-            <LinkButton href="/" onClick={handleLogin} intent="pink" size="small" className="flex items-center justify-center w-full">
+            <LinkButton href="/" onClick={handleLogin} intent="pink" size="small" className="flex-center w-full">
               Login
             </LinkButton>
           </div>
@@ -119,7 +119,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
             </Link>
           </p>
         </div>
-      </div >
+      </div> 
     </>
   );
 };
