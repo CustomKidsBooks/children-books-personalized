@@ -50,7 +50,7 @@ const Book = () => {
         <div className="w-1/6 flex justify-center fill-amber-100">
           <Button
             onClick={displayPreviousPage}
-            className="shadow-none"
+            className="shadow-none disabled:opacity-50"
             disabled={editImage || editParagraph ? true : false}
           >
             <Image
@@ -123,7 +123,7 @@ const Book = () => {
         <div className="w-1/6 flex justify-center text-green-500">
           <Button
             onClick={displayNextPage}
-            className="shadow-none"
+            className="shadow-none disabled:opacity-50"
             disabled={editImage || editParagraph ? true : false}
           >
             <Image
