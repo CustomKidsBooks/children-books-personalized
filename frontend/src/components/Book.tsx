@@ -2,7 +2,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useRef, useState } from "react";
 import useGetBookPages from "./hooks/useGetBookPages";
 import { Button } from "./ui/Button";
@@ -24,6 +23,7 @@ const Book = () => {
     displayNextPage,
     displayPreviousPage,
     updateBookPages,
+    resetData,
   } = useGetBookPages();
 
   const paragraphRef = useRef<HTMLTextAreaElement>(null);
@@ -48,7 +48,11 @@ const Book = () => {
     <section className="my-10 py-10">
       <div className="flex justify-around items-center">
         <div className="w-1/6 flex justify-center fill-amber-100">
-          <Button onClick={displayPreviousPage} className="shadow-none">
+          <Button
+            onClick={displayPreviousPage}
+            className="shadow-none"
+            disabled={editImage || editParagraph ? true : false}
+          >
             <Image
               src="/assets/backward-arrow.svg"
               alt="backward-arrow"
@@ -72,12 +76,22 @@ const Book = () => {
                 </div>
               )}
               {!!editImage && !previewImage ? (
-                <input
-                  type="file"
-                  className="h-full w-full"
-                  name="image"
-                  onChange={selectImage}
-                />
+                <div className="h-full w-full flex items-center space-x-6 justify-center">
+                  <label className="block">
+                    <input
+                      type="file"
+                      className="block w-full text-sm text-slate-500
+                    file:mr-4 file:py-2 file:px-4
+                    file:rounded-full file:border-0
+                    file:text-sm file:font-semibold
+                    file:bg-violet-50 file:text-pink
+                    hover:file:bg-violet-100
+                  "
+                      name="image"
+                      onChange={selectImage}
+                    />
+                  </label>
+                </div>
               ) : (
                 <img
                   src={`http://localhost:5001/${image}`}
@@ -107,7 +121,11 @@ const Book = () => {
           </div>
         </div>
         <div className="w-1/6 flex justify-center text-green-500">
-          <Button onClick={displayNextPage} className="shadow-none">
+          <Button
+            onClick={displayNextPage}
+            className="shadow-none"
+            disabled={editImage || editParagraph ? true : false}
+          >
             <Image
               src="/assets/forward-arrow.svg"
               alt="forward-arrow"
@@ -155,9 +173,13 @@ const Book = () => {
           </Button>
         </div>
         <div className="mt-5 sm:w-3/4 md:w-full text-center font-quicksand">
-          <Link href="#" className="underline underline-offset-3 font-semibold">
+          <Button
+            onClick={resetData}
+            intent="secondary"
+            className="bg-transparent underline underline-offset-3 shadow-none hover:bg-transparent hover:text-pink"
+          >
             Try Again!
-          </Link>
+          </Button>
         </div>
       </div>
     </section>

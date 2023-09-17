@@ -23,6 +23,7 @@ interface GetBookValues {
   displayNextPage: () => void;
   displayPreviousPage: () => void;
   updateBookPages: (paragraph?: string, image?: File) => void;
+  resetData: () => void;
 }
 
 // TODO: update API to insert dynamic bookID.
@@ -42,6 +43,8 @@ const useGetBookPages = (): GetBookValues => {
   const [editImage, setEditImage] = useState<boolean | null>(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
+  const [tryAgain, setTryAgain] = useState<boolean>(false);
+
   const [message, setMessage] = useState<string>("");
 
   useEffect(() => {
@@ -52,13 +55,23 @@ const useGetBookPages = (): GetBookValues => {
         setPageId(res.data[page].id);
         setImage(res.data[page].image);
         setParagraph(res.data[page].paragraph);
+        setTryAgain(false)
       })
       .catch((err) => {
         setIsError(true);
         console.log(err);
       })
       .finally(() => setIsLoading(false));
-  }, [page, pageNumber, image, paragraph, pageId, editParagraph, editImage]);
+  }, [
+    page,
+    pageNumber,
+    image,
+    paragraph,
+    pageId,
+    editParagraph,
+    editImage,
+    tryAgain,
+  ]);
 
   const totalPages = bookContent.length;
 
@@ -96,7 +109,7 @@ const useGetBookPages = (): GetBookValues => {
       .then((res) => {
         setMessage(res.data.message);
         setEditParagraph(null);
-        setEditImage(false)
+        setEditImage(false);
         setPreviewImage(null);
       })
       .catch((err) => {
@@ -104,6 +117,13 @@ const useGetBookPages = (): GetBookValues => {
         setIsError(true);
       })
       .finally(() => setIsLoading(false));
+  };
+
+  const resetData = () => {
+    setTryAgain(true)
+    setEditImage(false)
+    setEditParagraph(false)
+    setPreviewImage(null)
   };
 
   return {
@@ -122,6 +142,7 @@ const useGetBookPages = (): GetBookValues => {
     displayNextPage,
     displayPreviousPage,
     updateBookPages,
+    resetData,
   };
 };
 
