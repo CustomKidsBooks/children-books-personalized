@@ -30,7 +30,7 @@ const LandingPage = () => {
                     src="/assets/love_landing_page.png"
                     alt=""
                     width={300}
-                    height={44.206}
+                    height={50}
                     className="absolute top-[-25px] right-0 z-0"
                   />
                 </div>
