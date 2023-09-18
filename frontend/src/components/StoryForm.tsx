@@ -7,22 +7,22 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Button } from "@ui/Button";
 import { Heading } from "@ui/Heading";
 import { ageGroupList } from "@utils/constants";
-import { AdditionalField, FormValues } from "@utils/interfaces";
+import { AdditionalField, CreateStoryFormValues } from "@utils/interfaces";
 import { createStoryValidationSchema } from "@utils/storyValidation";
 import ReusableInput from "./ReusableInput";
 
 interface FormProps {
-  handleSubmit: (values: FormValues) => Promise<void>;
+  handleSubmit: (values: CreateStoryFormValues) => Promise<void>;
 }
 interface StoryFormProps extends FormProps {
-  setAdditionalFields: React.Dispatch<React.SetStateAction<AdditionalField[]>>;
   additionalFields: AdditionalField[];
+  setAdditionalFields: React.Dispatch<React.SetStateAction<AdditionalField[]>>;
 }
 
 const StoryForm: React.FC<StoryFormProps> = ({
   handleSubmit,
-  setAdditionalFields,
   additionalFields,
+  setAdditionalFields,
 }) => {
   const {
     values,
@@ -31,14 +31,15 @@ const StoryForm: React.FC<StoryFormProps> = ({
     errors,
     touched,
     handleSubmit: formikSubmit,
-  } = useFormik<FormValues>({
+  } = useFormik<CreateStoryFormValues>({
     initialValues: {
+      title: "",
+      ageGroup: "0-1",
       subject: "",
+      page: 1,
       name: "",
       description: "",
-      ageGroup: "0-1",
       lesson: "",
-      title: "",
     },
     validationSchema: createStoryValidationSchema,
     onSubmit: (values) => {
@@ -156,6 +157,22 @@ const StoryForm: React.FC<StoryFormProps> = ({
                     />
                     {touched.subject && errors.subject ? (
                       <div>{errors.subject}</div>
+                    ) : null}
+                  </div>
+                  <div className="md:flex items-center justify-between">
+                    <label htmlFor="page" className="label-input font-bold">
+                      Page
+                    </label>
+                    <ReusableInput
+                      id="page"
+                      name="page"
+                      type="number"
+                      value={values.page}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                    />
+                    {touched.page && errors.page ? (
+                      <div>{errors.page}</div>
                     ) : null}
                   </div>
                   <div className="flex flex-col text-sm md:pr-2">

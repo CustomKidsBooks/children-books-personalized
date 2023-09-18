@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import StoryForm from "@components/StoryForm";
-import { FormValues, AdditionalField } from "@utils/interfaces";
+import { CreateStoryFormValues, AdditionalField } from "@utils/interfaces";
 import { axiosInstance } from "@services/api-client";
 
 const CreateStory = () => {
@@ -10,13 +10,14 @@ const CreateStory = () => {
     []
   );
 
-  const createPrompt = async (values: FormValues) => {
+  const createPrompt = async (values: CreateStoryFormValues) => {
     setIsSubmitting(true);
     try {
       const response = await axiosInstance.post("/api/create_book", {
         title: values.title,
         ageGroup: values.ageGroup,
         subject: values.subject,
+        page: values.page,
         characters: additionalFields,
         lesson: values.lesson,
       });
@@ -28,9 +29,9 @@ const CreateStory = () => {
 
   return (
     <StoryForm
-      handleSubmit={createPrompt}
-      setAdditionalFields={setAdditionalFields}
       additionalFields={additionalFields}
+      setAdditionalFields={setAdditionalFields}
+      handleSubmit={createPrompt}
     />
   );
 };
