@@ -3,19 +3,12 @@ import StoryForm from "@components/StoryForm";
 import useCreateStory from "@components/hooks/useCreateStory";
 
 const CreateStory = () => {
-  const {
-    isError,
-    submitting,
-    additionalFields,
-    setAdditionalFields,
-    createStory,
-  } = useCreateStory();
+  const { isError, submitting, createStory } = useCreateStory();
 
   return (
     <StoryForm
+      isError={isError}
       submitting={submitting}
-      additionalFields={additionalFields}
-      setAdditionalFields={setAdditionalFields}
       handleCreateStory={createStory}
     />
   );

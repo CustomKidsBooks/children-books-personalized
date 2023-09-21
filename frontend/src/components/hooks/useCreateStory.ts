@@ -1,12 +1,9 @@
 import { axiosInstance } from "@services/api-client";
-import { AdditionalField, CreateStoryFormValues } from "@utils/interfaces";
+import { CreateStoryFormValues } from "@utils/interfaces";
 import { useState } from "react";
 
 const useCreateStory = () => {
   const [submitting, setIsSubmitting] = useState<boolean>(false);
-  const [additionalFields, setAdditionalFields] = useState<AdditionalField[]>(
-    []
-  );
 
   const [isError, setIsError] = useState<boolean>(false);
 
@@ -20,7 +17,7 @@ const useCreateStory = () => {
         ageGroup: values.ageGroup,
         subject: values.subject,
         page: values.page,
-        // characters: values.characters,
+        characters: values.characters,
         lesson: values.lesson,
       })
       .then((res) => console.log("Book created successfully!"))
@@ -31,8 +28,6 @@ const useCreateStory = () => {
   return {
     isError,
     submitting,
-    additionalFields,
-    setAdditionalFields,
     createStory,
   };
 };
