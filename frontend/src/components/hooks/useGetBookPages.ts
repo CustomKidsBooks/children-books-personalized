@@ -44,7 +44,6 @@ const useGetBookPages = (): GetBookValues => {
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   const [tryAgain, setTryAgain] = useState<boolean>(false);
-
   const [message, setMessage] = useState<string>("");
 
   useEffect(() => {
@@ -55,7 +54,7 @@ const useGetBookPages = (): GetBookValues => {
         setPageId(res.data[page].id);
         setImage(res.data[page].image);
         setParagraph(res.data[page].paragraph);
-        setTryAgain(false)
+        setTryAgain(false);
       })
       .catch((err) => {
         setIsError(true);
@@ -120,10 +119,10 @@ const useGetBookPages = (): GetBookValues => {
   };
 
   const resetData = () => {
-    setTryAgain(true)
-    setEditImage(false)
-    setEditParagraph(false)
-    setPreviewImage(null)
+    setTryAgain(true);
+    setEditImage(false);
+    setEditParagraph(false);
+    setPreviewImage(null);
   };
 
   return {
