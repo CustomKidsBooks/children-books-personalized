@@ -12,13 +12,15 @@ const useCreateStory = () => {
 
   const createStory = async (values: CreateStoryFormValues) => {
     setIsSubmitting(true);
+    console.log('characters', values);
+    
     await axiosInstance
-      .post("/api/create_post", {
+      .post("/api/create_book", {
         title: values.title,
         ageGroup: values.ageGroup,
         subject: values.subject,
         page: values.page,
-        characters: additionalFields,
+        // characters: values.characters,
         lesson: values.lesson,
       })
       .then((res) => console.log("Book created successfully!"))
@@ -29,6 +31,8 @@ const useCreateStory = () => {
   return {
     isError,
     submitting,
+    additionalFields,
+    setAdditionalFields,
     createStory,
   };
 };

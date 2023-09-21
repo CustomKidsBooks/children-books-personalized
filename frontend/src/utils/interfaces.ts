@@ -3,10 +3,8 @@ export interface CreateStoryFormValues {
   ageGroup: string;
   subject: string;
   page: number;
-  name?: string;
-  description?: string;
   lesson?: string;
-  characters?: string[];
+  characters?: AdditionalField[]
 }
 
 export interface LoginFormValues {

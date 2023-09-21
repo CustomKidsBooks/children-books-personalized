@@ -21,7 +21,7 @@ const useGetBookPages = () => {
 
   useEffect(() => {
     axiosInstance
-      .get("/api/books/8/pages")
+      .get("/api/books/9/pages")
       .then((res) => {
         setBookContent(res.data);
         setImage(res.data[0].image);

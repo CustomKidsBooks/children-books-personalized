@@ -10,9 +10,11 @@ import { ageGroupList } from "@utils/constants";
 import { AdditionalField, CreateStoryFormValues } from "@utils/interfaces";
 import { createStoryValidationSchema } from "@utils/storyValidation";
 import ReusableInput from "./ReusableInput";
+import LoadindSpinner from "./ui/LoadindSpinner";
 
 interface FormProps {
-  handleSubmit: (values: CreateStoryFormValues) => Promise<void>;
+  submitting: boolean;
+  handleCreateStory: (values: CreateStoryFormValues) => Promise<void>;
 }
 interface StoryFormProps extends FormProps {
   additionalFields: AdditionalField[];
@@ -20,32 +22,28 @@ interface StoryFormProps extends FormProps {
 }
 
 const StoryForm: React.FC<StoryFormProps> = ({
-  handleSubmit,
+  submitting,
+  handleCreateStory,
   additionalFields,
   setAdditionalFields,
 }) => {
-  const {
-    values,
-    handleChange,
-    handleBlur,
-    errors,
-    touched,
-    handleSubmit: formikSubmit,
-  } = useFormik<CreateStoryFormValues>({
-    initialValues: {
-      title: "",
-      ageGroup: "0-1",
-      subject: "",
-      page: 1,
-      name: "",
-      description: "",
-      lesson: "",
-    },
-    validationSchema: createStoryValidationSchema,
-    onSubmit: (values) => {
-      handleSubmit(values);
-    },
-  });
+  const { values, handleChange, handleBlur, errors, touched, handleSubmit } =
+    useFormik<CreateStoryFormValues>({
+      initialValues: {
+        title: "",
+        ageGroup: "0-1",
+        subject: "",
+        page: 3,
+        characters: [{ name: "", description: "" }],
+        lesson: "",
+      },
+      validationSchema: createStoryValidationSchema,
+      onSubmit: (values) => {
+        console.log("formik submit", values);
+
+        handleCreateStory(values);
+      },
+    });
 
   const handleAddField = () => {
     setAdditionalFields([...additionalFields, { name: "", description: "" }]);
@@ -60,6 +58,10 @@ const StoryForm: React.FC<StoryFormProps> = ({
     updatedFields[index][field] = value;
     setAdditionalFields(updatedFields);
   };
+
+  if (submitting && !errors) {
+    return <LoadindSpinner />;
+  }
 
   return (
     <>
@@ -92,7 +94,7 @@ const StoryForm: React.FC<StoryFormProps> = ({
             <div className="bg-kid h-229 background"></div>
             <div className="inline-flex pt-3 pr-4 pb-px pl-3 flex-col justify-end items-start bg-education h-113.12 background"></div>
             <div className="px-10 flex flex-col -mt-28 lg:-mt-0">
-              <form onSubmit={formikSubmit}>
+              <form onSubmit={handleSubmit}>
                 <div className="md:flex items-center justify-between">
                   <label htmlFor="title" className="label-input font-bold">
                     Title
@@ -143,6 +145,7 @@ const StoryForm: React.FC<StoryFormProps> = ({
                   <div className="md:flex items-center justify-between">
                     <label htmlFor="subject" className="label-input font-bold">
                       Subject
+                      <span className="asterisk">*</span>
                     </label>
                     <ReusableInput
                       id="subject"
@@ -155,8 +158,10 @@ const StoryForm: React.FC<StoryFormProps> = ({
                       rows={2}
                       className="w-full"
                     />
+                  </div>
+                  <div>
                     {touched.subject && errors.subject ? (
-                      <div>{errors.subject}</div>
+                      <div className="asterisk">{errors.subject}</div>
                     ) : null}
                   </div>
                   <div className="md:flex items-center justify-between">
@@ -171,10 +176,13 @@ const StoryForm: React.FC<StoryFormProps> = ({
                       onChange={handleChange}
                       onBlur={handleBlur}
                     />
+                  </div>
+                  <div>
                     {touched.page && errors.page ? (
-                      <div>{errors.page}</div>
+                      <div className="asterisk">{errors.page}</div>
                     ) : null}
                   </div>
+
                   <div className="flex flex-col text-sm md:pr-2">
                     <div className="flex items-center">
                       <label
@@ -193,6 +201,7 @@ const StoryForm: React.FC<StoryFormProps> = ({
                         </button>
                       </div>
                     </div>
+
                     {additionalFields.map((field, index) => (
                       <div key={index} className="flex flex-col mt-1">
                         <div className="md:flex items-center justify-between px-1">
@@ -204,8 +213,10 @@ const StoryForm: React.FC<StoryFormProps> = ({
                           </label>
                           <ReusableInput
                             id="name"
-                            name={`name${index}`}
+                            // name={`name${index}`}
+                            name={`field[${index}].name`}
                             type="text"
+                            // value={field.name}
                             value={field.name}
                             onChange={(e) =>
                               handleAdditionalFieldChange(
@@ -227,7 +238,7 @@ const StoryForm: React.FC<StoryFormProps> = ({
                           </label>
                           <ReusableInput
                             id="description"
-                            name={`description${index}`}
+                            name={`field[${index}].description`}
                             type="textarea"
                             value={field.description}
                             onChange={(e) =>
@@ -246,6 +257,7 @@ const StoryForm: React.FC<StoryFormProps> = ({
                       </div>
                     ))}
                   </div>
+
                   <div className="md:flex items-center justify-between">
                     <label htmlFor="lesson" className="label-input font-bold">
                       Lesson
