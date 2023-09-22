@@ -1,6 +1,7 @@
 import { Express } from "express";
 import { BookController } from "./controller/book.controller";
 import { UserController } from "./controller/user.controller";
+import { upload } from "./middleware/uploadFile";
 
 export default function (app: Express) {
   // create user
@@ -21,7 +22,11 @@ export default function (app: Express) {
   app.put("/api/books/:id", BookController.updateBookHandler);
 
   // Define a route to update a specific page by ID
-  app.put("/api/pages/:id", BookController.updatePageHandler);
+  app.put(
+    "/api/pages/:pageId",
+    upload.single("image"),
+    BookController.updatePageHandler
+  );
 
   // Handling DELETE request to delete a book
   app.delete("/api/books/:id", BookController.deleteBookHandler);

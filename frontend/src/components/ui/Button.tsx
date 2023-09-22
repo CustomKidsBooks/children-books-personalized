@@ -6,7 +6,6 @@ const ButttonVariants = cva(
   [
     "font-semibold",
     "p-4",
-    "border",
     "rounded",
     "font-quicksand",
     "tracking-widest",
@@ -16,8 +15,9 @@ const ButttonVariants = cva(
   {
     variants: {
       intent: {
-        primary: ["bg-teal", "text-black", "hover:bg-teal-400"],
+        primary: ["text-white"],
         secondary: ["bg-bright-turquoise", "text-black", "hover:bg-teal-400"],
+        teal: ["bg-teal", "border-gray-400", "hover:bg-teal-400"],
         pink: [
           "bg-pink",
           "text-white",

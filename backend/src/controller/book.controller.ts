@@ -12,6 +12,7 @@ import {
 } from "../service/book.service";
 import fs from "fs";
 import path from "path";
+import multer from "multer";
 
 type PageData = {
   pageNumber: number;
@@ -175,6 +176,7 @@ export const BookController = {
       const pages = await pageRepository.find({
         where: { book: { id: bookId } },
       });
+
       res.json(pages);
     } catch (error) {
       log.error("Error retrieving pages for the book:", error);
@@ -225,7 +227,7 @@ export const BookController = {
         fs.writeFileSync(newImagePath, image, "base64");
 
         // Update the book's image field with the new image path
-        book.image = newImagePath;
+        book.image = `images/page/${newImageName}`;
       }
 
       // Update book fields
@@ -252,7 +254,8 @@ export const BookController = {
 
   updatePageHandler: async (req: Request, res: Response) => {
     const pageId = parseInt(req.params.pageId);
-    const { paragraph, image } = req.body;
+
+    const { paragraph } = req.body;    
 
     try {
       const pageRepository = AppDataSource.getRepository(Page);
@@ -263,7 +266,7 @@ export const BookController = {
       }
 
       // Check if a new image is being uploaded
-      if (image) {
+      if (req.file) {
         // Delete the existing image if it exists
         if (page.image) {
           const imageName = path.basename(page.image);
@@ -277,19 +280,9 @@ export const BookController = {
             log.error("Error deleting image file:", error);
           }
         }
-
-        // Save the new image locally in the page folder
-        const newImageName = `${pageId}_${Date.now()}.jpg`;
-        const newImagePath = path.join(
-          __dirname,
-          `../../images/page/${newImageName}`
-        );
-
-        // Save the image file
-        fs.writeFileSync(newImagePath, image, "base64");
-
+                      
         // Update the image path in the database
-        page.image = newImageName;
+        page.image = `images/page/${req.file.filename}`;
       }
 
       // Update page content

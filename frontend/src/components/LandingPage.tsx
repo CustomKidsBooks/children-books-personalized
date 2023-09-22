@@ -1,10 +1,10 @@
 "use client";
 
+import LibraryCard from "@components/Library/LibraryCard";
 import { LinkButton } from "@ui/LinkButton";
 import Image from "next/image";
-import StartStep from "./StartStep";
-import LibraryCard from "@components/Library/LibraryCard";
 import { useState } from "react";
+import StartStep from "./StartStep";
 import UserProfile from "./UserProfile";
 
 const LandingPage = () => {
