@@ -1,17 +1,17 @@
 "use client";
 
 import Book from "@components/Book";
-import useDraft from "@components/hooks/useDraft";
-import { Button } from "@components/ui/Button";
+import useGetBook from "@components/hooks/useGetBook";
 import Image from "next/image";
 import Link from "next/link";
 
-const Draft = () => {
-  // TODO: update a hook API to get a single book once API is ready!.
+interface DraftValues {
+  id: number;
+}
 
-  const { isLoading, isError, bookData } = useDraft();
-
-  let lastBook = bookData[bookData.length - 1];
+const Draft = ({ params }: { params: DraftValues }) => {
+  const id = Number(params.id);
+  const { isLoading, isError, bookData } = useGetBook(id);
 
   if (isLoading) {
     return <p>Loading...</p>;
@@ -41,10 +41,10 @@ const Draft = () => {
       <div className="sm:bg-flower bg-no-repeat bg-right bg-contain">
         <div className="w-4/6 my-10 mx-auto font-quicksand">
           <h2 className="text-xl">
-            <span className="font-semibold">Title :</span> {lastBook.title}
+            <span className="font-semibold">Title :</span> {bookData?.title}
           </h2>
           <h2 className="text-xl mt-3">
-            <span className="font-semibold">Story :</span> {lastBook.desc}{" "}
+            <span className="font-semibold">Story :</span> {bookData?.desc}{" "}
           </h2>
           <h2 className="text-xl mt-3 font-semibold">
             Back to{" "}
@@ -56,7 +56,7 @@ const Draft = () => {
         </div>
 
         <div>
-          <Book />
+          <Book id={id} />
         </div>
       </div>
     </section>

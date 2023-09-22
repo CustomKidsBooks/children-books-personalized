@@ -6,11 +6,11 @@ import { Heading } from "@ui/Heading";
 import { ageGroupList } from "@utils/constants";
 import { CreateStoryFormValues } from "@utils/interfaces";
 import { createStoryValidationSchema } from "@utils/storyValidation";
-import { ErrorMessage, useFormik } from "formik";
+import { useFormik } from "formik";
 import Image from "next/image";
 import React from "react";
 import ReusableInput from "./ReusableInput";
-import LoadindSpinner from "./ui/LoadindSpinner";
+import CreateStorySkeleton from "./skeleton/CreateStory.skeleton";
 
 interface CreateStoryFormProps {
   isError: boolean;
@@ -47,8 +47,8 @@ const StoryForm: React.FC<CreateStoryFormProps> = ({
     },
   });
 
-  if (submitting && !errors) {
-    return <LoadindSpinner />;
+  if (submitting) {
+    return <CreateStorySkeleton />;
   }
 
   return (
@@ -231,10 +231,9 @@ const StoryForm: React.FC<CreateStoryFormProps> = ({
                             />
                           </div>
                           {/* <div>
-                            {errors.characters &&
-                              errors.characters[index] && (
-                                <div>{errors.characters[index].description}</div>
-                              )}
+                            {errors.characters && (
+                              <div>{errors.characters[index].description}</div>
+                            )}
                           </div> */}
                           <button
                             className="text-pink p-3"

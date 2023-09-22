@@ -26,9 +26,7 @@ interface GetBookValues {
   resetData: () => void;
 }
 
-// TODO: update API to insert dynamic bookID.
-
-const useGetBookPages = (): GetBookValues => {
+const useGetBookPages = (id: number): GetBookValues => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
   const [bookContent, setBookContent] = useState<BookContentValues[]>([]);
@@ -48,7 +46,7 @@ const useGetBookPages = (): GetBookValues => {
 
   useEffect(() => {
     axiosInstance
-      .get("/api/books/7/pages")
+      .get(`/api/books/${id}/pages`)
       .then((res) => {
         setBookContent(res.data);
         setPageId(res.data[page].id);
@@ -62,6 +60,7 @@ const useGetBookPages = (): GetBookValues => {
       })
       .finally(() => setIsLoading(false));
   }, [
+    id,
     page,
     pageNumber,
     image,

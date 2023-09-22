@@ -3,10 +3,14 @@
 
 import Image from "next/image";
 import { useRef, useState } from "react";
-import useGetBookPages from "./hooks/useGetBookPages";
 import { Button } from "./ui/Button";
+import useGetBookPages from "./hooks/useGetBookPages";
 
-const Book = () => {
+interface BookValues {
+  id: number;
+}
+
+const Book = ({ id }: BookValues) => {
   let {
     isLoading,
     isError,
@@ -24,7 +28,7 @@ const Book = () => {
     displayPreviousPage,
     updateBookPages,
     resetData,
-  } = useGetBookPages();
+  } = useGetBookPages(id);
 
   const paragraphRef = useRef<HTMLTextAreaElement>(null);
 

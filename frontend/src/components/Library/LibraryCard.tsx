@@ -38,7 +38,7 @@ const LibraryCard = ({ search }: LibraryValues) => {
           <div
             className="card snap-center transition duration-300 ease-in-out hover:scale-110"
             key={book.id}
-            onClick={() => router.push(`/preview-book/${book.id}`)}
+            onClick={() => router.push(`/draft/${book.id}`)}
           >
             <div className="object-contain h-[164px] w-[247.324px] relative">
               <Image
