@@ -7,10 +7,10 @@ const DownloadBook = () => {
     <div className="items-center">
       <h1 className="font-bold text text-3xl">Download:</h1>
       <div className="flex flex-col gap-4 py-4 w-32">
-        <Button intent="primary" className="text font-bold">
+        <Button intent="secondary" className="text font-bold">
           PDF
         </Button>
-        <Button intent="primary" className="text font-bold">
+        <Button intent="secondary" className="text font-bold">
           Word
         </Button>
       </div>

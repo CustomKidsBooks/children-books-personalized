@@ -10,6 +10,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        "bright-turquoise": "#00E8D1",
         teal: "#00EAD3",
         "teal-600": "#0d9488",
         "teal-400": "#2dd4bf",
@@ -22,7 +23,6 @@ module.exports = {
         "light-primary": "var(--background-light-primary, #FFF);",
       },
       fontFamily: {
-        satoshi: ["Quicksand", "Pacifico"],
         pacifico: ["Pacifico", "sans-serif"],
         quicksand: ["Quicksand", "sans-serif"],
       },
