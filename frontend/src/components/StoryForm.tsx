@@ -1,14 +1,14 @@
 "use client";
-import React from "react";
-import { useFormik } from "formik";
-import Image from "next/image";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Button } from "@ui/Button";
 import { Heading } from "@ui/Heading";
 import { ageGroupList } from "@utils/constants";
-import { AdditionalField, CreateStoryFormValues } from "@utils/interfaces";
+import { CreateStoryFormValues } from "@utils/interfaces";
 import { createStoryValidationSchema } from "@utils/storyValidation";
+import { ErrorMessage, useFormik } from "formik";
+import Image from "next/image";
+import React from "react";
 import ReusableInput from "./ReusableInput";
 import LoadindSpinner from "./ui/LoadindSpinner";
 
@@ -31,6 +31,7 @@ const StoryForm: React.FC<CreateStoryFormProps> = ({
     touched,
     handleSubmit,
     setFieldValue,
+    getFieldProps,
   } = useFormik<CreateStoryFormValues>({
     initialValues: {
       title: "",
@@ -42,8 +43,6 @@ const StoryForm: React.FC<CreateStoryFormProps> = ({
     },
     validationSchema: createStoryValidationSchema,
     onSubmit: (values) => {
-      console.log("formik submit", values);
-
       handleCreateStory(values);
     },
   });
@@ -231,6 +230,12 @@ const StoryForm: React.FC<CreateStoryFormProps> = ({
                               rows={2}
                             />
                           </div>
+                          {/* <div>
+                            {errors.characters &&
+                              errors.characters[index] && (
+                                <div>{errors.characters[index].description}</div>
+                              )}
+                          </div> */}
                           <button
                             className="text-pink p-3"
                             type="button"

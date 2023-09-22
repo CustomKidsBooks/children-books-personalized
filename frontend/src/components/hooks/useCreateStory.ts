@@ -4,13 +4,10 @@ import { useState } from "react";
 
 const useCreateStory = () => {
   const [submitting, setIsSubmitting] = useState<boolean>(false);
-
   const [isError, setIsError] = useState<boolean>(false);
 
   const createStory = async (values: CreateStoryFormValues) => {
     setIsSubmitting(true);
-    console.log('characters', values);
-    
     await axiosInstance
       .post("/api/create_book", {
         title: values.title,
