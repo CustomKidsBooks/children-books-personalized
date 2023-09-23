@@ -9,7 +9,7 @@ export const createStoryValidationSchema = Yup.object().shape({
     .min(1, "Age group must be selected"),
   subject: Yup.string()
     .min(10, "Subject must be at least 10 characters long")
-    .max(50, "Subject is too Long!")
+    .max(100, "Subject is too Long!")
     .required(),
   page: Yup.number()
     .min(3, "Page must be at least 3")

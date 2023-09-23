@@ -6,7 +6,7 @@ import { Heading } from "@ui/Heading";
 import { ageGroupList } from "@utils/constants";
 import { CreateStoryFormValues } from "@utils/interfaces";
 import { createStoryValidationSchema } from "@utils/storyValidation";
-import { useFormik } from "formik";
+import { getIn, useFormik } from "formik";
 import Image from "next/image";
 import React from "react";
 import ReusableInput from "./ReusableInput";
@@ -214,7 +214,9 @@ const StoryForm: React.FC<CreateStoryFormProps> = ({
                           </div>
                           <div className="asterisk">
                             {errors.characters && (
-                              <div>{errors.characters[index].name}</div>
+                              <div>
+                                {getIn(errors, `characters.${index}.name`)}
+                              </div>
                             )}
                           </div>
                           <div className="md:flex items-center justify-between px-1">
@@ -237,7 +239,12 @@ const StoryForm: React.FC<CreateStoryFormProps> = ({
                           </div>
                           <div className="asterisk">
                             {errors.characters && (
-                              <div>{errors.characters[index].description}</div>
+                              <div>
+                                {getIn(
+                                  errors,
+                                  `characters.${index}.description`
+                                )}
+                              </div>
                             )}
                           </div>
                           <button
