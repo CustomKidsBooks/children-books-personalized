@@ -212,6 +212,11 @@ const StoryForm: React.FC<CreateStoryFormProps> = ({
                               className="w-full"
                             />
                           </div>
+                          <div className="asterisk">
+                            {errors.characters && (
+                              <div>{errors.characters[index].name}</div>
+                            )}
+                          </div>
                           <div className="md:flex items-center justify-between px-1">
                             <label
                               htmlFor={`characters.${index}.description`}
@@ -230,11 +235,11 @@ const StoryForm: React.FC<CreateStoryFormProps> = ({
                               rows={2}
                             />
                           </div>
-                          {/* <div>
+                          <div className="asterisk">
                             {errors.characters && (
                               <div>{errors.characters[index].description}</div>
                             )}
-                          </div> */}
+                          </div>
                           <button
                             className="text-pink p-3"
                             type="button"
