@@ -10,14 +10,8 @@ import { ChangeEvent, useState } from "react";
 const UserLibrary = () => {
   const [search, setSearch] = useState("");
 
-  const tag: string[] = [
-    "family",
-    "divorce",
-    "love",
-    "friendship",
-    "nature",
-    "art",
-  ];
+  const tag: string =
+    "  1. #FallStorybook  2. #KidsFallAdventure  3. #AutumnFantasy";
 
   return (
     <section className="p-10 h-auto">

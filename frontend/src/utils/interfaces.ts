@@ -1,3 +1,13 @@
+export interface BookValues {
+  id: number;
+  title: string;
+  desc?: string;
+  author?: string;
+  page?: number;
+  image?: string;
+  tag?: string
+}
+
 export interface FormValues {
   title: string;
   ageGroup: string;

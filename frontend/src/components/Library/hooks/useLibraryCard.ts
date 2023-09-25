@@ -1,14 +1,7 @@
 import { axiosInstance } from "@services/api-client";
+import { BookValues } from "@utils/interfaces";
 import { useEffect, useState } from "react";
 
-export interface BookValues {
-  id: number;
-  title: string;
-  desc?: string;
-  author?: string;
-  page?: number;
-  image?: string;
-}
 
 const useLibraryCard = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
