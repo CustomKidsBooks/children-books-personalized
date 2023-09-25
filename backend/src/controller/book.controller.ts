@@ -27,9 +27,6 @@ export const BookController = {
       req.body;
     let newBook: Book | undefined;
 
-    console.log('characters', characters);
-    
-
     try {
       const bookRepository = AppDataSource.getRepository(Book);
 
