@@ -1,11 +1,10 @@
-export interface FormValues {
+export interface CreateStoryFormValues {
   title: string;
   ageGroup: string;
   subject: string;
-  name?: string;
-  description?: string;
+  page: number;
   lesson?: string;
-  characters?: string[];
+  characters?: AdditionalField[]
 }
 
 export interface LoginFormValues {
@@ -28,7 +27,7 @@ export interface ReusableInputProps {
   id: string;
   name: string;
   type: "text" | "number" | "select" | "textarea" | "password" | "email";
-  value?: string;
+  value?: string | number;
   onChange: (
     event: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
