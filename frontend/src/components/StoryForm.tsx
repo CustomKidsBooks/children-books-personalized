@@ -1,28 +1,27 @@
 "use client";
-import React from "react";
-import { useFormik } from "formik";
-import Image from "next/image";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "@ui/Button";
 import { Heading } from "@ui/Heading";
 import { ageGroupList } from "@utils/constants";
-import { AdditionalField, FormValues } from "@utils/interfaces";
+import { CreateStoryFormValues } from "@utils/interfaces";
 import { createStoryValidationSchema } from "@utils/storyValidation";
+import { getIn, useFormik } from "formik";
+import Image from "next/image";
+import React from "react";
 import ReusableInput from "./ReusableInput";
+import CreateStorySkeleton from "./skeleton/CreateStory.skeleton";
 
-interface FormProps {
-  handleSubmit: (values: FormValues) => Promise<void>;
-}
-interface StoryFormProps extends FormProps {
-  setAdditionalFields: React.Dispatch<React.SetStateAction<AdditionalField[]>>;
-  additionalFields: AdditionalField[];
+interface CreateStoryFormProps {
+  isError: boolean;
+  submitting: boolean;
+  handleCreateStory: (values: CreateStoryFormValues) => Promise<void>;
 }
 
-const StoryForm: React.FC<StoryFormProps> = ({
-  handleSubmit,
-  setAdditionalFields,
-  additionalFields,
+const StoryForm: React.FC<CreateStoryFormProps> = ({
+  isError,
+  submitting,
+  handleCreateStory,
 }) => {
   const {
     values,
@@ -30,35 +29,27 @@ const StoryForm: React.FC<StoryFormProps> = ({
     handleBlur,
     errors,
     touched,
-    handleSubmit: formikSubmit,
-  } = useFormik<FormValues>({
+    handleSubmit,
+    setFieldValue,
+    getFieldProps,
+  } = useFormik<CreateStoryFormValues>({
     initialValues: {
-      subject: "",
-      name: "",
-      description: "",
-      ageGroup: "0-1",
-      lesson: "",
       title: "",
+      ageGroup: "0-1",
+      subject: "",
+      page: 3,
+      characters: [],
+      lesson: "",
     },
     validationSchema: createStoryValidationSchema,
     onSubmit: (values) => {
-      handleSubmit(values);
+      handleCreateStory(values);
     },
   });
 
-  const handleAddField = () => {
-    setAdditionalFields([...additionalFields, { name: "", description: "" }]);
-  };
-
-  const handleAdditionalFieldChange = (
-    index: number,
-    field: keyof AdditionalField,
-    value: string
-  ) => {
-    const updatedFields = [...additionalFields];
-    updatedFields[index][field] = value;
-    setAdditionalFields(updatedFields);
-  };
+  if (submitting) {
+    return <CreateStorySkeleton />;
+  }
 
   return (
     <>
@@ -91,7 +82,7 @@ const StoryForm: React.FC<StoryFormProps> = ({
             <div className="bg-kid h-229 background"></div>
             <div className="inline-flex pt-3 pr-4 pb-px pl-3 flex-col justify-end items-start bg-education h-113.12 background"></div>
             <div className="px-10 flex flex-col -mt-28 lg:-mt-0">
-              <form onSubmit={formikSubmit}>
+              <form onSubmit={handleSubmit}>
                 <div className="md:flex items-center justify-between">
                   <label htmlFor="title" className="label-input font-bold">
                     Title
@@ -142,6 +133,7 @@ const StoryForm: React.FC<StoryFormProps> = ({
                   <div className="md:flex items-center justify-between">
                     <label htmlFor="subject" className="label-input font-bold">
                       Subject
+                      <span className="asterisk">*</span>
                     </label>
                     <ReusableInput
                       id="subject"
@@ -154,81 +146,125 @@ const StoryForm: React.FC<StoryFormProps> = ({
                       rows={2}
                       className="w-full"
                     />
+                  </div>
+                  <div>
                     {touched.subject && errors.subject ? (
-                      <div>{errors.subject}</div>
+                      <div className="asterisk">{errors.subject}</div>
                     ) : null}
                   </div>
-                  <div className="flex flex-col text-sm md:pr-2">
-                    <div className="flex items-center">
-                      <label
-                        htmlFor="characters"
-                        className="label-input font-bold"
-                      >
-                        Characters
-                      </label>
-                      <div className="flex items-center">
-                        <button
-                          id="addFieldButton"
-                          className="px-1 sm:px-0.5 bg-white font-bold font-quicksand shadow-xl sm:shadow-md"
-                          onClick={handleAddField}
-                        >
-                          <FontAwesomeIcon icon={faPlus} />
-                        </button>
-                      </div>
-                    </div>
-                    {additionalFields.map((field, index) => (
-                      <div key={index} className="flex flex-col mt-1">
-                        <div className="md:flex items-center justify-between px-1">
-                          <label
-                            htmlFor="name"
-                            className="label-input font-medium"
-                          >
-                            Name:
-                          </label>
-                          <ReusableInput
-                            id="name"
-                            name={`name${index}`}
-                            type="text"
-                            value={field.name}
-                            onChange={(e) =>
-                              handleAdditionalFieldChange(
-                                index,
-                                "name",
-                                e.target.value
-                              )
-                            }
-                            onBlur={handleBlur}
-                            className="w-full"
-                          />
-                        </div>
-                        <div className="md:flex items-center justify-between px-1">
-                          <label
-                            htmlFor="description"
-                            className="label-input font-medium"
-                          >
-                            Description:
-                          </label>
-                          <ReusableInput
-                            id="description"
-                            name={`description${index}`}
-                            type="textarea"
-                            value={field.description}
-                            onChange={(e) =>
-                              handleAdditionalFieldChange(
-                                index,
-                                "description",
-                                e.target.value
-                              )
-                            }
-                            onBlur={handleBlur}
-                            placeholder={`Ex. Description of the character`}
-                            rows={2}
-                          />
-                        </div>
-                        <hr className="bg-pink h-0.5 mx-10" />
-                      </div>
-                    ))}
+                  <div className="md:flex items-center justify-between">
+                    <label htmlFor="page" className="label-input font-bold">
+                      Page
+                    </label>
+                    <ReusableInput
+                      id="page"
+                      name="page"
+                      type="number"
+                      value={values.page}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                    />
                   </div>
+                  <div>
+                    {touched.page && errors.page ? (
+                      <div className="asterisk">{errors.page}</div>
+                    ) : null}
+                  </div>
+                  <div className="flex items-center">
+                    <label
+                      htmlFor="characters"
+                      className="label-input font-bold"
+                    >
+                      Characters
+                    </label>
+                    <div className="flex items-center">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setFieldValue("characters", [
+                            ...(values.characters || []),
+                            { name: "", description: "" },
+                          ])
+                        }
+                      >
+                        <FontAwesomeIcon icon={faPlus} />{" "}
+                      </button>
+                    </div>
+                  </div>
+                  {values.characters && values.characters.length > 0
+                    ? (values.characters || []).map((character, index) => (
+                        <div key={index} className="flex flex-col mt-1">
+                          <div className="md:flex items-center justify-between px-1">
+                            <label
+                              htmlFor={`characters.${index}.name`}
+                              className="label-input font-medium"
+                            >
+                              Name:
+                            </label>
+                            <ReusableInput
+                              type="text"
+                              id={`characters.${index}.name`}
+                              name={`characters.${index}.name`}
+                              onChange={handleChange}
+                              value={character.name}
+                              placeholder="Name"
+                              onBlur={handleBlur}
+                              className="w-full"
+                            />
+                          </div>
+                          <div className="asterisk">
+                            {errors.characters && (
+                              <div>
+                                {getIn(errors, `characters.${index}.name`)}
+                              </div>
+                            )}
+                          </div>
+                          <div className="md:flex items-center justify-between px-1">
+                            <label
+                              htmlFor={`characters.${index}.description`}
+                              className="label-input font-medium"
+                            >
+                              Description:
+                            </label>
+                            <ReusableInput
+                              type="text"
+                              id={`characters.${index}.description`}
+                              name={`characters.${index}.description`}
+                              onChange={handleChange}
+                              value={character.description}
+                              onBlur={handleBlur}
+                              placeholder={`Ex. Description of the character`}
+                              rows={2}
+                            />
+                          </div>
+                          <div className="asterisk">
+                            {errors.characters && (
+                              <div>
+                                {getIn(
+                                  errors,
+                                  `characters.${index}.description`
+                                )}
+                              </div>
+                            )}
+                          </div>
+                          <button
+                            className="text-pink p-3"
+                            type="button"
+                            onClick={() => {
+                              const updatedCharacters = [
+                                ...(values.characters || []),
+                              ];
+                              updatedCharacters.splice(index, 1);
+                              setFieldValue("characters", updatedCharacters);
+                            }}
+                          >
+                            Remove Character
+                          </button>
+                          <hr className="bg-pink h-0.5 mx-10" />
+                        </div>
+                      ))
+                    : null}
+
                   <div className="md:flex items-center justify-between">
                     <label htmlFor="lesson" className="label-input font-bold">
                       Lesson
