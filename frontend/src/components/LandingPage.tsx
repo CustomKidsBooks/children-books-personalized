@@ -23,7 +23,7 @@ const LandingPage = () => {
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-quicksand">
                 Unleashing{" "}
                 <div className="relative inline px-5">
-                  <span className=" relative z-10 font-normal font-pacifico text-pink font_feature">
+                  <span className="relative z-10 font-normal font-pacifico text-pink font_feature">
                     Love{" "}
                   </span>
                   <Image
@@ -86,7 +86,7 @@ const LandingPage = () => {
                 width={300}
                 height={12.5}
               />
-              <h1 className="absolute top-1/4 text-4xl font-satoshi font-medium mx-10 tracking-widest">
+              <h1 className="text absolute top-1/4 text-4xl font-medium mx-10 tracking-widest">
                 How to start?
               </h1>
             </div>
