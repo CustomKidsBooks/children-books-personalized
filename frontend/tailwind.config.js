@@ -93,8 +93,8 @@ module.exports = {
     plugin(function ({ addUtilities, addComponents }) {
       addComponents({
         ".card": {
-          width: "248px",
-          height: "248px",
+          width: "280px",
+          height: "280px",
           borderRadius: "0.6rem",
           backgroundColor: "var(--background-light-primary, #FFF);",
           boxShadow:

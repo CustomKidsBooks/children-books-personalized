@@ -6,7 +6,8 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Tag from "../Tag";
 import LibrarySkeleton from "./LibraryCard.skeleton";
-import useLibraryCard, { BookValues } from "./hooks/useLibraryCard";
+import useLibraryCard from "./hooks/useLibraryCard";
+import { BookValues } from "@utils/interfaces";
 
 interface LibraryValues {
   search?: string;
@@ -15,12 +16,9 @@ interface LibraryValues {
 const LibraryCard = ({ search }: LibraryValues) => {
   const router = useRouter();
   const { isLoading, isError, bookData } = useLibraryCard();
-  let tag: string[] = ["family", "divorce", "love"];
 
   const books: BookValues[] = search
-    ? bookData.filter((book) =>
-        book.title.toLowerCase().includes(search.trim())
-      )
+    ? bookData.filter((book) => book.tag?.toLowerCase().includes(search.trim()))
     : bookData;
 
   if (isLoading) {
@@ -40,7 +38,7 @@ const LibraryCard = ({ search }: LibraryValues) => {
             key={book.id}
             onClick={() => router.push(`/draft/${book.id}`)}
           >
-            <div className="object-contain h-[164px] w-[247.324px] relative">
+            <div className="object-contain h-[164px] w-[280px] relative">
               <Image
                 src={
                   book.image
@@ -67,7 +65,7 @@ const LibraryCard = ({ search }: LibraryValues) => {
                 <p className="text-pine-green">2-3</p>
               </div>
             </div>
-            <Tag tag={tag} />
+            <div>{book.tag && <Tag tag={book.tag} />}</div>
           </div>
         ))}
       </div>

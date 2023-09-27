@@ -1,10 +1,20 @@
+export interface BookValues {
+  id: number;
+  title: string;
+  desc?: string;
+  author?: string;
+  page?: number;
+  image?: string;
+  tag?: string;
+}
+
 export interface CreateStoryFormValues {
   title: string;
   ageGroup: string;
   subject: string;
   page: number;
   lesson?: string;
-  characters?: AdditionalField[]
+  characters?: AdditionalField[];
 }
 
 export interface LoginFormValues {

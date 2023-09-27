@@ -1,26 +1,22 @@
 "use client";
 
-import Image from "next/image";
-import useGetBook from "./hooks/useGetBook";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChildReaching } from "@fortawesome/free-solid-svg-icons";
-import Tag from "./Tag";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Image from "next/image";
 import DownloadBook from "./DownloadBook";
 import SendBook from "./SendBook";
-import LoadindSpinner from "./ui/LoadindSpinner";
+import Tag from "./Tag";
+import useGetBook from "./hooks/useGetBook";
 import PreviewBookSkeleton from "./skeleton/PreviewBook.skeleton";
 
 interface PreviewBookValues {
   id: number;
 }
 
-// TODO: Remove tag const and retrive tags from database when API ready
 // TODO: Add functionality to the page
 
 const PreviewBook = ({ id }: PreviewBookValues) => {
   const { bookData: book, isLoading, isError } = useGetBook(id);
-
-  const tag = ["family", "love", "Divorce"];
 
   if (isLoading) {
     return <PreviewBookSkeleton />;
@@ -42,7 +38,7 @@ const PreviewBook = ({ id }: PreviewBookValues) => {
           <p className="text-pine-green">2-3</p>
         </div>
       </div>
-      <Tag tag={tag} />
+      {book?.tag && <Tag tag={book.tag} />}
       <div className="pt-10 lg:grid lg:grid-cols-2 inline-grid lg:h-auto gap-10 place-content-evenly shrink">
         <div className="preview-card object-contain relative">
           <Image
