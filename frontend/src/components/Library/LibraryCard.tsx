@@ -38,7 +38,7 @@ const LibraryCard = ({ search }: LibraryValues) => {
             key={book.id}
             onClick={() => router.push(`/preview-book/${book.id}`)}
           >
-            <div className="object-contain h-[164px] w-[247.324px] relative">
+            <div className="object-contain h-[164px] w-[280px] relative">
               <Image
                 src={
                   book.image
@@ -65,7 +65,7 @@ const LibraryCard = ({ search }: LibraryValues) => {
                 <p className="text-pine-green">2-3</p>
               </div>
             </div>
-            {book.tag && <Tag tag={book.tag} />}
+            <div>{book.tag && <Tag tag={book.tag} />}</div>
           </div>
         ))}
       </div>
