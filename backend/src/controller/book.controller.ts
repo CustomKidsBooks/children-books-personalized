@@ -3,16 +3,21 @@ import { DeepPartial, FindOneOptions } from "typeorm";
 import { Book } from "../entities/book";
 import { Page } from "../entities/page";
 import { Request, Response } from "express";
+import streamifier from "streamifier";
 import log from "../logger";
 import { generateBookText, generateImage } from "../service/openai.service";
 import {
   downloadCoverImageLocally,
   downloadPagesImageLocally,
   getPagesFromContent,
+  createWordDocument,
+  fetchStoryDataForWord,
+  fetchStoryDataForPDF,
 } from "../service/book.service";
 import fs from "fs";
 import path from "path";
 import multer from "multer";
+import PDFDocument from "pdfkit"; // Use the PDF generation library you prefer
 
 type PageData = {
   pageNumber: number;
@@ -252,7 +257,7 @@ export const BookController = {
   updatePageHandler: async (req: Request, res: Response) => {
     const pageId = parseInt(req.params.pageId);
 
-    const { paragraph } = req.body;    
+    const { paragraph } = req.body;
 
     try {
       const pageRepository = AppDataSource.getRepository(Page);
@@ -277,7 +282,7 @@ export const BookController = {
             log.error("Error deleting image file:", error);
           }
         }
-                      
+
         // Update the image path in the database
         page.image = `images/page/${req.file.filename}`;
       }
@@ -380,6 +385,91 @@ export const BookController = {
         message:
           "An error occurred while deleting the book and associated pages",
       });
+    }
+  },
+  downloadStoryAsWord: async (req: Request, res: Response) => {
+    const bookId = parseInt(req.params.bookId);
+
+    try {
+      // Retrieve the story content and other necessary data from the database or wherever it's stored
+      const { title, subject } = await fetchStoryDataForWord(bookId);
+
+      if (!title || !subject) {
+        return res.status(404).json({ error: "Story not found" });
+      }
+
+      // Create a Word document
+      const docx = await createWordDocument(title, subject);
+
+      // Set the appropriate response headers for downloading
+      res.setHeader("Content-Type", "application/msword");
+      res.setHeader("Content-Disposition", `attachment; filename=story.docx`);
+
+      // Convert the Word document into a readable stream using streamifier
+      const docxStream = streamifier.createReadStream(docx);
+
+      // Pipe the stream to the response
+      docxStream.pipe(res);
+
+      // Cleanup: Remove any temporary files if needed
+    } catch (error) {
+      console.error("Error downloading Word document:", error);
+      return res.status(500).json({
+        error: "An error occurred while downloading the Word document",
+      });
+    }
+  },
+
+  // Inside BookController
+  downloadStoryAsPDF: async (req: Request, res: Response) => {
+    const bookId = parseInt(req.params.bookId);
+
+    try {
+      // Retrieve the story content and other necessary data from the database or wherever it's stored
+      const { title, subject } = await fetchStoryDataForPDF(bookId);
+
+      if (!title || !subject) {
+        return res.status(404).json({ error: "Story not found" });
+      }
+
+      // Create a PDF document
+      const doc = new PDFDocument();
+      const docName = path.basename(title);
+      // Get the file path
+      const tempFilePath = path.join(
+        __dirname,
+        `../../download/pdf/${docName}.pdf`
+      );
+      // Write the image buffer to a local file using fs module
+    fs.writeFileSync(tempFilePath, docName);
+      // Pipe the PDF content to a writable stream (file)
+      doc.pipe(fs.createWriteStream(tempFilePath));
+
+      // Add content to the PDF
+      doc.fontSize(12).text(title, { align: "center" });
+      doc.text(subject);
+
+      // End the PDF stream
+      doc.end();
+
+      // Set the appropriate response headers for downloading
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader("Content-Disposition", `attachment; filename=story.pdf`);
+
+      // Stream the PDF file to the client
+      const fileStream = fs.createReadStream(tempFilePath);
+      fileStream.pipe(res);
+      
+
+      // Cleanup: Remove the temporary PDF file after streaming
+      fileStream.on("end", () => {
+        fs.unlinkSync(tempFilePath);
+      });
+    } catch (error) {
+      console.error("Error downloading PDF:", error);
+      return res
+        .status(500)
+        .json({ error: "An error occurred while downloading the PDF" });
     }
   },
 
