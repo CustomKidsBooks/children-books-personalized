@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+const { url } = require("inspector");
 const plugin = require("tailwindcss/plugin");
 
 module.exports = {
@@ -26,8 +27,8 @@ module.exports = {
         pacifico: ["Pacifico", "sans-serif"],
         quicksand: ["Quicksand", "sans-serif"],
       },
-      fontWeight : {
-        bold : '700'
+      fontWeight: {
+        bold: "700",
       },
       typography: (theme) => ({
         default: {
@@ -83,8 +84,9 @@ module.exports = {
         ellipse: "url(/assets/bg_ellipse.png)",
         flower: "url(/assets/bg_flower.png)",
         education: "url('/assets/education.svg')",
-        readingBook :"url('/assets/undraw_reading_book.svg')",
+        readingBook: "url('/assets/undraw_reading_book.svg')",
         "ellipse-landing-page": "url('/assets/ellipse_landing_page.svg')",
+        "user-profile": "url('/assets/user-profile.png')",
       },
     },
   },
@@ -93,22 +95,23 @@ module.exports = {
     plugin(function ({ addUtilities, addComponents }) {
       addComponents({
         ".card": {
-          width: "248px",
-          height: "248px",
+          width: "280px",
+          height: "280px",
           borderRadius: "0.6rem",
           backgroundColor: "var(--background-light-primary, #FFF);",
           boxShadow:
             "0px 5px 5px 0px rgba(2, 3, 3, 0.04), 0px 3px 14px 0px rgba(2, 3, 3, 0.02), 0px 8px 10px 0px rgba(2, 3, 3, 0.03);",
         },
         ".preview-card": {
-          width:"506.622px",
+          width: "506.622px",
           height: "486.883px",
-          borderRadius: '5px',
+          borderRadius: "5px",
           borderStyle: "solid",
-          borderWidth: '1px',
+          borderWidth: "1px",
           borderColor: "#CCC",
           background: "#FFF",
-          boxShadow: "0px 5px 5px 0px rgba(2, 3, 3, 0.04), 0px 3px 14px 0px rgba(2, 3, 3, 0.02), 0px 8px 10px 0px rgba(2, 3, 3, 0.03)"
+          boxShadow:
+            "0px 5px 5px 0px rgba(2, 3, 3, 0.04), 0px 3px 14px 0px rgba(2, 3, 3, 0.02), 0px 8px 10px 0px rgba(2, 3, 3, 0.03)",
         },
         ".text": {
           fontFamily: "quicksand",

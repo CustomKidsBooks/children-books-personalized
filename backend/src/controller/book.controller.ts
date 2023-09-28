@@ -53,7 +53,7 @@ export const BookController = {
 
       const imageUrl = await generateImage(imageDesc);
 
-      const tagDesc = `create three tags based on information below ${imageDesc}`;
+      const tagDesc = `create a three tags which are 8 characters long based on information below ${imageDesc}`;
       const tags = await generateBookText(tagDesc);
       // 1. Honey Bee Adventure  2. Sweet Honey Production  3. Young Bee's Journey
 

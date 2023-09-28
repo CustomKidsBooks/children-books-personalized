@@ -1,6 +1,6 @@
 import { axiosInstance } from "@services/api-client";
+import { BookValues } from "@utils/interfaces";
 import { useState, useEffect } from "react";
-import { BookValues } from "./useDraft";
 
 
 const useGetBook = (id: number) => {
