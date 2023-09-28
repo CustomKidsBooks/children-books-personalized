@@ -13,15 +13,8 @@ const UserProfile = () => {
                 Hi,
               </h1>
             </div>
-            <div className="relative">
-              <Image
-                src="/assets/user-profile.png"
-                alt="User"
-                width={240}
-                height={100}
-                className="mx-auto w-3/4 h-auto md:w-full"
-              />
-              <h1 className="absolute top-2/4 left-2/4 -translate-x-2/4 -translate-y-2/4 font-pacifico text-pink font_feature text-4xl sm:text-5xl md:text-6xl">
+            <div className="">
+              <h1 className="ms-4 p-8 sm:p-10 bg-user-profile bg-cover bg-center bg-no-repeat font-pacifico text-pink font_feature text-4xl sm:text-5xl md:text-6xl">
                 adam
               </h1>
             </div>
