@@ -57,7 +57,7 @@ const PreviewBook = ({ id }: PreviewBookValues) => {
         </div>
         <div className="p-4">
           <div className="flex lg:flex-col flex-row  gap-24 w-full">
-            <DownloadBook />
+            <DownloadBook bookId={id} />
             <SendBook />
           </div>
         </div>
