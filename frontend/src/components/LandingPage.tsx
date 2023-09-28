@@ -8,7 +8,7 @@ import StartStep from "./StartStep";
 import UserProfile from "./UserProfile";
 
 const LandingPage = () => {
-  const [isLogin, setIsLogin] = useState<boolean>(false);
+  const [isLogin, setIsLogin] = useState<boolean>(true);
 
   if (isLogin) {
     return <UserProfile />;
