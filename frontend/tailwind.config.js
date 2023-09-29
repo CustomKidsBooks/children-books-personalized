@@ -87,6 +87,7 @@ module.exports = {
         readingBook: "url('/assets/undraw_reading_book.svg')",
         "ellipse-landing-page": "url('/assets/ellipse_landing_page.svg')",
         "user-profile": "url('/assets/user-profile.png')",
+        "kid-book": "url(/assets/kid-book.svg)",
       },
     },
   },
