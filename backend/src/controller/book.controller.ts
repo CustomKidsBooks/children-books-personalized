@@ -426,7 +426,8 @@ export const BookController = {
 
     try {
       // Retrieve the story content and other necessary data from the database or wherever it's stored
-      const { title, subject } = await fetchStoryDataForPDF(bookId);
+      const { title, subject, characters, lesson, pages, tag, image } =
+        await fetchStoryDataForPDF(bookId);
 
       if (!title || !subject) {
         return res.status(404).json({ error: "Story not found" });
@@ -440,14 +441,30 @@ export const BookController = {
         __dirname,
         `../../download/pdf/${docName}.pdf`
       );
-      // Write the image buffer to a local file using fs module
-    fs.writeFileSync(tempFilePath, docName);
+      // Write the buffer to a local file using fs module
+      fs.writeFileSync(tempFilePath, docName);
       // Pipe the PDF content to a writable stream (file)
       doc.pipe(fs.createWriteStream(tempFilePath));
 
       // Add content to the PDF
       doc.fontSize(12).text(title, { align: "center" });
       doc.text(subject);
+      // Embed the image in the PDF (replace 'imagePlaceholder' with the appropriate image coordinates)
+      if (image) {
+        const imageBuffer = fs.readFileSync(image); // Assuming 'image' contains the path to the image
+        // Define the coordinates and dimensions for placing the image
+        const x = 50; // X-coordinate (from left)
+        const y = 50; // Y-coordinate (from top)
+        const width = 200; // Width of the image
+        const height = 100; // Height of the image
+        doc.image(imageBuffer, x, y, { width: width, height: height });
+      }
+
+      // Add paragraphs from the pages to the PDF
+      for (const page of pages) {
+        doc.addPage(); // Start a new page for each page in the book
+        doc.text(page.paragraph);
+      }
 
       // End the PDF stream
       doc.end();
@@ -459,7 +476,6 @@ export const BookController = {
       // Stream the PDF file to the client
       const fileStream = fs.createReadStream(tempFilePath);
       fileStream.pipe(res);
-      
 
       // Cleanup: Remove the temporary PDF file after streaming
       fileStream.on("end", () => {

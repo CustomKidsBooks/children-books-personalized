@@ -1,8 +1,6 @@
 import axios from "axios";
 import fs from "fs";
 import { Book } from "../entities/book"; // Import your Book entity or data model
-import { EntityManager, DataSource, getRepository } from "typeorm";
-
 import path from "path";
 import { AppDataSource } from "../db/connect";
 // Function to download the image and save it locally in the Node.js environment
@@ -83,10 +81,11 @@ export async function fetchStoryDataForPDF(id: number) {
     }
 
     // In this example, we assume that your Book entity has properties like 'title' and 'content'
-    const { title, subject } = book;
-
+    const { title, subject, characters, lesson, tag, image } = book;
+     // Access the 'pages' property to get an array of page objects
+     const pages = book.pages || [];
     // Return the story data
-    return { title, subject };
+    return { title, subject, characters, lesson, pages, tag, image };
   } catch (error) {
     console.error("Error fetching story data:", error);
     throw error;
@@ -115,20 +114,25 @@ export async function createWordDocument(title: string, subject: string) {
   // Here's a basic example using the 'docxtemplater' library (you'll need to install it)
 
   const Docxtemplater = require("docxtemplater");
+  const PizZip = require("pizzip");
   const fs = require("fs");
   const docName = path.basename(title);
   const templatePath = path.join(
     __dirname,
     `../../download/word/${docName}.docx`
   );
+   // Write the buffer to a local file using fs module
+   fs.writeFileSync(templatePath, docName);
   const contentData = {
     title,
     subject,
   };
-
+  // Load the docx file as binary content
   const contentBuffer = fs.readFileSync(templatePath);
+  const zip = new PizZip(contentBuffer);
 
-  const doc = new Docxtemplater(contentBuffer);
+  const doc = new Docxtemplater(zip, contentBuffer);
+  doc.loadZip(zip);
   doc.setData(contentData);
   doc.render();
 

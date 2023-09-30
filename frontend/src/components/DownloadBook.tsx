@@ -23,7 +23,7 @@ const DownloadBook = ({ bookId }: { bookId: number }) => {
         <Button onClick={() => handleDownload(downloadPDF, "PDF")} intent="secondary" className="text font-bold">
           PDF
         </Button>
-        <Button onClick={downloadWord} intent="secondary" className="text font-bold">
+        <Button onClick={async () => await handleDownload(downloadWord, "Word")} intent="secondary" className="text font-bold">
           Word
         </Button>
       </div>
