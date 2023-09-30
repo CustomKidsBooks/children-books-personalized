@@ -20,11 +20,7 @@ const Login = () => {
     setIsSubmitting(false);
   };
 
-  return (
-    <LoginForm
-      handleSubmit={LoginPrompt}
-    />
-  );
+  return <LoginForm handleSubmit={LoginPrompt} />;
 };
 
 export default Login;

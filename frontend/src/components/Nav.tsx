@@ -14,8 +14,15 @@ import DeleteModal from "./delete/delete";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 
+import { getAccessToken } from "@auth0/nextjs-auth0";
+import { useUser } from "@auth0/nextjs-auth0/client";
+import handler from "@app/api/auth/[auth0]/route";
+
 //Todo: Need to Handle login, signup, delete logic once Api completed
 const Nav = () => {
+  const { user, error, isLoading } = useUser();
+  console.log("user", user);
+
   const pathname = usePathname();
   const [activeLink, setActiveLink] = useState<string | null>(null);
   const [isLoggedIn, setLoggedIn] = useState(false);
@@ -25,7 +32,7 @@ const Nav = () => {
 
   const { showModal, openModal, closeModal, auth, setToken } =
     useContext(ModalContext);
-  
+
   const handleImageClick = () => {
     setDropdownVisible(!isDropdownVisible);
   };
@@ -63,10 +70,23 @@ const Nav = () => {
     setToken("");
   };
 
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>{error.message}</div>;
+
   const LoginButton = () => {
+    // return (
+    //   <>
+    //     {user ? (
+    //       <a href="/api/auth/logout">Logout</a>
+    //     ) : (
+    //       <a href="/api/auth/login">Login</a>
+    //     )}
+    //   </>
+    // );
+
     return (
       <>
-        {auth.length > 0 ? (
+        {user ? (
           <div className="flex items-center">
             <div className="relative">
               <button onClick={handleImageClick}>
@@ -90,11 +110,15 @@ const Nav = () => {
                 </div>
               )}
             </div>
+            {/* <a href="/api/auth/login">Login</a>
+
+    <a href="/api/auth/logout">Logout</a> */}
             <a
-              href="#"
-              onClick={handleLogout}
-              className={` lg:inline-block lg:mt-0 text-black hover:text-pink mx-4 ${pathname === "/logout" ? "underline text-pink" : ""
-                }`}
+              href="/api/auth/logout"
+              // onClick={handleLogout}
+              className={` lg:inline-block lg:mt-0 text-black hover:text-pink mx-4 ${
+                pathname === "/logout" ? "underline text-pink" : ""
+              }`}
             >
               Logout
             </a>
@@ -111,10 +135,10 @@ const Nav = () => {
           </div>
         ) : (
           <a
-            href="#"
-            onClick={() => {
-              openModal("loginModal");
-            }}
+            href="/api/auth/login"
+            // onClick={() => {
+            //   openModal("loginModal");
+            // }}
             className="inline-block px-4 py-2 leading-none border rounded border-white hover:border-transparent text-white bg-pink mt-4 lg:mt-0"
           >
             Login
@@ -148,24 +172,27 @@ const Nav = () => {
                   <a
                     href="/"
                     onClick={() => setActiveLink("home")}
-                    className={`block lg:inline-block lg:mt-0 text-black hover:text-pink mx-4 ${pathname === "/" ? "underline text-pink" : ""
-                      }`}
+                    className={`block lg:inline-block lg:mt-0 text-black hover:text-pink mx-4 ${
+                      pathname === "/" ? "underline text-pink" : ""
+                    }`}
                   >
                     Home
                   </a>
                   <a
                     href="/create-story"
                     onClick={() => setActiveLink("About us")}
-                    className={`block lg:inline-block lg:mt-0 text-black hover:text-pink mx-4 ${pathname === "/create-story" ? "underline text-pink" : ""
-                      }`}
+                    className={`block lg:inline-block lg:mt-0 text-black hover:text-pink mx-4 ${
+                      pathname === "/create-story" ? "underline text-pink" : ""
+                    }`}
                   >
                     About us
                   </a>
                   <a
                     href="/user-library"
                     onClick={() => setActiveLink("Library")}
-                    className={`block lg:inline-block lg:mt-0 text-black hover:text-pink mx-4 ${pathname === "/user-library" ? "underline text-pink" : ""
-                      }`}
+                    className={`block lg:inline-block lg:mt-0 text-black hover:text-pink mx-4 ${
+                      pathname === "/user-library" ? "underline text-pink" : ""
+                    }`}
                   >
                     Library
                   </a>
@@ -210,24 +237,27 @@ const Nav = () => {
               <a
                 href="/"
                 onClick={() => setActiveLink("home")}
-                className={`block mt-4 lg:inline-block lg:mt-0 text-black hover:text-pink mx-4 ${pathname === "/" ? "underline text-pink" : ""
-                  }`}
+                className={`block mt-4 lg:inline-block lg:mt-0 text-black hover:text-pink mx-4 ${
+                  pathname === "/" ? "underline text-pink" : ""
+                }`}
               >
                 Home
               </a>
               <a
                 href="/create-story"
                 onClick={() => setActiveLink("About us")}
-                className={`block mt-4 lg:inline-block lg:mt-0 text-black hover:text-pink mx-4 ${pathname === "/create-story" ? "underline text-pink" : ""
-                  }`}
+                className={`block mt-4 lg:inline-block lg:mt-0 text-black hover:text-pink mx-4 ${
+                  pathname === "/create-story" ? "underline text-pink" : ""
+                }`}
               >
                 About us
               </a>
               <a
                 href="/user-library"
                 onClick={() => setActiveLink("Library")}
-                className={`block mt-4 lg:inline-block lg:mt-0 text-black hover:text-pink mx-4 ${pathname === "/user-library" ? "underline text-pink" : ""
-                  }`}
+                className={`block mt-4 lg:inline-block lg:mt-0 text-black hover:text-pink mx-4 ${
+                  pathname === "/user-library" ? "underline text-pink" : ""
+                }`}
               >
                 Library
               </a>

@@ -1,17 +1,20 @@
 "use client";
 
+import { useUser } from "@auth0/nextjs-auth0/client";
 import LibraryCard from "@components/Library/LibraryCard";
 import { LinkButton } from "@ui/LinkButton";
 import Image from "next/image";
-import { useState } from "react";
 import StartStep from "./StartStep";
 import UserProfile from "./UserProfile";
 
 const LandingPage = () => {
-  const [isLogin, setIsLogin] = useState<boolean>(true);
+  const { user, error, isLoading } = useUser();
 
-  if (isLogin) {
-    return <UserProfile />;
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>{error.message}</div>;
+
+  if (user) {
+    return <UserProfile user={user} />;
   }
 
   return (

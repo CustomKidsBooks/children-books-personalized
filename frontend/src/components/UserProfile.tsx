@@ -1,8 +1,13 @@
 import Image from "next/image";
 import LibraryCard from "./Library/LibraryCard";
 import { LinkButton } from "./ui/LinkButton";
+import { UserProfile } from "@auth0/nextjs-auth0/client";
 
-const UserProfile = () => {
+interface UserProfileValues {
+  user: UserProfile;
+}
+
+const UserProfile = ({ user }: UserProfileValues) => {
   return (
     <>
       <section className="bg-teal ">
@@ -15,7 +20,7 @@ const UserProfile = () => {
             </div>
             <div className="">
               <h1 className="ms-4 p-8 sm:p-10 bg-user-profile bg-cover bg-center bg-no-repeat font-pacifico text-pink font_feature text-4xl sm:text-5xl md:text-6xl">
-                adam
+                {user?.nickname || user?.name}
               </h1>
             </div>
           </div>

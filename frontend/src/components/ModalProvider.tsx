@@ -7,10 +7,10 @@ export const ModalContext = createContext({
     loginModal: false,
     signUpModal: false,
   },
-  openModal: (modal: 'loginModal' | 'signUpModal') => { },
-  closeModal: (modal: 'loginModal' | 'signUpModal') => { },
-  auth: '',
-  setToken: (token: string) => { },
+  openModal: (modal: "loginModal" | "signUpModal") => {},
+  closeModal: (modal: "loginModal" | "signUpModal") => {},
+  auth: "",
+  setToken: (token: string) => {},
 });
 
 interface IModalContextProps {
@@ -22,14 +22,13 @@ export const ModalProvider: React.FC<IModalContextProps> = ({ children }) => {
     signUpModal: false,
     deleteModal: false,
   });
-  const [auth, setAuth] = useState<string>('');
-  const setToken = (token: string) => setAuth(token)
+  const [auth, setAuth] = useState<string>("");
+  const setToken = (token: string) => setAuth(token);
 
-  const openModal = (modal: 'loginModal' | 'signUpModal') => {
+  const openModal = (modal: "loginModal" | "signUpModal") => {
     let temp: any = showModal;
-    console.log(temp);
 
-    const obj: any = {}
+    const obj: any = {};
     temp = Object.keys(showModal).map((key: string) => {
       if (key === modal) {
         temp[key] = true;
@@ -37,18 +36,18 @@ export const ModalProvider: React.FC<IModalContextProps> = ({ children }) => {
         temp[key] = false;
       }
       obj[key] = temp[key];
-      return { [key]: temp[key] }
-    })
-    setShowModal(obj)
+      return { [key]: temp[key] };
+    });
+    setShowModal(obj);
   };
 
-  const closeModal = (modal: 'loginModal' | 'signUpModal' | 'deleteModal') => {
+  const closeModal = (modal: "loginModal" | "signUpModal" | "deleteModal") => {
     let temp: any = showModal;
     temp = Object.keys(showModal).map((key: string) => {
       temp[key] = false;
-      return { [key]: temp[key] }
-    })
-    setShowModal({ ...showModal, [modal]: false })
+      return { [key]: temp[key] };
+    });
+    setShowModal({ ...showModal, [modal]: false });
   };
 
   const value = {
@@ -56,11 +55,10 @@ export const ModalProvider: React.FC<IModalContextProps> = ({ children }) => {
     openModal,
     closeModal,
     auth,
-    setToken
+    setToken,
   };
 
   return (
-    <ModalContext.Provider value={value}>{children}
-    </ModalContext.Provider>
+    <ModalContext.Provider value={value}>{children}</ModalContext.Provider>
   );
 };
