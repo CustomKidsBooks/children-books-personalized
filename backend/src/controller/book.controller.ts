@@ -399,19 +399,20 @@ export const BookController = {
       }
 
       // Create a Word document
-      const docx = await createWordDocument(title, subject);
+      const buf = await createWordDocument(title, subject);
 
       // Set the appropriate response headers for downloading
-      res.setHeader("Content-Type", "application/msword");
+      res.setHeader("Content-Type", "application/octet-stream");
       res.setHeader("Content-Disposition", `attachment; filename=story.docx`);
+      res.send(buf);
 
-      // Convert the Word document into a readable stream using streamifier
-      const docxStream = streamifier.createReadStream(docx);
+      // // Convert the Word document into a readable stream using streamifier
+      // const docxStream = streamifier.createReadStream(docx);
 
-      // Pipe the stream to the response
-      docxStream.pipe(res);
+      // // Pipe the stream to the response
+      // docxStream.pipe(res);
 
-      // Cleanup: Remove any temporary files if needed
+      // // Cleanup: Remove any temporary files if needed
     } catch (error) {
       console.error("Error downloading Word document:", error);
       return res.status(500).json({
@@ -437,50 +438,61 @@ export const BookController = {
       const doc = new PDFDocument();
       const docName = path.basename(title);
       // Get the file path
-      const tempFilePath = path.join(
-        __dirname,
-        `../../download/pdf/${docName}.pdf`
-      );
+      // const tempFilePath = path.join(
+      //   __dirname,
+      //   `../../download/pdf/${docName}.pdf`
+      // );
       // Write the buffer to a local file using fs module
-      fs.writeFileSync(tempFilePath, docName);
+      // fs.writeFileSync(tempFilePath, docName);
       // Pipe the PDF content to a writable stream (file)
-      doc.pipe(fs.createWriteStream(tempFilePath));
+      //doc.pipe(fs.createWriteStream(tempFilePath));
 
       // Add content to the PDF
       doc.fontSize(12).text(title, { align: "center" });
       doc.text(subject);
       // Embed the image in the PDF (replace 'imagePlaceholder' with the appropriate image coordinates)
-      if (image) {
-        const imageBuffer = fs.readFileSync(image); // Assuming 'image' contains the path to the image
-        // Define the coordinates and dimensions for placing the image
-        const x = 50; // X-coordinate (from left)
-        const y = 50; // Y-coordinate (from top)
-        const width = 200; // Width of the image
-        const height = 100; // Height of the image
-        doc.image(imageBuffer, x, y, { width: width, height: height });
-      }
-
+      // if (image) {
+      //   const imageBuffer = fs.readFileSync(image); // Assuming 'image' contains the path to the image
+      //   // Define the coordinates and dimensions for placing the image
+      //   const x = 50; // X-coordinate (from left)
+      //   const y = 50; // Y-coordinate (from top)
+      //   const width = 200; // Width of the image
+      //   const height = 100; // Height of the image
+      //   doc.image(imageBuffer, x, y, { width: width, height: height });
+      // }
+      //console.log("462", pages.length)
       // Add paragraphs from the pages to the PDF
       for (const page of pages) {
+        console.log("465", pages.length)
         doc.addPage(); // Start a new page for each page in the book
         doc.text(page.paragraph);
+        if (page.image) {
+          const imageBuffer = fs.readFileSync(page.image); // Assuming 'page.image' contains the path to the image
+          const x = 50; // X-coordinate (from left)
+          const y = 150; // Y-coordinate (from top) - Adjust this value as needed to position the image below the text
+          const width = 200; // Width of the image
+          const height = 100; // Height of the image
+          doc.image(imageBuffer, x, y, { width: width, height: height });
+        }
       }
 
       // End the PDF stream
+      doc.pipe(res);
       doc.end();
 
       // Set the appropriate response headers for downloading
-      res.setHeader("Content-Type", "application/pdf");
-      res.setHeader("Content-Disposition", `attachment; filename=story.pdf`);
+      //res.setHeader("Content-Type", "application/pdf");
+      //res.setHeader("Content-Disposition", `attachment; filename=story.pdf`);
 
       // Stream the PDF file to the client
-      const fileStream = fs.createReadStream(tempFilePath);
-      fileStream.pipe(res);
+      // const fileStream = fs.createReadStream(tempFilePath);
+      // res.download(tempFilePath);
+      // fileStream.pipe(res);
 
       // Cleanup: Remove the temporary PDF file after streaming
-      fileStream.on("end", () => {
-        fs.unlinkSync(tempFilePath);
-      });
+      // fileStream.on("end", () => {
+      //   fs.unlinkSync(tempFilePath);
+      // });
     } catch (error) {
       console.error("Error downloading PDF:", error);
       return res
