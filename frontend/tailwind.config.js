@@ -103,8 +103,6 @@ module.exports = {
             "0px 5px 5px 0px rgba(2, 3, 3, 0.04), 0px 3px 14px 0px rgba(2, 3, 3, 0.02), 0px 8px 10px 0px rgba(2, 3, 3, 0.03);",
         },
         ".preview-card": {
-          width: "506.622px",
-          height: "486.883px",
           borderRadius: "5px",
           borderStyle: "solid",
           borderWidth: "1px",
