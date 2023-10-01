@@ -2,7 +2,7 @@ import { Express } from "express";
 import { BookController } from "./controller/book.controller";
 import { UserController } from "./controller/user.controller";
 import { upload } from "./middleware/uploadFile";
-
+const authMiddleware = require("./auth/authCheck");
 export default function (app: Express) {
   // create user
   app.post("/api/create_user", UserController.createUser);
@@ -11,7 +11,7 @@ export default function (app: Express) {
   app.get("/api/books/:bookId/pages", BookController.fetchPagesForBook);
 
   // Handling POST request to create a new book
-  app.post("/api/create_book", BookController.createBook);
+  app.post("/api/create_book", authMiddleware, BookController.createBook);
   // Handling GET request to fetch all books
   app.get("/api/books", BookController.fetchBooks);
 
