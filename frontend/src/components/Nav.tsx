@@ -16,11 +16,10 @@ import { faBars } from "@fortawesome/free-solid-svg-icons";
 
 import { getAccessToken } from "@auth0/nextjs-auth0";
 import { useUser } from "@auth0/nextjs-auth0/client";
-import handler from "@app/api/auth/[auth0]/route";
 
 //Todo: Need to Handle login, signup, delete logic once Api completed
 const Nav = () => {
-  const { user, error, isLoading } = useUser();
+  const { user, error, isLoading, checkSession } = useUser();
   console.log("user", user);
 
   const pathname = usePathname();
@@ -32,6 +31,12 @@ const Nav = () => {
 
   const { showModal, openModal, closeModal, auth, setToken } =
     useContext(ModalContext);
+
+  // const handleLogin = async () => {
+  //   const { accessToken } = await getAccessToken();
+
+  //   console.log(accessToken);
+  // };
 
   const handleImageClick = () => {
     setDropdownVisible(!isDropdownVisible);
@@ -74,16 +79,6 @@ const Nav = () => {
   if (error) return <div>{error.message}</div>;
 
   const LoginButton = () => {
-    // return (
-    //   <>
-    //     {user ? (
-    //       <a href="/api/auth/logout">Logout</a>
-    //     ) : (
-    //       <a href="/api/auth/login">Login</a>
-    //     )}
-    //   </>
-    // );
-
     return (
       <>
         {user ? (
@@ -110,9 +105,6 @@ const Nav = () => {
                 </div>
               )}
             </div>
-            {/* <a href="/api/auth/login">Login</a>
-
-    <a href="/api/auth/logout">Logout</a> */}
             <a
               href="/api/auth/logout"
               // onClick={handleLogout}
@@ -139,6 +131,7 @@ const Nav = () => {
             // onClick={() => {
             //   openModal("loginModal");
             // }}
+            // onClick={handleLogin}
             className="inline-block px-4 py-2 leading-none border rounded border-white hover:border-transparent text-white bg-pink mt-4 lg:mt-0"
           >
             Login
