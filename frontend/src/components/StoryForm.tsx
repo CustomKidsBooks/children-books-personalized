@@ -70,7 +70,7 @@ const StoryForm: React.FC<CreateStoryFormProps> = ({
         </div>
         <div className="bg-kid h-[229px] bg-no-repeat bg-left-top background lg:hidden"></div>
         <div className="bg-education h-[114px] background lg:hidden"></div>
-        <div className="w-full lg:flex -mt-24 lg:mt-10">
+        <div className="w-full lg:flex -mt-24 lg:mt-10 bg-ellipse-create-story-page bg-no-repeat bg-contain lg:bg-none bg-right-bottom">
           <div className="lg:w-2/4 px-10">
             <form onSubmit={handleSubmit}>
               <div className="md:flex items-center justify-between">
@@ -113,7 +113,6 @@ const StoryForm: React.FC<CreateStoryFormProps> = ({
                 ) : null}
               </div>
               <div className="relative">
-                <div className="-z-10 bg-gradient-radial rounded-l-[1337px] absolute right-[-150px] opacity-40 w-350 h-full lg:bg-none lg:rounded-none"></div>
                 <label
                   htmlFor="details"
                   className="font-bold font-quicksand text-pink sm:text-2xl lg:text-3xl tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose"
