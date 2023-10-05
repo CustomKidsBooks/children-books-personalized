@@ -51,7 +51,7 @@ const UserProfile = ({ user }: UserProfileValues) => {
 
       <section className="bg-pink px-10 py-16 flex flex-col justify-center gap-12 lg:h-96 ">
         <div>
-          <h1 className="text-center text-white text-3xl sm:text-4xl md:text-5xl ">
+          <h1 className="text text-center text-white text-3xl sm:text-4xl md:text-5xl ">
             What story would you like to tell today?
           </h1>
         </div>

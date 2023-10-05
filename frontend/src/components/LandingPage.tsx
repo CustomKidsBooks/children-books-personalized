@@ -6,11 +6,12 @@ import { LinkButton } from "@ui/LinkButton";
 import Image from "next/image";
 import StartStep from "./StartStep";
 import UserProfile from "./UserProfile";
+import LandinPageSkeleton from "./skeleton/LandinPage.skeleton";
 
 const LandingPage = () => {
   const { user, error, isLoading } = useUser();
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <LandinPageSkeleton />;
   if (error) return <div>{error.message}</div>;
 
   if (user) {

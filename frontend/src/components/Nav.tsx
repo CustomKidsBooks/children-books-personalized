@@ -1,20 +1,19 @@
 "use client";
 
-import React, { useState, useContext, useEffect } from "react";
+import LoginForm from "@components/LoginForm";
+import Modal from "@components/Modal";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { LoginFormValues, SignUpFormValues } from "@utils/interfaces";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import Modal from "@components/Modal";
-import LoginForm from "@components/LoginForm";
-import { LoginFormValues } from "@utils/interfaces";
-import { SignUpFormValues } from "@utils/interfaces";
+import { useContext, useState } from "react";
 import { ModalContext } from "./ModalProvider";
 import SignUpForm from "./SignUpForm";
 import DeleteModal from "./delete/delete";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
-
 import { useUser } from "@auth0/nextjs-auth0/client";
+import NavbarSkeleton from "./skeleton/Navbar.skeleton";
 
 const Nav = () => {
   const { user, error, isLoading } = useUser();
@@ -66,7 +65,7 @@ const Nav = () => {
     setToken("");
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <NavbarSkeleton />;
   if (error) return <div>{error.message}</div>;
 
   const LoginButton = () => {
