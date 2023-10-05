@@ -1,5 +1,5 @@
 import { AppDataSource } from "../db/connect";
-import { DeepPartial, FindOneOptions } from "typeorm";
+import { DeepPartial, FindOneOptions, FindOptions } from "typeorm";
 import { Book } from "../entities/book";
 import { Page } from "../entities/page";
 import { Request, Response } from "express";
@@ -23,8 +23,16 @@ export const BookController = {
   /** ======== Create a Book ======== **/
 
   createBook: async (req: Request, res: Response) => {
-    const { userId, title, age, subject, characters, lesson, page, privacy } =
-      req.body;
+    const {
+      userEmail,
+      title,
+      age,
+      subject,
+      characters,
+      lesson,
+      page,
+      privacy,
+    } = req.body;
     let newBook: Book | undefined;
 
     try {
@@ -58,7 +66,7 @@ export const BookController = {
         const localImagePath = await downloadCoverImageLocally(imageUrl);
 
         newBook = bookRepository.create({
-          userId,
+          userEmail,
           title,
           subject,
           characters: charactersInfo,
@@ -122,8 +130,15 @@ export const BookController = {
   fetchBooks: async (req: Request, res: Response) => {
     try {
       const bookRepository = AppDataSource.getRepository(Book);
-      const books = await bookRepository.find();
-      res.json(books);
+
+      if (req.query) {
+        const userEmail = req.query.userEmail as string;
+        const books = await bookRepository.findBy({ userEmail: userEmail });
+        res.json(books);
+      } else {
+        const books = await bookRepository.find();
+        res.json(books);
+      }
     } catch (error) {
       log.error("Error retrieving books:", error);
       res
@@ -252,7 +267,7 @@ export const BookController = {
   updatePageHandler: async (req: Request, res: Response) => {
     const pageId = parseInt(req.params.pageId);
 
-    const { paragraph } = req.body;    
+    const { paragraph } = req.body;
 
     try {
       const pageRepository = AppDataSource.getRepository(Page);
@@ -277,7 +292,7 @@ export const BookController = {
             log.error("Error deleting image file:", error);
           }
         }
-                      
+
         // Update the image path in the database
         page.image = `images/page/${req.file.filename}`;
       }

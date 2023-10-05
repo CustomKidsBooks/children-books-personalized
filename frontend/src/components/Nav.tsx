@@ -14,12 +14,10 @@ import DeleteModal from "./delete/delete";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 
-import { getAccessToken } from "@auth0/nextjs-auth0";
 import { useUser } from "@auth0/nextjs-auth0/client";
 
-//Todo: Need to Handle login, signup, delete logic once Api completed
 const Nav = () => {
-  const { user, error, isLoading, checkSession } = useUser();
+  const { user, error, isLoading } = useUser();
   console.log("user", user);
 
   const pathname = usePathname();
@@ -31,13 +29,6 @@ const Nav = () => {
 
   const { showModal, openModal, closeModal, auth, setToken } =
     useContext(ModalContext);
-
-  // const handleLogin = async () => {
-  //   const { accessToken } = await getAccessToken();
-
-  //   console.log(accessToken);
-  // };
-
   const handleImageClick = () => {
     setDropdownVisible(!isDropdownVisible);
   };

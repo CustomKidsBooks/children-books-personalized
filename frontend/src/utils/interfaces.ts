@@ -1,7 +1,7 @@
 export interface BookValues {
   id: number;
   title: string;
-  desc?: string;
+  subject?: string;
   author?: string;
   page?: number;
   image?: string;
@@ -9,6 +9,7 @@ export interface BookValues {
 }
 
 export interface CreateStoryFormValues {
+  userEmail?: string;
   title: string;
   ageGroup: string;
   subject: string;
