@@ -1,16 +1,13 @@
 import React, { useState } from "react";
-import { Heading } from "./ui/Heading";
 import { Button } from "./ui/Button";
-import useDownloadBook from "./hooks/useDownloadBook";
 
 const DownloadBook = ({ bookId }: { bookId: number }) => {
-  let { downloadPDF, downloadWord, isLoading, isError } = useDownloadBook(bookId);
   const [message, setMessage] = useState<string | null>(null);
 
-  const handleDownload = async (downloadFunction: () => Promise<void>, fileName: string) => {
+  const handleDownload = (downloadLink: string, fileName: string) => {
     try {
-      await downloadFunction();
-      setMessage(`${fileName} download successful`);
+      window.open(downloadLink, "_blank");
+      setMessage(`${fileName} download initiated`);
     } catch (error: any) {
       setMessage(`Error downloading ${fileName}: ${error.message}`);
     }
@@ -20,13 +17,26 @@ const DownloadBook = ({ bookId }: { bookId: number }) => {
     <div className="items-center">
       <h1 className="font-bold text text-3xl">Download:</h1>
       <div className="flex flex-col gap-4 py-4 w-32">
-        <Button onClick={() => window.location.href = `http://localhost:5001/api/download/story/pdf/${bookId}`} intent="secondary" className="text font-bold">
+        <Button
+          onClick={() =>
+            handleDownload(`http://localhost:5001/api/download/story/pdf/${bookId}`, "PDF")
+          }
+          intent="secondary"
+          className="text font-bold"
+        >
           PDF
         </Button>
-        <Button onClick={() => window.location.href = `http://localhost:5001/api/download/story/word/${bookId}`} intent="secondary" className="text font-bold">
+        <Button
+          onClick={() =>
+            handleDownload(`http://localhost:5001/api/download/story/word/${bookId}`, "Word")
+          }
+          intent="secondary"
+          className="text font-bold"
+        >
           Word
         </Button>
       </div>
+      {message && <p>{message}</p>}
     </div>
   );
 };

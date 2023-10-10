@@ -106,7 +106,7 @@ const Book = ({ id }: BookValues) => {
               <p className="absolute bottom-3 left-5 font-bold">{pageNumber}</p>
             </div>
           </div>
-          <div className="w-1/4 bg-yellow-200 relative flex items-center font-quicksand font-semibold">
+          <div className="w-1/4 bg-yellow relative flex items-center font-quicksand font-semibold">
             {editParagraph ? (
               <textarea
                 className="m-4 leading-10 text-xl tracking-widest box-border h-full bg-yellow-200"
@@ -116,7 +116,7 @@ const Book = ({ id }: BookValues) => {
                 name="paragraph"
               />
             ) : (
-              <p className="m-4 leading-10 text-xl tracking-widest">
+              <p className="m-4 leading-10 text-2xl tracking-widest font-semibold">
                 {paragraph}
               </p>
             )}
@@ -141,9 +141,9 @@ const Book = ({ id }: BookValues) => {
         </div>
       </div>
       <div className="w-4/6 mx-auto my-10 py-10">
-        <div className="flex flex-col md:flex-row md:space-x-10 md:justify-center">
+        <div className="flex flex-col md:flex-row md:space-x-10 md:justify-center font-bold text-2xl">
           <Button
-            className="sm:w-3/4 text-center"
+            className="sm:w-3/4 text-center px-2 py-4"
             intent="teal"
             size="medium"
             onClick={() => setEditParagraph(true)}
@@ -151,7 +151,7 @@ const Book = ({ id }: BookValues) => {
             Edit Paragraph
           </Button>
           <Button
-            className="sm:w-3/4 text-center mt-3 md:mt-0"
+            className="sm:w-3/4 text-center mt-3 md:mt-0 px-2 py-4"
             intent="teal"
             size="medium"
             onClick={() => setEditImage(true)}

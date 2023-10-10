@@ -389,29 +389,36 @@ export const BookController = {
   },
   downloadStoryAsWord: async (req: Request, res: Response) => {
     const bookId = parseInt(req.params.bookId);
-
     try {
       // Retrieve the story content and other necessary data from the database or wherever it's stored
-      const { title, subject } = await fetchStoryDataForWord(bookId);
+      const { title, subject, paragraphs, image, images } =
+        await fetchStoryDataForWord(bookId);
 
       if (!title || !subject) {
         return res.status(404).json({ error: "Story not found" });
       }
-
-      // Create a Word document
-      const buf = await createWordDocument(title, subject);
-
-      // Set the appropriate response headers for downloading
-      res.setHeader("Content-Type", "application/octet-stream");
-      res.setHeader("Content-Disposition", `attachment; filename=story.docx`);
-      res.send(buf);
-
+      if (image !== null) {
+        // Create a Word document
+        const buf = await createWordDocument(
+          title,
+          subject,
+          paragraphs,
+          image,
+          images
+        );
+        // Set the appropriate response headers for downloading
+        res.setHeader("Content-Type", "application/msword");
+        res.setHeader("Content-Disposition", `attachment; filename=story.docx`);
+        res.send(buf);
+      } else {
+        // `image` is null, handle it accordingly
+        console.error("No image provided");
+        // You can choose to handle the absence of an image, such as providing a default image or an error message
+      }
       // // Convert the Word document into a readable stream using streamifier
       // const docxStream = streamifier.createReadStream(docx);
-
       // // Pipe the stream to the response
       // docxStream.pipe(res);
-
       // // Cleanup: Remove any temporary files if needed
     } catch (error) {
       console.error("Error downloading Word document:", error);
@@ -420,79 +427,74 @@ export const BookController = {
       });
     }
   },
-
-  // Inside BookController
   downloadStoryAsPDF: async (req: Request, res: Response) => {
     const bookId = parseInt(req.params.bookId);
 
     try {
       // Retrieve the story content and other necessary data from the database or wherever it's stored
-      const { title, subject, characters, lesson, pages, tag, image } =
-        await fetchStoryDataForPDF(bookId);
-
+      const { title, subject, image, pages } = await fetchStoryDataForPDF(
+        bookId
+      );
       if (!title || !subject) {
         return res.status(404).json({ error: "Story not found" });
       }
-
       // Create a PDF document
       const doc = new PDFDocument();
-      const docName = path.basename(title);
-      // Get the file path
-      // const tempFilePath = path.join(
-      //   __dirname,
-      //   `../../download/pdf/${docName}.pdf`
-      // );
-      // Write the buffer to a local file using fs module
-      // fs.writeFileSync(tempFilePath, docName);
-      // Pipe the PDF content to a writable stream (file)
-      //doc.pipe(fs.createWriteStream(tempFilePath));
+      let pageNumber = 1;
 
+      // Define common values for text and image positioning
+      const textConfig = {
+        x: 60,
+        width: 280,
+      };
+
+      const imageConfig = {
+        x: 60, // X-coordinate for the upper half
+        width: 280,
+      };
+
+      // Calculate the vertical center of the page
+      const centerY = doc.page.height / 2;
       // Add content to the PDF
-      doc.fontSize(12).text(title, { align: "center" });
-      doc.text(subject);
-      // Embed the image in the PDF (replace 'imagePlaceholder' with the appropriate image coordinates)
-      // if (image) {
-      //   const imageBuffer = fs.readFileSync(image); // Assuming 'image' contains the path to the image
-      //   // Define the coordinates and dimensions for placing the image
-      //   const x = 50; // X-coordinate (from left)
-      //   const y = 50; // Y-coordinate (from top)
-      //   const width = 200; // Width of the image
-      //   const height = 100; // Height of the image
-      //   doc.image(imageBuffer, x, y, { width: width, height: height });
-      // }
-      //console.log("462", pages.length)
-      // Add paragraphs from the pages to the PDF
-      for (const page of pages) {
-        console.log("465", pages.length)
-        doc.addPage(); // Start a new page for each page in the book
-        doc.text(page.paragraph);
-        if (page.image) {
-          const imageBuffer = fs.readFileSync(page.image); // Assuming 'page.image' contains the path to the image
-          const x = 50; // X-coordinate (from left)
-          const y = 150; // Y-coordinate (from top) - Adjust this value as needed to position the image below the text
-          const width = 200; // Width of the image
-          const height = 100; // Height of the image
-          doc.image(imageBuffer, x, y, { width: width, height: height });
-        }
+      doc.fontSize(24).text(title, { align: "center" });
+      doc.fontSize(20).text(subject);
+      if (image) {
+        const imageBuffer = fs.readFileSync(image);
+        const imageWidth = imageConfig.width;
+        // Calculate the Y-coordinate to center the image vertically
+        const imageY = centerY - imageWidth / 2;
+        doc.image(imageBuffer, imageConfig.x, imageY, {
+          width: imageWidth,
+          height: imageWidth, // Keep the image square
+        });
       }
+      // Add paragraphs and images from pages
+      for (const page of pages) {
+        doc.addPage(); // Start a new page for each page in the book
+        pageNumber++;
+        // Add image in the upper half
+        if (page.image) {
+          const imageBuffer = fs.readFileSync(page.image);
+          const imageWidth = imageConfig.width;
+          // Calculate the Y-coordinate to center the image vertically
+          const imageY = centerY - imageWidth / 2;
 
-      // End the PDF stream
+          doc.image(imageBuffer, imageConfig.x, imageY, {
+            width: imageWidth,
+            height: imageWidth, // Keep the image square
+          });
+        }
+        // Calculate the Y-coordinate to center the text vertically below the image
+        const textY = centerY + imageConfig.width / 2 + 10; // Adjust the 10 for spacing
+        // Add text in the lower half
+        doc.text(page.paragraph, textConfig.x, textY, {
+          width: textConfig.width,
+        });
+      }
       doc.pipe(res);
+      // Add page number
+      doc.fontSize(12).text(`Page ${pageNumber}`, { align: "right" });
       doc.end();
-
-      // Set the appropriate response headers for downloading
-      //res.setHeader("Content-Type", "application/pdf");
-      //res.setHeader("Content-Disposition", `attachment; filename=story.pdf`);
-
-      // Stream the PDF file to the client
-      // const fileStream = fs.createReadStream(tempFilePath);
-      // res.download(tempFilePath);
-      // fileStream.pipe(res);
-
-      // Cleanup: Remove the temporary PDF file after streaming
-      // fileStream.on("end", () => {
-      //   fs.unlinkSync(tempFilePath);
-      // });
     } catch (error) {
       console.error("Error downloading PDF:", error);
       return res
@@ -500,6 +502,238 @@ export const BookController = {
         .json({ error: "An error occurred while downloading the PDF" });
     }
   },
+
+  downloadnoStoryAsPDF: async (req: Request, res: Response) => {
+    const bookId = parseInt(req.params.bookId);
+
+    try {
+      // Retrieve the story content and other necessary data from the database or wherever it's stored
+      const { title, subject, image, pages } = await fetchStoryDataForPDF(
+        bookId
+      );
+
+      if (!title || !subject) {
+        return res.status(404).json({ error: "Story not found" });
+      }
+
+      // Create a PDF document
+      const doc = new PDFDocument();
+
+      // Define common values for text and image positioning
+      const textConfig = {
+        x: 20,
+        width: 280,
+      };
+
+      const imageConfig = {
+        x: 20, // X-coordinate for the upper half
+        y: 20, // Y-coordinate for the upper half
+        width: 280,
+        height: 150, // Height of the upper half
+      };
+
+      // Add content to the PDF
+      doc.fontSize(24).text(title, { align: "center" });
+      doc.fontSize(20).text(subject);
+
+      if (image) {
+        const imageBuffer = fs.readFileSync(image);
+        doc.image(imageBuffer, imageConfig.x, imageConfig.y, {
+          width: imageConfig.width,
+          height: imageConfig.height,
+        });
+      }
+
+      // Add paragraphs and images from pages
+      for (const page of pages) {
+        doc.addPage(); // Start a new page for each page in the book
+
+        // Add image in the upper half
+        if (page.image) {
+          const imageBuffer = fs.readFileSync(page.image);
+          doc.image(imageBuffer, imageConfig.x, imageConfig.y, {
+            width: imageConfig.width,
+            height: imageConfig.height,
+          });
+        }
+
+        // Add text in the lower half
+        doc.text(
+          page.paragraph,
+          textConfig.x,
+          imageConfig.y + imageConfig.height,
+          {
+            width: textConfig.width,
+          }
+        );
+      }
+
+      doc.pipe(res);
+      doc.end();
+    } catch (error) {
+      console.error("Error downloading PDF:", error);
+      return res
+        .status(500)
+        .json({ error: "An error occurred while downloading the PDF" });
+    }
+  },
+
+  // Inside BookController
+  download6StoryAsPDF: async (req: Request, res: Response) => {
+    const bookId = parseInt(req.params.bookId);
+
+    try {
+      // Retrieve the story content and other necessary data from the database or wherever it's stored
+      const { title, subject, image, pages } = await fetchStoryDataForPDF(
+        bookId
+      );
+
+      if (!title || !subject) {
+        return res.status(404).json({ error: "Story not found" });
+      }
+
+      // Create a PDF document
+      const doc = new PDFDocument();
+
+      // Define common values for text and image positioning
+      const textConfig = {
+        x: 20,
+        y: 150,
+        width: 280,
+      };
+
+      const imageConfig = {
+        x: 300,
+        y: 150,
+        width: 290,
+      };
+
+      // Add content to the PDF
+      doc.fontSize(24).text(title, { align: "center" });
+      doc.fontSize(20).text(subject);
+
+      if (image) {
+        const imageBuffer = fs.readFileSync(image);
+        const imageWidth = imageConfig.width;
+        const imageHeight = imageConfig.width; // Assuming the image's height is the same as its width
+
+        // Calculate the X and Y coordinates to center the image on the page
+        const centerX = (doc.page.width - imageWidth) / 2;
+        const centerY = (doc.page.height - imageHeight) / 2;
+
+        doc.image(imageBuffer, centerX, centerY, {
+          width: imageWidth,
+          height: imageHeight,
+        });
+      }
+
+      // Add paragraphs and images from pages
+      for (const page of pages) {
+        doc.addPage(); // Start a new page for each page in the book
+
+        // Add text
+        doc.text(page.paragraph, textConfig.x, textConfig.y, {
+          width: textConfig.width,
+        });
+
+        if (page.image) {
+          const imageBuffer = fs.readFileSync(page.image);
+          doc.image(imageBuffer, imageConfig.x, imageConfig.y, {
+            width: imageConfig.width,
+            height: imageConfig.width,
+          });
+        }
+      }
+      doc.pipe(res);
+      doc.end();
+    } catch (error) {
+      console.error("Error downloading PDF:", error);
+      return res
+        .status(500)
+        .json({ error: "An error occurred while downloading the PDF" });
+    }
+  },
+
+  // downloadStoryAsPDF: async (req: Request, res: Response) => {
+  //   const bookId = parseInt(req.params.bookId);
+
+  //   try {
+  //     // Retrieve the story content and other necessary data from the database or wherever it's stored
+  //     const { title, subject, characters, lesson, pages, tag, image } =
+  //       await fetchStoryDataForPDF(bookId);
+
+  //     if (!title || !subject) {
+  //       return res.status(404).json({ error: "Story not found" });
+  //     }
+
+  //     // Create a PDF document
+  //     const doc = new PDFDocument();
+  //     // Add content to the PDF
+  //     doc.fontSize(24).text(title, { align: "center" });
+  //     doc.fontSize(20).text(subject);
+  //     if (image) {
+  //       const imageBuffer = fs.readFileSync(image); // Assuming 'page.image' contains the path to the image
+  //       const x = 50; // X-coordinate (from left)
+  //       const y = 150; // Y-coordinate (from top) - Adjust this value as needed to position the image below the text
+  //       const width = 300; // Width of the image
+  //       const height = 300; // Height of the image
+  //       doc.image(imageBuffer, x, y, { width: width, height: height });
+  //     }
+  //     for (const page of pages) {
+  //       doc.addPage(); // Start a new page for each page in the book
+  //       const xText = 20; // X-coordinate for text
+  //       const yText = 150; // Y-coordinate for text
+  //       const xImage = 300; // X-coordinate for image (adjust as needed)
+  //       const yImage = 150; // Y-coordinate for image (adjust as needed)
+  //       const textWidth = 280; // Width of the text
+  //       const imageWidth = 290; // Width of the image (adjust as needed)
+
+  //       // Add text
+  //       doc.text(page.paragraph, xText, yText, { width: textWidth });
+
+  //       if (page.image) {
+  //         const imageBuffer = fs.readFileSync(page.image); // Assuming 'page.image' contains the path to the image
+  //         doc.image(imageBuffer, xImage, yImage, { width: imageWidth });
+  //       }
+  //     }
+  //     doc.pipe(res);
+  //     doc.end();
+  //   }
+  // for (const page of pages) {
+  //   console.log("465", pages.length);
+  //   doc.addPage(); // Start a new page for each page in the book
+  //   doc.text(page.paragraph);
+  //   if (page.image) {
+  //     const imageBuffer = fs.readFileSync(page.image); // Assuming 'page.image' contains the path to the image
+  //     const x = 50; // X-coordinate (from left)
+  //     const y = 150; // Y-coordinate (from top) - Adjust this value as needed to position the image below the text
+  //     const width = 300; // Width of the image
+  //     const height = 300; // Height of the image
+  //     doc.image(imageBuffer, x, y, { width: width, height: height });
+  //   }
+  // }
+
+  // End the PDF stream
+  // Set the appropriate response headers for downloading
+  //res.setHeader("Content-Type", "application/pdf");
+  //res.setHeader("Content-Disposition", `attachment; filename=story.pdf`);
+
+  // Stream the PDF file to the client
+  // const fileStream = fs.createReadStream(tempFilePath);
+  // res.download(tempFilePath);
+  // fileStream.pipe(res);
+
+  // Cleanup: Remove the temporary PDF file after streaming
+  // fileStream.on("end", () => {
+  //   fs.unlinkSync(tempFilePath);
+  // });
+  //   catch (error) {
+  //     console.error("Error downloading PDF:", error);
+  //     return res
+  //       .status(500)
+  //       .json({ error: "An error occurred while downloading the PDF" });
+  //   }
+  // },
 
   /** ======== Delete Specific page ======== **/
 
