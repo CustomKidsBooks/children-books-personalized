@@ -3,7 +3,6 @@ import { DeepPartial, FindOneOptions } from "typeorm";
 import { Book } from "../entities/book";
 import { Page } from "../entities/page";
 import { Request, Response } from "express";
-import streamifier from "streamifier";
 import log from "../logger";
 import { generateBookText, generateImage } from "../service/openai.service";
 import {
@@ -16,8 +15,7 @@ import {
 } from "../service/book.service";
 import fs from "fs";
 import path from "path";
-import multer from "multer";
-import PDFDocument from "pdfkit"; // Use the PDF generation library you prefer
+import PDFDocument from "pdfkit";
 
 type PageData = {
   pageNumber: number;

@@ -1,15 +1,7 @@
 import axios from "axios";
 import fs from "fs";
 import { Book } from "../entities/book"; // Import your Book entity or data model
-import path from "path";
-import Docxtemplater from "docxtemplater";
-import PizZip from "pizzip";
-import * as mammoth from "mammoth";
-import * as htmlToDocx from "html-docx-js";
-// @ts-ignore
-import officegen from "officegen";
-//const { Document, Packer, Paragraph, TextRun, PageBreak } = require('docx');
-// Your code here
+
 import {
   Document,
   Packer,
