@@ -400,7 +400,10 @@ export const BookController = {
       if (image !== null) {
         const buf = await createWordDocument(title, paragraphs, image, images);
         res.setHeader("Content-Type", "application/msword");
-        res.setHeader("Content-Disposition", `attachment; filename=story.docx`);
+        res.setHeader(
+          "Content-Disposition",
+          `attachment; filename=${title}.docx`
+        );
         res.send(buf);
       } else {
         console.error("No image provided");
@@ -452,7 +455,11 @@ export const BookController = {
       };
 
       const centerY = doc.page.height / 2;
-      doc.font("Times-Roman").fillColor('green').fontSize(20).text(title, { align: "center" });
+      doc
+        .font("Times-Roman")
+        .fillColor("green")
+        .fontSize(20)
+        .text(title, { align: "center", underline: true });
 
       if (image) {
         const imageBuffer = fs.readFileSync(image);
@@ -475,7 +482,7 @@ export const BookController = {
           height: imageWidth,
         });
         doc.y = imageY + imageWidth + 5;
-        doc.fillColor('black').text(`(${pageNumber})`, { align: "center" });
+        doc.fillColor("black").text(`(${pageNumber})`, { align: "center" });
       }
 
       for (const page of pages) {
@@ -524,9 +531,10 @@ export const BookController = {
             width: textConfig.width,
             align: "center",
           });
-        doc.fillColor('black').text(`(${pageNumber + 1})`, { align: "center" });
+        doc.fillColor("black").text(`(${pageNumber + 1})`, { align: "center" });
         pageNumber++;
       }
+      res.setHeader("Content-Disposition", `attachment; filename=${title}.pdf`);
       doc.pipe(res);
       doc.end();
     } catch (error) {

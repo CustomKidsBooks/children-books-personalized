@@ -29,6 +29,7 @@ import {
   VerticalPositionAlign,
   PageBreak,
   IParagraphOptions,
+  UnderlineType,
 } from "docx";
 import { AppDataSource } from "../db/connect";
 // Function to download the image and save it locally in the Node.js environment
@@ -202,6 +203,10 @@ export async function createWordDocument(
                   color: "008000",
                   size: 36,
                   font: "quicksand",
+                  underline: {
+                    type: UnderlineType.DOUBLE,
+                    color: "FF0000",
+                  },
                 }),
               ],
             }),

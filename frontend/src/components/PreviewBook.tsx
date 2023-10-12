@@ -27,8 +27,8 @@ const PreviewBook = ({ id }: PreviewBookValues) => {
   }
 
   return (
-    <section className="mt-10">
-      <div className="p-2 mb-3 grid grid-cols-2 w-[506.622px]">
+    <section className="">
+      <div className="p-2 mb-3 flex flex-col gap-3 md:gap-0 md:flex-row justify-between md:w-2/4">
         <p className="text">{book?.title}</p>
         <div className="flex gap-2 ">
           <FontAwesomeIcon
@@ -38,24 +38,26 @@ const PreviewBook = ({ id }: PreviewBookValues) => {
           <p className="text-pine-green">2-3</p>
         </div>
       </div>
-      {book?.tag && <Tag tag={book.tag} />}
-      <div className="pt-10 lg:grid lg:grid-cols-2 inline-grid lg:h-auto gap-10 place-content-evenly shrink">
-        <div className="preview-card object-contain relative">
-          <Image
-            src={
-              book?.image
-                ? `/assets/images/cover.jpg`
-                : "/assets/images/family.jpg"
-            }
-            alt="book cover"
-            fill={true}
-          />
-        </div>
-        <div className="p-4">
-          <div className="flex lg:flex-col flex-row  gap-24 w-full">
-            <DownloadBook bookId={id} />
-            <SendBook />
+      <div className="mb-10">{book?.tag && <Tag tag={book.tag} />}</div>
+      <div className="flex flex-col lg:flex-row">
+        <div className="lg:w-2/4">
+          <div className="preview-card object-contain w-full">
+            <Image
+              src={
+                book?.image
+                  ? `/assets/images/cover.jpg`
+                  : "/assets/images/family.jpg"
+              }
+              alt="book cover"
+              width={506}
+              height={486}
+              className="w-full"
+            />
           </div>
+        </div>
+        <div className="mt-10 lg:mt-0 lg:w-1/4 lg:mx-auto gap-5 flex flex-col lg:justify-around">
+          <DownloadBook bookId={id} />
+          <SendBook />
         </div>
       </div>
     </section>
