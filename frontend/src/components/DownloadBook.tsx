@@ -8,6 +8,9 @@ const DownloadBook = ({ bookId }: { bookId: number }) => {
     try {
       window.open(downloadLink, "_blank");
       setMessage(`${fileName} download initiated`);
+      setTimeout(() => {
+        setMessage(null);
+      }, 4000);
     } catch (error: any) {
       setMessage(`Error downloading ${fileName}: ${error.message}`);
     }
