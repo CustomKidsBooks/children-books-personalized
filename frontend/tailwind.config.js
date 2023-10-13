@@ -16,6 +16,7 @@ module.exports = {
         "teal-600": "#0d9488",
         "teal-400": "#2dd4bf",
         pink: "#F54298",
+        "yellow": "#FDCF00",
         "pink-300": "#F06292",
         "pink-700": "#be185d",
         "pink-deep": "#FF449F",

@@ -33,4 +33,10 @@ export default function (app: Express) {
 
   // Handling DELETE request to delete a specific page
   app.delete("/api/pages/:pageId", BookController.deletePageHandler);
+
+  // Handling pdf download
+  app.get('/api/download/story/pdf/:bookId', BookController.downloadStoryAsPDF);
+  // Handling word download
+  app.get('/api/download/story/word/:bookId', BookController.downloadStoryAsWord);
+
 }
