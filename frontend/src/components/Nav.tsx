@@ -14,6 +14,8 @@ import SignUpForm from "./SignUpForm";
 import DeleteModal from "./delete/delete";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import NavbarSkeleton from "./skeleton/Navbar.skeleton";
+import { Button } from "./ui/Button";
+import axios from "axios";
 
 const Nav = () => {
   const { user, error, isLoading } = useUser();
@@ -131,6 +133,15 @@ const Nav = () => {
     );
   };
 
+  const handleToken = async () => {
+    await axios
+      .get("api/books/sn/djk")
+      .then(() => {})
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <>
       <nav className="bg-white">
@@ -170,6 +181,9 @@ const Nav = () => {
                   >
                     About us
                   </a>
+                  <Button className="text-black" onClick={handleToken}>
+                    Token
+                  </Button>
                   <a
                     href="/user-library"
                     onClick={() => setActiveLink("Library")}
