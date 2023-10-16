@@ -9,13 +9,14 @@ import {
   downloadCoverImageLocally,
   downloadPagesImageLocally,
   getPagesFromContent,
-  createWordDocument,
   fetchStoryDataForWord,
   fetchStoryDataForPDF,
 } from "../service/book.service";
 import fs from "fs";
 import path from "path";
 import PDFDocument from "pdfkit";
+import nodemailer from "nodemailer";
+import { generatePdfDoc, generateWordDoc } from "../utils";
 
 type PageData = {
   pageNumber: number;
@@ -388,7 +389,7 @@ export const BookController = {
   downloadStoryAsWord: async (req: Request, res: Response) => {
     const bookId = parseInt(req.params.bookId);
     try {
-      const { title, paragraphs, image, images } = await fetchStoryDataForWord(
+      const { title, image } = await fetchStoryDataForWord(
         bookId
       );
 
@@ -396,7 +397,7 @@ export const BookController = {
         return res.status(404).json({ error: "Story not found" });
       }
       if (image !== null) {
-        const buf = await createWordDocument(title, paragraphs, image, images);
+        const buf = await generateWordDoc(bookId);
         res.setHeader("Content-Type", "application/msword");
         res.setHeader(
           "Content-Disposition",
@@ -416,125 +417,10 @@ export const BookController = {
 
   downloadStoryAsPDF: async (req: Request, res: Response) => {
     const bookId = parseInt(req.params.bookId);
-    const frameX = 30;
-    const frameWidth = 550;
-
-    function drawFrameOverlay(
-      doc: PDFKit.PDFDocument,
-      x: number,
-      y: number,
-      frameWidth: number,
-      frameHeight: number,
-      borderColor: string,
-      backgroundColor: string,
-      opacity: number
-    ) {
-      doc.save();
-      doc.rect(x, y, frameWidth, frameHeight).stroke(borderColor);
-      doc.rect(x, y, frameWidth, frameHeight).fill(backgroundColor);
-      doc.opacity(opacity);
-      doc.restore();
-    }
-
     try {
-      const { title, image, pages } = await fetchStoryDataForPDF(bookId);
-      if (!title) {
-        return res.status(404).json({ error: "Story not found" });
-      }
-      const doc = new PDFDocument();
-      let pageNumber = 1;
-
-      const textConfig = {
-        width: 380,
-      };
-
-      const imageConfig = {
-        width: 350,
-      };
-
-      const centerY = doc.page.height / 2;
-      doc
-        .font("Times-Roman")
-        .fillColor("green")
-        .fontSize(20)
-        .text(title, { align: "center", underline: true });
-
-      if (image) {
-        const imageBuffer = fs.readFileSync(image);
-        const imageWidth = imageConfig.width;
-        const imagePadding = 40;
-        const imageY = centerY - imageWidth / 2 - imagePadding;
-
-        drawFrameOverlay(
-          doc,
-          frameX,
-          imageY,
-          frameWidth,
-          imageWidth + 100,
-          "gold",
-          "orange",
-          0.5
-        );
-        doc.image(imageBuffer, (doc.page.width - imageWidth) / 2, imageY, {
-          width: imageWidth,
-          height: imageWidth,
-        });
-        doc.y = imageY + imageWidth + 5;
-        doc.fillColor("black").text(`(${pageNumber})`, { align: "center" });
-      }
-
-      for (const page of pages) {
-        doc.addPage();
-        if (page.image) {
-          const imageBuffer = fs.readFileSync(page.image);
-          const imageWidth = imageConfig.width;
-          const imagePadding = 40;
-          const imageY = centerY - imageWidth / 2 - imagePadding;
-
-          drawFrameOverlay(
-            doc,
-            frameX,
-            imageY,
-            frameWidth,
-            imageWidth + 150,
-            "orange",
-            "orange",
-            0.5
-          );
-
-          doc.image(imageBuffer, (doc.page.width - imageWidth) / 2, imageY, {
-            width: imageWidth,
-            height: imageWidth,
-          });
-          doc.y = imageY + imageWidth;
-        }
-        const textPadding = 5;
-        const textY = centerY + imageConfig.width / 2 + textPadding;
-
-        drawFrameOverlay(
-          doc,
-          frameX,
-          textY,
-          frameWidth,
-          120,
-          "orange",
-          "orange",
-          0.5
-        );
-        const textX = doc.page.width / 2;
-        doc
-          .font("Times-Roman")
-          .fontSize(16)
-          .text(page.paragraph, textX - 200, textY, {
-            width: textConfig.width,
-            align: "center",
-          });
-        doc.fillColor("black").text(`(${pageNumber + 1})`, { align: "center" });
-        pageNumber++;
-      }
+      const { title, doc } = await generatePdfDoc(bookId);
       res.setHeader("Content-Disposition", `attachment; filename=${title}.pdf`);
       doc.pipe(res);
-      doc.end();
     } catch (error) {
       console.error("Error downloading PDF:", error);
       return res
@@ -589,7 +475,105 @@ export const BookController = {
       });
     }
   },
+  sendBookAsPdf: async (req: Request, res: Response) => {
+    try {
+      const { bookId } = req.body;
+      console.log("hit send button");
 
+      // Retrieve the book data and generate the PDF (you'll need to implement this)
+      const { title, doc } = await generatePdfDoc(bookId);
+      const pdfBuffer = await new Promise((resolve) => {
+        //Finalize document and convert to buffer array
+        let buffers: Buffer[] = [];
+        doc.on("data", buffers.push.bind(buffers));
+        doc.on("end", () => {
+          resolve(new Uint8Array(Buffer.concat(buffers)) as Buffer);
+        });
+      });
+
+      // Create a Nodemailer transport for sending emails
+      const transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST,
+        port: 2525,
+        auth: {
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASS,
+        },
+      });
+      // Send the PDF as an email attachment
+      const mailOptions = {
+        from: process.env.SMTP_FROM,
+        to: process.env.SMTP_TO,
+        subject: "Book PDF Document",
+        text: "Attached is the PDF of the book.",
+        attachments: [
+          {
+            filename: `${title}.pdf`,
+            content: pdfBuffer as Buffer, // The PDF buffer generated earlier
+          },
+        ],
+      };
+      console.log("hit 521");
+      // Send the email
+      await transporter.sendMail(mailOptions);
+      res
+        .status(200)
+        .json({ success: true, message: "Email sent successfully." });
+    } catch (error) {
+      console.error("Error sending the email:", error);
+      res
+        .status(500)
+        .json({ success: false, message: "Email sending failed." });
+    }
+  },
+  sendBookAsWord: async (req: Request, res: Response) => {
+    try {
+      const { bookId } = req.body;
+      console.log("hit send button");
+
+      // Retrieve the book data and generate the PDF (you'll need to implement this)
+      const { title, doc } = await generateWordDoc(bookId);
+      const pdfBuffer = await new Promise((resolve) => {
+        //Finalize document and convert to buffer array
+        let buffers: Buffer[] = [];
+       
+      });
+
+      // Create a Nodemailer transport for sending emails
+      const transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST,
+        port: 2525,
+        auth: {
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASS,
+        },
+      });
+      // Send the PDF as an email attachment
+      const mailOptions = {
+        from: process.env.SMTP_FROM,
+        to: process.env.SMTP_TO,
+        subject: "Book Word Document",
+        text: "Attached is the Word Version of the book.",
+        attachments: [
+          {
+            filename: `${title}.docx`,
+            content: pdfBuffer as Buffer, // The PDF buffer generated earlier
+          },
+        ],
+      };
+      console.log("hit 521");
+      // Send the email
+      await transporter.sendMail(mailOptions);
+      res
+        .status(200)
+        .json({ success: true, message: "Email sent successfully." });
+    } catch (error) {
+      console.error("Error sending the email:", error);
+      res
+        .status(500)
+        .json({ success: false, message: "Email sending failed." });
+    }
+  },
   // ... other methods ...
 };
 

@@ -39,4 +39,8 @@ export default function (app: Express) {
   // Handling word download
   app.get('/api/download/story/word/:bookId', BookController.downloadStoryAsWord);
 
+  // Define an API endpoint for sending the book as a PDF
+  app.post("/api/sendBookAsPdf/:bookId", BookController.sendBookAsPdf);
+  // Define an API endpoint for sending the book as a Word
+  app.post("/api/sendBookAsWord/:bookId", BookController.sendBookAsWord);
 }
