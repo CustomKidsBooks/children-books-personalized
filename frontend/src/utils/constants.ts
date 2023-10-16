@@ -32,3 +32,8 @@ export const ageGroupList: string[] = [
   "10-11",
   "11-12",
 ];
+
+export const privacyList: string[] = [
+  "private",
+  "public"
+]

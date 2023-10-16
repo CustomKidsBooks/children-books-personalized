@@ -3,7 +3,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "@ui/Button";
 import { Heading } from "@ui/Heading";
-import { ageGroupList } from "@utils/constants";
+import { ageGroupList, privacyList } from "@utils/constants";
 import { CreateStoryFormValues } from "@utils/interfaces";
 import { createStoryValidationSchema } from "@utils/storyValidation";
 import { getIn, useFormik } from "formik";
@@ -35,6 +35,7 @@ const StoryForm: React.FC<CreateStoryFormProps> = ({
   } = useFormik<CreateStoryFormValues>({
     initialValues: {
       title: "",
+      privacy: "private",
       ageGroup: "0-1",
       subject: "",
       page: 3,
@@ -112,6 +113,28 @@ const StoryForm: React.FC<CreateStoryFormProps> = ({
                   <div className="asterisk">{errors.ageGroup}</div>
                 ) : null}
               </div>
+
+              <div className="md:flex items-center">
+                <label htmlFor="privacy" className="label-input font-bold">
+                  Privacy
+                  <span className="asterisk">*</span>
+                </label>
+                <ReusableInput
+                  id="privacy"
+                  name="privacy"
+                  type="select"
+                  value={values.privacy}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  options={privacyList}
+                />
+              </div>
+              <div>
+                {touched.privacy && errors.privacy ? (
+                  <div className="asterisk">{errors.privacy}</div>
+                ) : null}
+              </div>
+
               <div className="relative">
                 <label
                   htmlFor="details"
