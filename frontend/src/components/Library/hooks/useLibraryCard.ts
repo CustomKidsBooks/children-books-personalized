@@ -1,6 +1,6 @@
 import { useUser } from "@auth0/nextjs-auth0/client";
-import { axiosInstance } from "@services/api-client";
 import { BookValues } from "@utils/interfaces";
+import axios from "axios";
 import { useEffect, useState } from "react";
 
 const useLibraryCard = () => {
@@ -36,8 +36,8 @@ const useLibraryCard = () => {
     //     .finally(() => setIsLoading(false));
     // }
 
-    axiosInstance
-      .get(`/api/books/`)
+    axios
+      .get(`/api/books`)
       .then((res) => {
         setBookData(res.data);
       })

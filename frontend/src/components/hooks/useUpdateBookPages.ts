@@ -1,4 +1,4 @@
-import { axiosInstance } from "@services/api-client";
+import axios from "axios";
 import { useEffect, useState } from "react";
 
 const useUpdateBookPages = () => {
@@ -7,7 +7,7 @@ const useUpdateBookPages = () => {
   const [bookData, setBookData] = useState();
 
   useEffect(() => {
-    axiosInstance
+    axios
       .put("/api/pages/4")
       .then((res) => {
         setBookData(res.data.message);

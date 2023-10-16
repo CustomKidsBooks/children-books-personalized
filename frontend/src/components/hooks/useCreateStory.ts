@@ -1,6 +1,6 @@
 import { useUser } from "@auth0/nextjs-auth0/client";
-import { axiosInstance } from "@services/api-client";
 import { CreateStoryFormValues } from "@utils/interfaces";
+import axios from "axios";
 import { useState } from "react";
 
 const useCreateStory = () => {
@@ -10,7 +10,7 @@ const useCreateStory = () => {
 
   const createStory = async (values: CreateStoryFormValues) => {
     setIsSubmitting(true);
-    await axiosInstance
+    await axios
       .post("/api/create_book", {
         userEmail: user?.email || null,
         title: values.title,

@@ -2,7 +2,6 @@ import { Express } from "express";
 import { BookController } from "./controller/book.controller";
 import { UserController } from "./controller/user.controller";
 import { upload } from "./middleware/uploadFile";
-import { checkJwt } from "./middleware/auth";
 
 export default function (app: Express) {
   // create user

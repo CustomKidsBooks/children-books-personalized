@@ -1,4 +1,5 @@
 import { axiosInstance } from "@services/api-client";
+import axios from "axios";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 interface BookContentValues {
@@ -45,7 +46,7 @@ const useGetBookPages = (id: number): GetBookValues => {
   const [message, setMessage] = useState<string>("");
 
   useEffect(() => {
-    axiosInstance
+    axios
       .get(`/api/books/${id}/pages`)
       .then((res) => {
         setBookContent(res.data);

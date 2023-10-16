@@ -1,6 +1,6 @@
-import { axiosInstance } from "@services/api-client";
 import { BookValues } from "@utils/interfaces";
-import { useState, useEffect } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 
 const useGetBook = (id: number) => {
@@ -9,7 +9,7 @@ const useGetBook = (id: number) => {
     const [bookData, setBookData] = useState<BookValues>();
   
     useEffect(() => {
-      axiosInstance
+      axios
         .get(`/api/book/${id}`)
         .then((res) => {
           setBookData(res.data.data);          

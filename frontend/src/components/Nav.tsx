@@ -1,5 +1,6 @@
 "use client";
 
+import { useUser } from "@auth0/nextjs-auth0/client";
 import LoginForm from "@components/LoginForm";
 import Modal from "@components/Modal";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
@@ -12,10 +13,7 @@ import { useContext, useState } from "react";
 import { ModalContext } from "./ModalProvider";
 import SignUpForm from "./SignUpForm";
 import DeleteModal from "./delete/delete";
-import { useUser } from "@auth0/nextjs-auth0/client";
 import NavbarSkeleton from "./skeleton/Navbar.skeleton";
-import { Button } from "./ui/Button";
-import axios from "axios";
 
 const Nav = () => {
   const { user, error, isLoading } = useUser();
@@ -65,6 +63,7 @@ const Nav = () => {
   const handleLogout = () => {
     setLoggedIn(false);
     setToken("");
+    localStorage.removeItem("accessToken");
   };
 
   if (isLoading) return <NavbarSkeleton />;
@@ -99,7 +98,7 @@ const Nav = () => {
             </div>
             <a
               href="/api/auth/logout"
-              // onClick={handleLogout}
+              onClick={handleLogout}
               className={` lg:inline-block lg:mt-0 text-black hover:text-pink mx-4 ${
                 pathname === "/logout" ? "underline text-pink" : ""
               }`}
@@ -131,15 +130,6 @@ const Nav = () => {
         )}
       </>
     );
-  };
-
-  const handleToken = async () => {
-    await axios
-      .get("api/books/sn/djk")
-      .then(() => {})
-      .catch((err) => {
-        console.log(err);
-      });
   };
 
   return (
@@ -181,9 +171,6 @@ const Nav = () => {
                   >
                     About us
                   </a>
-                  <Button className="text-black" onClick={handleToken}>
-                    Token
-                  </Button>
                   <a
                     href="/user-library"
                     onClick={() => setActiveLink("Library")}
