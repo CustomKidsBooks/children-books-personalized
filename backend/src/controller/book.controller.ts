@@ -16,6 +16,7 @@ import fs from "fs";
 import path from "path";
 import PDFDocument from "pdfkit";
 import nodemailer from "nodemailer";
+import readline from "readline";
 import { generatePdfDoc, generateWordDoc } from "../utils";
 
 type PageData = {
@@ -389,24 +390,13 @@ export const BookController = {
   downloadStoryAsWord: async (req: Request, res: Response) => {
     const bookId = parseInt(req.params.bookId);
     try {
-      const { title, image } = await fetchStoryDataForWord(
-        bookId
+      const { title, buffer } = await generateWordDoc(bookId);
+      res.setHeader("Content-Type", "application/msword");
+      res.setHeader(
+        "Content-Disposition",
+        `attachment; filename=${title}.docx`
       );
-
-      if (!title) {
-        return res.status(404).json({ error: "Story not found" });
-      }
-      if (image !== null) {
-        const buf = await generateWordDoc(bookId);
-        res.setHeader("Content-Type", "application/msword");
-        res.setHeader(
-          "Content-Disposition",
-          `attachment; filename=${title}.docx`
-        );
-        res.send(buf);
-      } else {
-        console.error("No image provided");
-      }
+      res.send(buffer);
     } catch (error) {
       console.error("Error downloading Word document:", error);
       return res.status(500).json({
@@ -428,7 +418,6 @@ export const BookController = {
         .json({ error: "An error occurred while downloading the PDF" });
     }
   },
-
   /** ======== Delete Specific page ======== **/
 
   deletePageHandler: async (req: Request, res: Response) => {
@@ -478,20 +467,14 @@ export const BookController = {
   sendBookAsPdf: async (req: Request, res: Response) => {
     try {
       const { bookId } = req.body;
-      console.log("hit send button");
-
-      // Retrieve the book data and generate the PDF (you'll need to implement this)
       const { title, doc } = await generatePdfDoc(bookId);
       const pdfBuffer = await new Promise((resolve) => {
-        //Finalize document and convert to buffer array
         let buffers: Buffer[] = [];
         doc.on("data", buffers.push.bind(buffers));
         doc.on("end", () => {
           resolve(new Uint8Array(Buffer.concat(buffers)) as Buffer);
         });
       });
-
-      // Create a Nodemailer transport for sending emails
       const transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,
         port: 2525,
@@ -500,7 +483,6 @@ export const BookController = {
           pass: process.env.SMTP_PASS,
         },
       });
-      // Send the PDF as an email attachment
       const mailOptions = {
         from: process.env.SMTP_FROM,
         to: process.env.SMTP_TO,
@@ -509,12 +491,10 @@ export const BookController = {
         attachments: [
           {
             filename: `${title}.pdf`,
-            content: pdfBuffer as Buffer, // The PDF buffer generated earlier
+            content: pdfBuffer as Buffer,
           },
         ],
       };
-      console.log("hit 521");
-      // Send the email
       await transporter.sendMail(mailOptions);
       res
         .status(200)
@@ -529,17 +509,11 @@ export const BookController = {
   sendBookAsWord: async (req: Request, res: Response) => {
     try {
       const { bookId } = req.body;
-      console.log("hit send button");
-
-      // Retrieve the book data and generate the PDF (you'll need to implement this)
-      const { title, doc } = await generateWordDoc(bookId);
-      const pdfBuffer = await new Promise((resolve) => {
-        //Finalize document and convert to buffer array
-        let buffers: Buffer[] = [];
-       
+      const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout,
       });
-
-      // Create a Nodemailer transport for sending emails
+      const { title, buffer } = await generateWordDoc(bookId);
       const transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,
         port: 2525,
@@ -548,22 +522,21 @@ export const BookController = {
           pass: process.env.SMTP_PASS,
         },
       });
-      // Send the PDF as an email attachment
+      rl.question('Enter the recipient\'s email address: ', async (recipientEmail) => {
+        rl.close();
       const mailOptions = {
         from: process.env.SMTP_FROM,
-        to: process.env.SMTP_TO,
+        to: recipientEmail,
         subject: "Book Word Document",
         text: "Attached is the Word Version of the book.",
         attachments: [
           {
             filename: `${title}.docx`,
-            content: pdfBuffer as Buffer, // The PDF buffer generated earlier
+            content: buffer,
           },
         ],
       };
-      console.log("hit 521");
-      // Send the email
-      await transporter.sendMail(mailOptions);
+      await transporter.sendMail(mailOptions);})
       res
         .status(200)
         .json({ success: true, message: "Email sent successfully." });

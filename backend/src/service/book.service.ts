@@ -1,21 +1,6 @@
 import axios from "axios";
 import fs from "fs";
 import { Book } from "../entities/book"; // Import your Book entity or data model
-
-import {
-  Document,
-  Packer,
-  Paragraph,
-  TextRun,
-  ImageRun,
-  IImageOptions,
-  NumberFormat,
-  AlignmentType,
-  Footer,
-  PageNumber,
-  Header,
-  UnderlineType,
-} from "docx";
 import { AppDataSource } from "../db/connect";
 // Function to download the image and save it locally in the Node.js environment
 export async function downloadCoverImageLocally(
@@ -86,13 +71,12 @@ export async function fetchStoryDataForPDF(id: number) {
       where: { id },
       relations: ["pages"],
     });
-
     if (!book) {
       throw new Error("Book not found");
     }
-    const { title, characters, lesson, tag, image } = book; 
-    const pages = book.pages || [];  
-    return { title, characters, lesson, pages, tag, image };
+    const { title, image } = book;
+    const pages = book.pages || [];
+    return { title, pages, image };
   } catch (error) {
     console.error("Error fetching story data:", error);
     throw error;
@@ -106,16 +90,19 @@ export async function fetchStoryDataForWord(id: number) {
       where: { id },
       relations: ["pages"],
     });
-
     if (!book) {
       throw new Error("Book not found");
     }
-    const { title, image} = book;
-    
-    const paragraphs = book.pages.map((page) => page.paragraph);
-    const images = book.pages.map((page) => page.image);
-    return { title, paragraphs, image, images };
+    const { title, image } = book;
+    if (image !== null) {
+      const paragraphs = book.pages.map((page) => page.paragraph);
+      const images = book.pages.map((page) => page.image);
+      return { title, paragraphs, image, images };
+    } else {
+      console.error("No image provided");
+    }
   } catch (error) {
+    console.error("Error downloading Word document:", error);
     throw error;
   }
 }
