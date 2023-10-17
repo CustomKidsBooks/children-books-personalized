@@ -57,7 +57,7 @@ const PreviewBook = ({ id }: PreviewBookValues) => {
         </div>
         <div className="mt-10 lg:mt-0 lg:w-1/4 lg:mx-auto gap-5 flex flex-col lg:justify-around">
           <DownloadBook bookId={id} />
-          <SendBook />
+          <SendBook bookId={id} />
         </div>
       </div>
     </section>
