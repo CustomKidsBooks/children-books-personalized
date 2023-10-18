@@ -35,7 +35,7 @@ const StoryForm: React.FC<CreateStoryFormProps> = ({
   } = useFormik<CreateStoryFormValues>({
     initialValues: {
       title: "",
-      privacy: "private",
+      privacy: "Public",
       ageGroup: "0-1",
       subject: "",
       page: 3,

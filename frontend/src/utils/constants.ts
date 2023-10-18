@@ -1,23 +1,3 @@
-export const characterList: string[] = [
-  "boy",
-  "girl",
-  "toy",
-  "superhero",
-  "car",
-  "pet",
-  "other",
-];
-
-export const languageList: string[] = [
-  "English",
-  "Spanish",
-  "French",
-  "German",
-  "Arabic",
-  "Brazilian Portuguese",
-  "Turkish",
-];
-
 export const ageGroupList: string[] = [
   "0-1",
   "1-2",
@@ -34,6 +14,6 @@ export const ageGroupList: string[] = [
 ];
 
 export const privacyList: string[] = [
-  "private",
-  "public"
+  "Private",
+  "Public"
 ]
