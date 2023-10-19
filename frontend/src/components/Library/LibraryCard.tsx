@@ -29,6 +29,10 @@ const LibraryCard = ({ search }: LibraryValues) => {
     return <div>Error...</div>;
   }
 
+  if (bookData.length === 0) {
+    return <h1 className="text p-4">You don't have any book!</h1>;
+  }
+
   return (
     <section className="py-10">
       <div className="place-items-center lg:grid lg:grid-cols-4 gap-4 flex overflow-x-auto">

@@ -1,4 +1,5 @@
 import { useUser } from "@auth0/nextjs-auth0/client";
+import { axiosInstance } from "@services/api-client";
 import { BookValues } from "@utils/interfaces";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -12,8 +13,9 @@ const useLibraryCard = () => {
   const userEmail = user && user.email;
 
   useEffect(() => {
+
     // if (userEmail) {
-    //   axiosInstance
+    //   axios
     //     .get(`/api/books?userEmail=${userEmail}`)
     //     .then((res) => {
     //       setBookData(res.data);
@@ -24,8 +26,8 @@ const useLibraryCard = () => {
     //     })
     //     .finally(() => setIsLoading(false));
     // } else {
-    //   axiosInstance
-    //     .get(`/api/books/`)
+    //   axios
+    //     .get(`/api/books`)
     //     .then((res) => {
     //       setBookData(res.data);
     //     })

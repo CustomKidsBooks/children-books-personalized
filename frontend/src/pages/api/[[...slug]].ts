@@ -1,22 +1,15 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import { getAccessToken } from "@auth0/nextjs-auth0";
 import { axiosInstance } from "@services/api-client";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  // const { accessToken } = await getAccessToken(req, res);
-
-  // if (typeof window !== "undefined" && accessToken) {
-  //   localStorage.setItem("accessToken", accessToken || "null");
-  // }
-  // console.log('acc', accessToken);
-  
-
   const { slug } = req.query;
   const slugUrl: string = Array.isArray(slug) ? slug.join("/") : "";
-  console.log(slugUrl, "url");
+console.log('slug', slug);
+console.log('url', slugUrl);
+
 
   if (req.method === "GET") {
     axiosInstance

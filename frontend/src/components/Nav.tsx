@@ -14,11 +14,11 @@ import { ModalContext } from "./ModalProvider";
 import SignUpForm from "./SignUpForm";
 import DeleteModal from "./delete/delete";
 import NavbarSkeleton from "./skeleton/Navbar.skeleton";
+import UserProfile from "./UserProfile";
+import { LinkButton } from "./ui/LinkButton";
 
 const Nav = () => {
   const { user, error, isLoading } = useUser();
-  console.log("user", user);
-
   const pathname = usePathname();
   const [activeLink, setActiveLink] = useState<string | null>(null);
   const [isLoggedIn, setLoggedIn] = useState(false);
@@ -28,9 +28,11 @@ const Nav = () => {
 
   const { showModal, openModal, closeModal, auth, setToken } =
     useContext(ModalContext);
+
   const handleImageClick = () => {
     setDropdownVisible(!isDropdownVisible);
   };
+
   const handleDeleteClick = () => {
     setDeleteModalVisible(true);
   };
@@ -81,18 +83,34 @@ const Nav = () => {
                   alt="avatar"
                   width={48}
                   height={48}
-                  className="object-contain"
+                  className={`object-contain hover:fill-pink-700 ${
+                    pathname === "/user-profile"
+                      ? "fill-current text-pink"
+                      : "fill-black"
+                  }`}
                 />
               </button>
               {isDropdownVisible && (
-                <div className="absolute right-[-120px] top-[22px] mt-6 py-2 px-2 w-44 border-solid border-pink flex-shrink-0 bg-white rounded-lg shadow-3xl">
-                  <a
-                    href="#"
-                    onClick={handleDeleteClick}
-                    className="text-black font-quicksand text-sm font-normal inline-flex items-center justify-center px-3 py-2 bg-teal"
-                  >
-                    Delete My Account
-                  </a>
+                <div className="absolute right-[-120px] top-[22px] mt-6 py-2 px-2 w-44 border-solid border-pink flex-shrink-0 bg-white rounded-lg shadow-3x">
+                  <div>
+                    <LinkButton
+                      href="/user-profile"
+                      intent="teal"
+                      className="text-sm font-normal inline-flex items-center justify-center"
+                    >
+                      My Profile
+                    </LinkButton>
+                  </div>
+                  <div>
+                    <LinkButton
+                      href="#"
+                      intent="teal"
+                      onClick={handleDeleteClick}
+                      className="text-sm font-normal"
+                    >
+                      Delete my account
+                    </LinkButton>
+                  </div>
                 </div>
               )}
             </div>
@@ -119,10 +137,6 @@ const Nav = () => {
         ) : (
           <a
             href="/api/auth/login"
-            // onClick={() => {
-            //   openModal("loginModal");
-            // }}
-            // onClick={handleLogin}
             className="inline-block px-4 py-2 leading-none border rounded border-white hover:border-transparent text-white bg-pink mt-4 lg:mt-0"
           >
             Login

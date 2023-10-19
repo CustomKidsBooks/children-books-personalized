@@ -5,7 +5,6 @@ import LibraryCard from "@components/Library/LibraryCard";
 import { LinkButton } from "@ui/LinkButton";
 import Image from "next/image";
 import StartStep from "./StartStep";
-import UserProfile from "./UserProfile";
 import LandinPageSkeleton from "./skeleton/LandinPage.skeleton";
 
 const LandingPage = () => {
@@ -13,10 +12,6 @@ const LandingPage = () => {
 
   if (isLoading) return <LandinPageSkeleton />;
   if (error) return <div>{error.message}</div>;
-
-  if (user) {
-    return <UserProfile user={user} />;
-  }
 
   return (
     <>

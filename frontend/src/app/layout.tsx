@@ -1,9 +1,8 @@
+import { UserProvider } from "@auth0/nextjs-auth0/client";
 import Footer from "@components/Footer";
 import Nav from "@components/Nav";
 import "@styles/globals.css";
 import React from "react";
-import { ModalProvider } from "../components/ModalProvider";
-import { UserProvider } from "@auth0/nextjs-auth0/client";
 
 export const metadata = {
   title: "Children's Book",
@@ -15,7 +14,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    // <ModalProvider>
     <html lang="en">
       <UserProvider>
         <body>
@@ -29,6 +27,5 @@ export default function RootLayout({
         </body>
       </UserProvider>
     </html>
-    // </ModalProvider>
   );
 }
