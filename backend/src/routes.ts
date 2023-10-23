@@ -11,7 +11,7 @@ export default function (app: Express) {
   app.get("/api/books/:bookId/pages", BookController.fetchPagesForBook);
 
   // Handling POST request to create a new book
-  app.post("/api/create_book", authMiddleware, BookController.createBook);
+  app.post("/api/create_book", BookController.createBook);
   // Handling GET request to fetch all books
   app.get("/api/books", BookController.fetchBooks);
 
