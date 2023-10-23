@@ -51,11 +51,9 @@ export const BookController = {
 
       const tagDesc = `create a three tags which are 8 characters long based on information below ${imageDesc}`;
       const tags = await generateBookText(tagDesc);
-      // 1. Honey Bee Adventure  2. Sweet Honey Production  3. Young Bee's Journey
 
       // Check if imageUrl is not undefined before proceeding
       if (imageUrl) {
-        // Download the image and save it locally
         const localImagePath = await downloadCoverImageLocally(imageUrl);
 
         newBook = bookRepository.create({

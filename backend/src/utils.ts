@@ -2,7 +2,7 @@ import {
   fetchStoryDataForWord,
   fetchStoryDataForPDF,
 } from "./service/book.service";
-import { Document, Packer, PageNumber, NumberFormat, AlignmentType, TextRun, Header, Footer, ImageRun, IImageOptions, Paragraph, UnderlineType } from 'docx';
+import { Document, Packer, PageNumber, NumberFormat, AlignmentType, TextRun, Footer, ImageRun, IImageOptions, Paragraph, UnderlineType } from 'docx';
 import fs from "fs";
 import PDFDocument from "pdfkit";
 
@@ -34,15 +34,12 @@ export async function generatePdfDoc(bookId: number) {
     }
     const doc = new PDFDocument();
     let pageNumber = 1;
-
     const textConfig = {
       width: 380,
     };
-
     const imageConfig = {
       width: 350,
     };
-
     const centerY = doc.page.height / 2;
     doc
       .font("Times-Roman")
@@ -92,7 +89,6 @@ export async function generatePdfDoc(bookId: number) {
           "orange",
           0.5
         );
-
         doc.image(imageBuffer, (doc.page.width - imageWidth) / 2, imageY, {
           width: imageWidth,
           height: imageWidth,

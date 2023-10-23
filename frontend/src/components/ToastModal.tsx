@@ -3,7 +3,6 @@ import { ToastModalProps } from "@utils/interfaces";
 
 const ToastModal: React.FC<ToastModalProps> = ({ isVisible, message, onClose }) => {
   if (!isVisible) return null;
-  const close = () => onClose();
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-opacity-40 z-50">

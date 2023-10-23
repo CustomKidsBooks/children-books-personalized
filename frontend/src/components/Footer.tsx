@@ -23,10 +23,10 @@ const Footer = () => {
           <div className="flex-between gap-1">
             <FontAwesomeIcon icon={faEnvelope} />
             <a
-              href="mailto:TinyTaleWriters@gmail.com"
+              href="mailto:	TinyTaleCreators@gmail.com"
               className="font-quicksand"
             >
-              TinyTaleWriters@gmail.com
+              TinyTaleCreators@gmail.com
             </a>
           </div>
         </div>

@@ -49,4 +49,4 @@ No installation is required for users. Developers can clone the repository and f
 This project is licensed under the [MIT License]().
 
 ## Contact
-For inquiries and support, contact us at TinyTaleWriters@gmail.com.
+For inquiries and support, contact us at TinyTaleCreators@gmail.com.
