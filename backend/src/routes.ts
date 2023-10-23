@@ -2,7 +2,7 @@ import { Express } from "express";
 import { BookController } from "./controller/book.controller";
 import { UserController } from "./controller/user.controller";
 import { upload } from "./middleware/uploadFile";
-
+const authMiddleware = require("./auth/authCheck");
 export default function (app: Express) {
   const authMiddleware = require("./auth/authCheck");
 
@@ -39,4 +39,10 @@ export default function (app: Express) {
 
   // Handling DELETE request to delete a specific page
   app.delete("/api/pages/:pageId", BookController.deletePageHandler);
+
+  // Handling pdf download
+  app.get('/api/download/story/pdf/:bookId', BookController.downloadStoryAsPDF);
+  // Handling word download
+  app.get('/api/download/story/word/:bookId', BookController.downloadStoryAsWord);
+
 }

@@ -12,6 +12,7 @@ export interface CreateStoryFormValues {
   userEmail?: string;
   title: string;
   ageGroup: string;
+  privacy:string;
   subject: string;
   page: number;
   lesson?: string;

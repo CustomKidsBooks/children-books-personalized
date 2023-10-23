@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import fs from "fs";
 import path from "path";
-import formidable from "formidable";
 import { DeepPartial, FindOneOptions } from "typeorm";
 import { AppDataSource } from "../db/connect";
 import { Book } from "../entities/book";
@@ -11,9 +10,12 @@ import {
   downloadCoverImageLocally,
   downloadPagesImageLocally,
   getPagesFromContent,
+  createWordDocument,
+  fetchStoryDataForWord,
+  fetchStoryDataForPDF,
 } from "../service/book.service";
 import { generateBookText, generateImage } from "../service/openai.service";
-import { auth } from "express-oauth2-jwt-bearer";
+import PDFDocument from "pdfkit";
 
 type PageData = {
   pageNumber: number;
@@ -122,7 +124,7 @@ export const BookController = {
 
   fetchBooks: async (req: Request, res: Response) => {
     try {
-      console.log("auth", req.auth);
+      // console.log("auth", req.auth);
 
       const bookRepository = AppDataSource.getRepository(Book);
       const books = await bookRepository.find();
@@ -386,6 +388,163 @@ export const BookController = {
         message:
           "An error occurred while deleting the book and associated pages",
       });
+    }
+  },
+  downloadStoryAsWord: async (req: Request, res: Response) => {
+    const bookId = parseInt(req.params.bookId);
+    try {
+      const { title, paragraphs, image, images } = await fetchStoryDataForWord(
+        bookId
+      );
+
+      if (!title) {
+        return res.status(404).json({ error: "Story not found" });
+      }
+      if (image !== null) {
+        const buf = await createWordDocument(title, paragraphs, image, images);
+        res.setHeader("Content-Type", "application/msword");
+        res.setHeader(
+          "Content-Disposition",
+          `attachment; filename=${title}.docx`
+        );
+        res.send(buf);
+      } else {
+        console.error("No image provided");
+      }
+    } catch (error) {
+      console.error("Error downloading Word document:", error);
+      return res.status(500).json({
+        error: "An error occurred while downloading the Word document",
+      });
+    }
+  },
+
+  downloadStoryAsPDF: async (req: Request, res: Response) => {
+    const bookId = parseInt(req.params.bookId);
+    const frameX = 30;
+    const frameWidth = 550;
+
+    function drawFrameOverlay(
+      doc: PDFKit.PDFDocument,
+      x: number,
+      y: number,
+      frameWidth: number,
+      frameHeight: number,
+      borderColor: string,
+      backgroundColor: string,
+      opacity: number
+    ) {
+      doc.save();
+      doc.rect(x, y, frameWidth, frameHeight).stroke(borderColor);
+      doc.rect(x, y, frameWidth, frameHeight).fill(backgroundColor);
+      doc.opacity(opacity);
+      doc.restore();
+    }
+
+    try {
+      const { title, image, pages } = await fetchStoryDataForPDF(bookId);
+      if (!title) {
+        return res.status(404).json({ error: "Story not found" });
+      }
+      const doc = new PDFDocument();
+      let pageNumber = 1;
+
+      const textConfig = {
+        width: 380,
+      };
+
+      const imageConfig = {
+        width: 350,
+      };
+
+      const centerY = doc.page.height / 2;
+      doc
+        .font("Times-Roman")
+        .fillColor("green")
+        .fontSize(20)
+        .text(title, { align: "center", underline: true });
+
+      if (image) {
+        const imageBuffer = fs.readFileSync(image);
+        const imageWidth = imageConfig.width;
+        const imagePadding = 40;
+        const imageY = centerY - imageWidth / 2 - imagePadding;
+
+        drawFrameOverlay(
+          doc,
+          frameX,
+          imageY,
+          frameWidth,
+          imageWidth + 100,
+          "gold",
+          "orange",
+          0.5
+        );
+        doc.image(imageBuffer, (doc.page.width - imageWidth) / 2, imageY, {
+          width: imageWidth,
+          height: imageWidth,
+        });
+        doc.y = imageY + imageWidth + 5;
+        doc.fillColor("black").text(`(${pageNumber})`, { align: "center" });
+      }
+
+      for (const page of pages) {
+        doc.addPage();
+        if (page.image) {
+          const imageBuffer = fs.readFileSync(page.image);
+          const imageWidth = imageConfig.width;
+          const imagePadding = 40;
+          const imageY = centerY - imageWidth / 2 - imagePadding;
+
+          drawFrameOverlay(
+            doc,
+            frameX,
+            imageY,
+            frameWidth,
+            imageWidth + 150,
+            "orange",
+            "orange",
+            0.5
+          );
+
+          doc.image(imageBuffer, (doc.page.width - imageWidth) / 2, imageY, {
+            width: imageWidth,
+            height: imageWidth,
+          });
+          doc.y = imageY + imageWidth;
+        }
+        const textPadding = 5;
+        const textY = centerY + imageConfig.width / 2 + textPadding;
+
+        drawFrameOverlay(
+          doc,
+          frameX,
+          textY,
+          frameWidth,
+          120,
+          "orange",
+          "orange",
+          0.5
+        );
+        const textX = doc.page.width / 2;
+        doc
+          .font("Times-Roman")
+          .fontSize(16)
+          .text(page.paragraph, textX - 200, textY, {
+            width: textConfig.width,
+            align: "center",
+          });
+        doc.fillColor("black").text(`(${pageNumber + 1})`, { align: "center" });
+        pageNumber++;
+      }
+      res.setHeader("Content-Disposition", `attachment; filename=${title}.pdf`);
+      doc.pipe(res);
+      doc.end();
+    } catch (error) {
+      console.error("Error downloading PDF:", error);
+      return res
+        .status(500)
+        .json({ error: "An error occurred while downloading the PDF" });
     }
   },
 
