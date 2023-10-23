@@ -161,22 +161,6 @@ export async function generateWordDoc(bookId: number) {
               },
             },
           },
-          headers: {
-            default: new Header({
-              children: [
-                new Paragraph({
-                  children: [
-                    new TextRun({
-                      children: ["Page Number ", PageNumber.CURRENT],
-                    }),
-                    new TextRun({
-                      children: [" to ", PageNumber.TOTAL_PAGES],
-                    }),
-                  ],
-                }),
-              ],
-            }),
-          },
           footers: {
             default: new Footer({
               children: [
@@ -186,7 +170,7 @@ export async function generateWordDoc(bookId: number) {
                       children: ["Page Number: ", PageNumber.CURRENT],
                     }),
                     new TextRun({
-                      children: [" to ", PageNumber.TOTAL_PAGES],
+                      children: [PageNumber.TOTAL_PAGES],
                     }),
                   ],
                 }),

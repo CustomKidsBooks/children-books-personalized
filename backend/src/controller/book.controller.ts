@@ -460,37 +460,52 @@ export const BookController = {
       });
     }
   },
-  sendBookAsPdf: async (req: Request, res: Response) => {
+  sendEmail: async (req: Request, res: Response, emailType: string) => {
     try {
       const { bookId, recipientEmail } = req.body;
-      const { title, doc } = await generatePdfDoc(bookId);
-      const pdfBuffer = await new Promise((resolve) => {
-        let buffers: Buffer[] = [];
-        doc.on("data", buffers.push.bind(buffers));
-        doc.on("end", () => {
-          resolve(new Uint8Array(Buffer.concat(buffers)) as Buffer);
+      let title, content, subject;
+
+      if (emailType === "PDF") {
+        const { title: pdfTitle, doc } = await generatePdfDoc(bookId);
+        title = pdfTitle;
+        const pdfBuffer = await new Promise((resolve) => {
+          let buffers: Buffer[] = [];
+          doc.on("data", buffers.push.bind(buffers));
+          doc.on("end", () => {
+            resolve(new Uint8Array(Buffer.concat(buffers)) as Buffer);
+          });
         });
-      });
+        content = pdfBuffer as Buffer;
+        subject = "Your Book's PDF Document is Ready for Download";
+      } else if (emailType === "Word") {
+        const { title: wordTitle, buffer } = await generateWordDoc(bookId);
+        title = wordTitle;
+        content = buffer;
+        subject = "Your Book's Word Document is Ready for Download";
+      }
+
       const transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,
-        port: 2525,
+        port: 587,
         auth: {
           user: process.env.SMTP_USER,
           pass: process.env.SMTP_PASS,
         },
       });
+
       const mailOptions = {
         from: process.env.SMTP_FROM,
         to: recipientEmail,
-        subject: "Book PDF Document",
-        text: "Attached is the PDF of the story book.",
+        subject: subject,
+        text: `We are delighted to share the ${emailType} Version of your storybook with you. You can access it by downloading the Attached ${emailType} Document below. Happy reading!`,
         attachments: [
           {
-            filename: `${title}.pdf`,
-            content: pdfBuffer as Buffer,
+            filename: `${title}.${emailType}`,
+            content: content,
           },
         ],
       };
+
       await transporter.sendMail(mailOptions);
       res
         .status(200)
@@ -502,40 +517,11 @@ export const BookController = {
         .json({ success: false, message: "Email sending failed." });
     }
   },
+  sendBookAsPdf: async (req: Request, res: Response) => {
+    await BookController.sendEmail(req, res, "PDF");
+  },
   sendBookAsWord: async (req: Request, res: Response) => {
-    try {
-      const { bookId, recipientEmail } = req.body;
-      const { title, buffer } = await generateWordDoc(bookId);
-      const transporter = nodemailer.createTransport({
-        host: process.env.SMTP_HOST,
-        port: 2525,
-        auth: {
-          user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASS,
-        },
-      });
-      const mailOptions = {
-        from: process.env.SMTP_FROM,
-        to: recipientEmail,
-        subject: "Book Word Document",
-        text: "Attached is the Word Version of the story book.",
-        attachments: [
-          {
-            filename: `${title}.docx`,
-            content: buffer,
-          },
-        ],
-      };
-      await transporter.sendMail(mailOptions);
-      res
-        .status(200)
-        .json({ success: true, message: "Email sent successfully." });
-    } catch (error) {
-      console.error("Error sending the email:", error);
-      res
-        .status(500)
-        .json({ success: false, message: "Email sending failed." });
-    }
+    await BookController.sendEmail(req, res, "Word");
   },
   // ... other methods ...
 };
