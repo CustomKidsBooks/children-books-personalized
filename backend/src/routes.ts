@@ -18,6 +18,8 @@ export default function (app: Express) {
   // Handling GET request to fetch all books
   app.get("/api/books", BookController.fetchBooks);
 
+  // TODO: addding user books route, 
+
   // Handling GET request to fetch a book with it's related pages
   app.get("/api/book/:id", BookController.fetchCoverAndPagesById);
 

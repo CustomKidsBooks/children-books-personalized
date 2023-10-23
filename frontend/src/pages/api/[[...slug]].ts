@@ -24,6 +24,7 @@ export default async function handler(
         res.status(500).json({ message: "Internal Server Error" });
       });
   }
+  
   if (req.method === "POST") {
     axiosInstance
       .post(`/api/${slugUrl}`, req.body, {
