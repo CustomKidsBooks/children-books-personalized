@@ -164,7 +164,6 @@ const Book = ({ id }: BookValues) => {
             className="sm:w-3/4 md:w-2/4 text-center capitalize"
             intent="pink"
             size="medium"
-            // disabled={!editImage || !editParagraph}
             onClick={() =>
               editParagraph === true
                 ? updateBookPages(paragraphRef.current?.value, undefined)

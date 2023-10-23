@@ -4,6 +4,8 @@ import { UserController } from "./controller/user.controller";
 import { upload } from "./middleware/uploadFile";
 
 export default function (app: Express) {
+  const authMiddleware = require("./auth/authCheck");
+
   // create user
   app.post("/api/create_user", UserController.createUser);
 
@@ -25,6 +27,7 @@ export default function (app: Express) {
   // Define a route to update a specific page by ID
   app.put(
     "/api/pages/:pageId",
+    // formMiddleWare,
     upload.single("image"),
     BookController.updatePageHandler
   );

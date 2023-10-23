@@ -1,8 +1,8 @@
 Arguments: 
-  /Users/hafsa/.nvm/versions/node/v20.5.0/bin/node /opt/homebrew/Cellar/yarn/1.22.19/libexec/bin/yarn.js install
+  /Users/hafsa/.nvm/versions/node/v20.5.0/bin/node /opt/homebrew/Cellar/yarn/1.22.19/libexec/bin/yarn.js add formidable
 
 PATH: 
-  /Users/hafsa/.nvm/versions/node/v20.5.0/bin:/Users/hafsa/.nvm/versions/node/v14.6.0/bin:/Library/Frameworks/Python.framework/Versions/3.10/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/share/dotnet:~/.dotnet/tools:/Users/hafsa/.nvm/versions/node/v14.6.0/bin:/Users/hafsa/opt/anaconda3/bin:/Users/hafsa/opt/anaconda3/condabin:/Library/Frameworks/Python.framework/Versions/3.10/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/hafsa/.fig/bin:/Users/hafsa/.local/bin
+  /Users/hafsa/.nvm/versions/node/v20.5.0/bin:/Users/hafsa/.nvm/versions/node/v20.5.0/bin:/Users/hafsa/.nvm/versions/node/v14.6.0/bin:/Library/Frameworks/Python.framework/Versions/3.10/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/share/dotnet:~/.dotnet/tools:/Users/hafsa/.nvm/versions/node/v14.6.0/bin:/Users/hafsa/opt/anaconda3/bin:/Users/hafsa/opt/anaconda3/condabin:/Library/Frameworks/Python.framework/Versions/3.10/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/hafsa/.fig/bin:/Users/hafsa/.local/bin
 
 Yarn version: 
   1.22.19

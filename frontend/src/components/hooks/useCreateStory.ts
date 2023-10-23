@@ -12,7 +12,7 @@ const useCreateStory = () => {
     setIsSubmitting(true);
     await axios
       .post("/api/create_book", {
-        userEmail: user?.email || null,
+        userID: user?.sub || null,
         title: values.title,
         ageGroup: values.ageGroup,
         subject: values.subject,

@@ -1,18 +1,19 @@
+import { Request, Response } from "express";
+import fs from "fs";
+import path from "path";
+import formidable from "formidable";
+import { DeepPartial, FindOneOptions } from "typeorm";
 import { AppDataSource } from "../db/connect";
-import { DeepPartial, FindOneOptions, FindOptions } from "typeorm";
 import { Book } from "../entities/book";
 import { Page } from "../entities/page";
-import { Request, Response } from "express";
 import log from "../logger";
-import { generateBookText, generateImage } from "../service/openai.service";
 import {
   downloadCoverImageLocally,
   downloadPagesImageLocally,
   getPagesFromContent,
 } from "../service/book.service";
-import fs from "fs";
-import path from "path";
-import multer from "multer";
+import { generateBookText, generateImage } from "../service/openai.service";
+import { auth } from "express-oauth2-jwt-bearer";
 
 type PageData = {
   pageNumber: number;
@@ -23,16 +24,8 @@ export const BookController = {
   /** ======== Create a Book ======== **/
 
   createBook: async (req: Request, res: Response) => {
-    const {
-      userEmail,
-      title,
-      age,
-      subject,
-      characters,
-      lesson,
-      page,
-      privacy,
-    } = req.body;
+    const { userID, title, age, subject, characters, lesson, page, privacy } =
+      req.body;
     let newBook: Book | undefined;
 
     try {
@@ -66,7 +59,7 @@ export const BookController = {
         const localImagePath = await downloadCoverImageLocally(imageUrl);
 
         newBook = bookRepository.create({
-          userEmail,
+          userID,
           title,
           subject,
           characters: charactersInfo,
@@ -129,16 +122,11 @@ export const BookController = {
 
   fetchBooks: async (req: Request, res: Response) => {
     try {
-      const bookRepository = AppDataSource.getRepository(Book);
+      console.log("auth", req.auth);
 
-      if (req.query) {
-        const userEmail = req.query.userEmail as string;
-        const books = await bookRepository.findBy({ userEmail: userEmail });
-        res.json(books);
-      } else {
-        const books = await bookRepository.find();
-        res.json(books);
-      }
+      const bookRepository = AppDataSource.getRepository(Book);
+      const books = await bookRepository.find();
+      res.json(books);
     } catch (error) {
       log.error("Error retrieving books:", error);
       res
@@ -265,9 +253,12 @@ export const BookController = {
   /** ======== Update Specific page ======== **/
 
   updatePageHandler: async (req: Request, res: Response) => {
+    console.log("bisfbnvoi", res.json(req.body));
+
     const pageId = parseInt(req.params.pageId);
 
     const { paragraph } = req.body;
+    // console.log("paragraph", req.body);
 
     try {
       const pageRepository = AppDataSource.getRepository(Page);

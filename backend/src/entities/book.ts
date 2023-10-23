@@ -7,7 +7,7 @@ export class Book {
   id!: number;
 
   @Column({ nullable: true })
-  userEmail!: string;
+  userID!: string;
 
   @Column()
   title!: string;
