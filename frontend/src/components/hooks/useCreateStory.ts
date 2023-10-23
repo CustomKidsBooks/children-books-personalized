@@ -12,6 +12,7 @@ const useCreateStory = () => {
       .post("/api/create_book", {
         title: values.title,
         ageGroup: values.ageGroup,
+        privacy:values.privacy,
         subject: values.subject,
         page: values.page,
         characters: values.characters,

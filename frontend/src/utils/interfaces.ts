@@ -11,6 +11,7 @@ export interface BookValues {
 export interface CreateStoryFormValues {
   title: string;
   ageGroup: string;
+  privacy:string;
   subject: string;
   page: number;
   lesson?: string;
