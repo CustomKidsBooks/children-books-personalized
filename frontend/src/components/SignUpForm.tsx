@@ -9,7 +9,7 @@ import { LinkButton } from "@ui/LinkButton";
 import { ModalContext } from "./ModalProvider";
 
 interface SignUpFormProps {
-  handleSubmit: (values: SignUpFormValues, formType: 'login' | 'signup') => Promise<void>;
+  handleSubmit: (values: SignUpFormValues, formType: 'login' | 'signup' ) => Promise<void>;
 }
 
 const SignUpForm: React.FC<SignUpFormProps> = ({

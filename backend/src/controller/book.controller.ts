@@ -9,14 +9,10 @@ import {
   downloadCoverImageLocally,
   downloadPagesImageLocally,
   getPagesFromContent,
-  fetchStoryDataForWord,
-  fetchStoryDataForPDF,
 } from "../service/book.service";
 import fs from "fs";
 import path from "path";
-import PDFDocument from "pdfkit";
 import nodemailer from "nodemailer";
-import readline from "readline";
 import { generatePdfDoc, generateWordDoc } from "../utils";
 
 type PageData = {
@@ -466,7 +462,7 @@ export const BookController = {
   },
   sendBookAsPdf: async (req: Request, res: Response) => {
     try {
-      const { bookId } = req.body;
+      const { bookId, recipientEmail } = req.body;
       const { title, doc } = await generatePdfDoc(bookId);
       const pdfBuffer = await new Promise((resolve) => {
         let buffers: Buffer[] = [];
@@ -485,9 +481,9 @@ export const BookController = {
       });
       const mailOptions = {
         from: process.env.SMTP_FROM,
-        to: process.env.SMTP_TO,
+        to: recipientEmail,
         subject: "Book PDF Document",
-        text: "Attached is the PDF of the book.",
+        text: "Attached is the PDF of the story book.",
         attachments: [
           {
             filename: `${title}.pdf`,
@@ -508,11 +504,7 @@ export const BookController = {
   },
   sendBookAsWord: async (req: Request, res: Response) => {
     try {
-      const { bookId } = req.body;
-      const rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout,
-      });
+      const { bookId, recipientEmail } = req.body;
       const { title, buffer } = await generateWordDoc(bookId);
       const transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,
@@ -522,13 +514,11 @@ export const BookController = {
           pass: process.env.SMTP_PASS,
         },
       });
-      rl.question('Enter the recipient\'s email address: ', async (recipientEmail) => {
-        rl.close();
       const mailOptions = {
         from: process.env.SMTP_FROM,
         to: recipientEmail,
         subject: "Book Word Document",
-        text: "Attached is the Word Version of the book.",
+        text: "Attached is the Word Version of the story book.",
         attachments: [
           {
             filename: `${title}.docx`,
@@ -536,7 +526,7 @@ export const BookController = {
           },
         ],
       };
-      await transporter.sendMail(mailOptions);})
+      await transporter.sendMail(mailOptions);
       res
         .status(200)
         .json({ success: true, message: "Email sent successfully." });
