@@ -6,9 +6,10 @@ export const ModalContext = createContext({
   showModal: {
     loginModal: false,
     signUpModal: false,
+    sendEmailModal: false
   },
-  openModal: (modal: 'loginModal' | 'signUpModal') => { },
-  closeModal: (modal: 'loginModal' | 'signUpModal') => { },
+  openModal: (modal: 'loginModal' | 'signUpModal' | 'sendEmailModal') => { },
+  closeModal: (modal: 'loginModal' | 'signUpModal' | 'sendEmailModal') => { },
   auth: '',
   setToken: (token: string) => { },
 });
@@ -21,13 +22,13 @@ export const ModalProvider: React.FC<IModalContextProps> = ({ children }) => {
     loginModal: false,
     signUpModal: false,
     deleteModal: false,
+    sendEmailModal: false,
   });
   const [auth, setAuth] = useState<string>('');
   const setToken = (token: string) => setAuth(token)
 
-  const openModal = (modal: 'loginModal' | 'signUpModal') => {
+  const openModal = (modal: 'loginModal' | 'signUpModal' | 'sendEmailModal') => {
     let temp: any = showModal;
-    console.log(temp);
 
     const obj: any = {}
     temp = Object.keys(showModal).map((key: string) => {
@@ -42,7 +43,7 @@ export const ModalProvider: React.FC<IModalContextProps> = ({ children }) => {
     setShowModal(obj)
   };
 
-  const closeModal = (modal: 'loginModal' | 'signUpModal' | 'deleteModal') => {
+  const closeModal = (modal: 'loginModal' | 'signUpModal' | 'deleteModal' | 'sendEmailModal' ) => {
     let temp: any = showModal;
     temp = Object.keys(showModal).map((key: string) => {
       temp[key] = false;
@@ -56,7 +57,7 @@ export const ModalProvider: React.FC<IModalContextProps> = ({ children }) => {
     openModal,
     closeModal,
     auth,
-    setToken
+    setToken,
   };
 
   return (

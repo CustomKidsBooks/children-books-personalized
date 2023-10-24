@@ -72,3 +72,12 @@ export interface DeleteModalProps extends ModalProps {
   width?: string;
   onConfirm: () => void;
 }
+export interface SendEmailModalProps {
+  email: string;
+}
+
+export interface ToastModalProps {
+  isVisible: boolean;
+  onClose: () => void;
+  message: string;
+}
