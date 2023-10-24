@@ -1,0 +1,102 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Quicksand&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Pacifico&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.font_feature {
+  font-feature-settings: "clig" off, "liga" off;
+}
+
+.container {
+  position: relative;
+  text-align: center;
+  color: pink;
+}
+
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.display_book::before {
+  content: "";
+  position: absolute;
+  display: block;
+  z-index: 1;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  right: 50%;
+  border: 1px solid rgb(203 213 225);
+}
+
+@media only screen and (min-width: 922px) {
+  .bg-reading-book {
+    flex-shrink: 0;
+    background-image: theme("backgroundImage.readingBook");
+    background-blend-mode: overlay;
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+}
+
+.app {
+  @apply relative z-10 flex justify-center items-center flex-col max-w-7xl mx-auto sm:px-16 px-6;
+}
+
+.desc {
+  @apply mt-5 text-lg text-gray-600 sm:text-xl max-w-2xl;
+}
+
+.fa-icon {
+  color: theme("colors.pine-green");
+}
+
+.tag-border {
+  border: 0.5px solid #00ead3;
+  border-radius: 5px;
+  background-color: #fff;
+}
+.flex-center {
+  @apply flex justify-center items-center;
+}
+
+.home {
+  @apply mt-16 mx-auto w-full max-w-xl flex justify-center items-center flex-col gap-2;
+}
+
+.flex-between {
+  @apply flex justify-between items-center;
+}
+
+.form_input {
+  @apply w-full flex rounded-lg my-3 p-3 text-base md:text-lg lg:text-xl text-black outline-0;
+}
+
+.label-input {
+  @apply text-xl lg:text-2xl font-quicksand tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose mr-2;
+}
+
+.asterisk {
+  @apply text-red-500 text-sm;
+}
+
+.background {
+  @apply bg-no-repeat bg-blend-overlay bg-kid-opacity lg:bg-none lg:h-0;
+}
+.border-bg {
+  @apply border-0.2 border-custom border-opacity-10 bg-lt-primary shadow-3xl;
+}
+
+.place-item {
+  @apply flex flex-col justify-end items-start;
+}
+
+.label-text {
+  @apply text-base md:text-lg font-bold font-quicksand;
+}

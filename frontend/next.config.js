@@ -1,4 +1,12 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
+const nextConfig = {
+  reactStrictMode: true,
+  images: {
+    domains: ['127.0.0.1']
+  },
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
+
+
+//http://localhost:5001/
