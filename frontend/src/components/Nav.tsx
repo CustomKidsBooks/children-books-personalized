@@ -14,7 +14,6 @@ import { ModalContext } from "./ModalProvider";
 import SignUpForm from "./SignUpForm";
 import DeleteModal from "./delete/delete";
 import NavbarSkeleton from "./skeleton/Navbar.skeleton";
-import UserProfile from "./UserProfile";
 import { LinkButton } from "./ui/LinkButton";
 
 const Nav = () => {

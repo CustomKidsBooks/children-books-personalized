@@ -1,19 +1,19 @@
 import { useUser } from "@auth0/nextjs-auth0/client";
-import { axiosInstance } from "@services/api-client";
 import { BookValues } from "@utils/interfaces";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-const useLibraryCard = () => {
+const useLibraryCard = (userID?: string | null) => {
   const { user } = useUser();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
   const [bookData, setBookData] = useState<BookValues[]>([]);
-  console.log("user", user);
+  
+  const url = userID ? `/api/protected/books/${userID}` : "/api/books";
 
   useEffect(() => {
     axios
-      .get(`/api/books`)
+      .get(url)
       .then((res) => {
         setBookData(res.data);
       })

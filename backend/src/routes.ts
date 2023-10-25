@@ -2,7 +2,6 @@ import { Express } from "express";
 import { BookController } from "./controller/book.controller";
 import { UserController } from "./controller/user.controller";
 import { upload } from "./middleware/uploadFile";
-const authMiddleware = require("./auth/authCheck");
 export default function (app: Express) {
   const authMiddleware = require("./auth/authCheck");
 
@@ -15,10 +14,18 @@ export default function (app: Express) {
   // Handling POST request to create a new book
   app.post("/api/create_book", BookController.createBook);
 
+  // Handling POST request to create a new book for user
+  app.post(
+    "/api/create_book/:userID",
+    authMiddleware,
+    BookController.createBook
+  );
+
   // Handling GET request to fetch all books
   app.get("/api/books", BookController.fetchBooks);
 
-  // TODO: addding user books route, 
+  // Handling GET request to fetch user books
+  app.get("/api/books/:userID", authMiddleware, BookController.fetchUserBooks);
 
   // Handling GET request to fetch a book with it's related pages
   app.get("/api/book/:id", BookController.fetchCoverAndPagesById);
@@ -29,7 +36,6 @@ export default function (app: Express) {
   // Define a route to update a specific page by ID
   app.put(
     "/api/pages/:pageId",
-    // formMiddleWare,
     upload.single("image"),
     BookController.updatePageHandler
   );
@@ -41,8 +47,11 @@ export default function (app: Express) {
   app.delete("/api/pages/:pageId", BookController.deletePageHandler);
 
   // Handling pdf download
-  app.get('/api/download/story/pdf/:bookId', BookController.downloadStoryAsPDF);
+  app.get("/api/download/story/pdf/:bookId", BookController.downloadStoryAsPDF);
+  
   // Handling word download
-  app.get('/api/download/story/word/:bookId', BookController.downloadStoryAsWord);
-
+  app.get(
+    "/api/download/story/word/:bookId",
+    BookController.downloadStoryAsWord
+  );
 }

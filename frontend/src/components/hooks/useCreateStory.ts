@@ -8,14 +8,15 @@ const useCreateStory = () => {
   const [submitting, setIsSubmitting] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
 
+  const url = user ? `/api/protected/create_book/${user.sub}` : `/api/create_book`;
+
   const createStory = async (values: CreateStoryFormValues) => {
     setIsSubmitting(true);
     await axios
-      .post("/api/create_book", {
-        userID: user?.sub || null,
+      .post(url, {
         title: values.title,
         ageGroup: values.ageGroup,
-        privacy:values.privacy,
+        privacy: values.privacy,
         subject: values.subject,
         page: values.page,
         characters: values.characters,

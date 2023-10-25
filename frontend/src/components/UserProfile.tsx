@@ -46,7 +46,8 @@ const UserProfile = ({ user }: UserProfileValues) => {
             Library
           </h1>
         </div>
-        <LibraryCard />
+
+        <LibraryCard userID={user?.sub} />
       </section>
 
       <section className="bg-pink px-10 py-16 flex flex-col justify-center gap-12 lg:h-96 ">

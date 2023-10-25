@@ -60,8 +60,10 @@ export const BookController = {
         // Download the image and save it locally
         const localImagePath = await downloadCoverImageLocally(imageUrl);
 
+        let uid = (req as any).auth?.sub;
+
         newBook = bookRepository.create({
-          userID,
+          userID: uid || null,
           title,
           subject,
           characters: charactersInfo,
@@ -124,10 +126,28 @@ export const BookController = {
 
   fetchBooks: async (req: Request, res: Response) => {
     try {
-      // console.log("auth", req.auth);
-
       const bookRepository = AppDataSource.getRepository(Book);
       const books = await bookRepository.find();
+      res.json(books);
+    } catch (error) {
+      log.error("Error retrieving books:", error);
+      res
+        .status(500)
+        .json({ error: "An error occurred while retrieving books" });
+    }
+  },
+
+  /** ======== Fetch user Books ======== **/
+
+  fetchUserBooks: async (req: Request, res: Response) => {
+    try {
+      const userID = req.params.userID;
+      const bookRepository = AppDataSource.getRepository(Book);
+      const books = await bookRepository.find({ where: { userID: userID } });
+
+      if (!books) {
+        return res.status(404).json({ error: "Books not found" });
+      }
       res.json(books);
     } catch (error) {
       log.error("Error retrieving books:", error);
@@ -255,12 +275,9 @@ export const BookController = {
   /** ======== Update Specific page ======== **/
 
   updatePageHandler: async (req: Request, res: Response) => {
-    console.log("bisfbnvoi", res.json(req.body));
-
     const pageId = parseInt(req.params.pageId);
 
     const { paragraph } = req.body;
-    // console.log("paragraph", req.body);
 
     try {
       const pageRepository = AppDataSource.getRepository(Page);
