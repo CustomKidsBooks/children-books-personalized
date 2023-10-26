@@ -1,17 +1,12 @@
 "use client";
 
 import { useUser } from "@auth0/nextjs-auth0/client";
-import LoginForm from "@components/LoginForm";
-import Modal from "@components/Modal";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { LoginFormValues, SignUpFormValues } from "@utils/interfaces";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useContext, useState } from "react";
-import { ModalContext } from "./ModalProvider";
-import SignUpForm from "./SignUpForm";
+import { useState } from "react";
 import DeleteModal from "./delete/delete";
 import NavbarSkeleton from "./skeleton/Navbar.skeleton";
 import { LinkButton } from "./ui/LinkButton";
@@ -20,13 +15,9 @@ const Nav = () => {
   const { user, error, isLoading } = useUser();
   const pathname = usePathname();
   const [activeLink, setActiveLink] = useState<string | null>(null);
-  const [isLoggedIn, setLoggedIn] = useState(false);
   const [isDropdownVisible, setDropdownVisible] = useState(false);
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
   const [isMenuOpen, setMenuOpen] = useState(false);
-
-  const { showModal, openModal, closeModal, auth, setToken } =
-    useContext(ModalContext);
 
   const handleImageClick = () => {
     setDropdownVisible(!isDropdownVisible);
@@ -42,29 +33,6 @@ const Nav = () => {
 
   const handleDeleteCancel = () => {
     setDeleteModalVisible(false);
-  };
-  const handleSubmit = async (
-    values: LoginFormValues | SignUpFormValues,
-    formType: "login" | "signup"
-  ) => {
-    try {
-      if (formType === "login") {
-        setLoggedIn(true);
-        setToken("xyz");
-        closeModal("loginModal");
-      } else if (formType === "signup") {
-        setLoggedIn(true);
-        closeModal("signUpModal");
-      }
-    } catch (error) {
-      console.error("API error:", error);
-    }
-  };
-
-  const handleLogout = () => {
-    setLoggedIn(false);
-    setToken("");
-    localStorage.removeItem("accessToken");
   };
 
   if (isLoading) return <NavbarSkeleton />;
@@ -115,7 +83,6 @@ const Nav = () => {
             </div>
             <a
               href="/api/auth/logout"
-              onClick={handleLogout}
               className={` lg:inline-block lg:mt-0 text-black hover:text-pink mx-4 ${
                 pathname === "/logout" ? "underline text-pink" : ""
               }`}
@@ -197,24 +164,6 @@ const Nav = () => {
                 </div>
               </div>
             </div>
-            {showModal.loginModal && (
-              <>
-                <Modal
-                  isVisible={showModal.loginModal}
-                  onClose={() => closeModal("loginModal")}
-                >
-                  <LoginForm handleSubmit={handleSubmit} />
-                </Modal>
-              </>
-            )}
-            {showModal.signUpModal && (
-              <Modal
-                isVisible={showModal.signUpModal}
-                onClose={() => closeModal("signUpModal")}
-              >
-                <SignUpForm handleSubmit={handleSubmit} />
-              </Modal>
-            )}
             <div className="absolute inset-y-0 right-0 flex items-center sm:hidden">
               <button
                 type="button"
