@@ -9,7 +9,7 @@ export default async function handler(
   const slugUrl: string = Array.isArray(slug) ? slug.join("/") : "";
 
   if (req.method === "GET") {
-    axiosInstance
+    await axiosInstance
       .get(`/api/${slugUrl}`)
       .then((response) => {
         res.status(200).json(response.data);
@@ -19,14 +19,13 @@ export default async function handler(
         res.status(500).json({ message: "Internal Server Error" });
       });
   } else if (req.method === "POST") {
-    axiosInstance
+    await axiosInstance
       .post(`/api/${slugUrl}`, req.body)
-      .then((response) =>
+      .then((response) => 
         res.status(200).json({ message: "Book created successfully!" })
       )
       .catch((err) => res.status(500).json({ message: "Error" }));
   } else {
-    // Handle unsupported methods
     res.setHeader('Allow', ['GET', 'POST']);
     res.status(405).json({ message: 'Method Not Allowed' });
   }
