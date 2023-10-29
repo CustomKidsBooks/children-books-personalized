@@ -6,6 +6,7 @@ export interface BookValues {
   page?: number;
   image?: string;
   tag?: string;
+  privacy?:string;
 }
 
 export interface CreateStoryFormValues {

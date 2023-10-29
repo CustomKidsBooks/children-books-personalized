@@ -2,12 +2,15 @@ import Image from "next/image";
 import LibraryCard from "./Library/LibraryCard";
 import { LinkButton } from "./ui/LinkButton";
 import { UserProfile } from "@auth0/nextjs-auth0/client";
+import { useState } from "react";
 
 interface UserProfileValues {
   user: UserProfile;
 }
 
 const UserProfile = ({ user }: UserProfileValues) => {
+  const [privacy, setPrivacy] = useState("public");
+
   return (
     <>
       <section className="bg-teal ">
@@ -35,19 +38,33 @@ const UserProfile = ({ user }: UserProfileValues) => {
         </div>
       </section>
       <section className="p-10 h-auto">
-        <div className="relative inline-block">
-          <Image
-            src="/assets/library.jpg"
-            alt="Library"
-            width={247}
-            height={126}
-          />
-          <h1 className="absolute top-2/4 -translate-y-2/4 left-2/4 -translate-x-2/4 md:text-4xl text-3xl font-quicksand font-medium">
-            Library
-          </h1>
+        <div className="flex flex-col justify-between md:flex-row">
+          <div className="relative inline-block">
+            <Image
+              src="/assets/library.jpg"
+              alt="Library"
+              width={247}
+              height={126}
+            />
+            <h1 className="absolute top-2/4 -translate-y-2/4 left-2/4 -translate-x-2/4 md:text-4xl text-3xl font-quicksand font-medium">
+              Library
+            </h1>
+          </div>
+          <div className="flex justify-center gap-3 items-center mt-5 md:mt-0 md:me-10">
+            <label className="label-input font-bold">Privacy</label>
+            <select
+              name="privacy"
+              value={privacy}
+              onChange={(e) => setPrivacy(e.target.value)}
+              className="flex rounded-lg my-3 p-3 text-base md:text-lg lg:text-xl text-black outline-0 shadow"
+            >
+              <option value="public">Public</option>
+              <option value="private">Private</option>
+            </select>
+          </div>
         </div>
 
-        <LibraryCard userID={user?.sub} />
+        <LibraryCard userID={user?.sub} privacy={privacy} />
       </section>
 
       <section className="bg-pink px-10 py-16 flex flex-col justify-center gap-12 lg:h-96 ">
