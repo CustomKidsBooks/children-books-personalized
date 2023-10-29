@@ -2,8 +2,9 @@ import { Express } from "express";
 import { BookController } from "./controller/book.controller";
 import { UserController } from "./controller/user.controller";
 import { upload } from "./middleware/uploadFile";
+
 export default function (app: Express) {
-  const authMiddleware = require("./auth/authCheck");
+  const { authMiddleware } = require("./auth/authCheck");
 
   // create user
   app.post("/api/create_user", UserController.createUser);
@@ -48,9 +49,12 @@ export default function (app: Express) {
 
   // Handling pdf download
   app.get("/api/download/story/pdf/:bookId", BookController.downloadStoryAsPDF);
-  
+
   // Handling word download
-  app.get('/api/download/story/word/:bookId', BookController.downloadStoryAsWord);
+  app.get(
+    "/api/download/story/word/:bookId",
+    BookController.downloadStoryAsWord
+  );
 
   // Define an API endpoint for sending the book as a PDF
   app.post("/api/sendBookAsPdf/:bookId", BookController.sendBookAsPdf);

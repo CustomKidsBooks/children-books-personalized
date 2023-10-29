@@ -7,7 +7,6 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const { accessToken } = await getAccessToken(req, res);
-
   const { slug } = req.query;
   const slugUrl: string = Array.isArray(slug) ? slug.join("/") : "";
 

@@ -24,10 +24,9 @@ export const BookController = {
   /** ======== Create a Book ======== **/
 
   createBook: async (req: Request, res: Response) => {
-    const { userID, title, age, subject, characters, lesson, page, privacy } =
+    const { title, age, subject, characters, lesson, page, privacy } =
       req.body;
     let newBook: Book | undefined;
-
     try {
       const bookRepository = AppDataSource.getRepository(Book);
 
@@ -56,10 +55,10 @@ export const BookController = {
       if (imageUrl) {
         const localImagePath = await downloadCoverImageLocally(imageUrl);
 
-        let uid = (req as any).auth?.sub;
+        const uid = (req as any).auth?.sub;
 
         newBook = bookRepository.create({
-          userID: uid || null,
+          userID: uid ?? null,
           title,
           subject,
           characters: charactersInfo,
