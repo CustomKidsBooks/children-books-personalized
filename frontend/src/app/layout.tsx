@@ -1,3 +1,4 @@
+import { UserProvider } from "@auth0/nextjs-auth0/client";
 import Footer from "@components/Footer";
 import Nav from "@components/Nav";
 import "@styles/globals.css";
@@ -14,18 +15,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ModalProvider>
     <html lang="en">
-      <body>
-        <div className="flex flex-col min-h-screen h-auto">
-          <main className="">
-            <Nav />
-            {children}
-          </main>
-          <Footer />
-        </div>
-      </body>
-    </html>  
-    </ModalProvider>
+      <UserProvider>
+        <ModalProvider>
+          <body>
+            <div className="flex flex-col min-h-screen h-auto">
+              <main className="">
+                <Nav />
+                {children}
+              </main>
+              <Footer />
+            </div>
+          </body>
+        </ModalProvider>
+      </UserProvider>
+    </html>
   );
 }

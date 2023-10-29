@@ -6,16 +6,17 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Tag from "../Tag";
 import LibrarySkeleton from "./LibraryCard.skeleton";
-import useLibraryCard from "./hooks/useLibraryCard";
+import useLibraryCard from "../hooks/useLibraryCard";
 import { BookValues } from "@utils/interfaces";
 
 interface LibraryValues {
+  userID?: string | null;
   search?: string;
 }
 
-const LibraryCard = ({ search }: LibraryValues) => {
+const LibraryCard = ({ userID, search }: LibraryValues) => {
   const router = useRouter();
-  const { isLoading, isError, bookData } = useLibraryCard();
+  const { isLoading, isError, bookData } = useLibraryCard(userID);
 
   const books: BookValues[] = search
     ? bookData.filter((book) => book.tag?.toLowerCase().includes(search.trim()))
@@ -27,6 +28,14 @@ const LibraryCard = ({ search }: LibraryValues) => {
 
   if (isError) {
     return <div>Error...</div>;
+  }
+
+  if (bookData.length === 0) {
+    return (
+      <section>
+        <h1 className="text p-4">You don't have any book!</h1>
+      </section>
+    );
   }
 
   return (

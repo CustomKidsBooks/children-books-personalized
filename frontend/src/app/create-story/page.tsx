@@ -1,8 +1,9 @@
 "use client";
+
 import StoryForm from "@components/StoryForm";
 import useCreateStory from "@components/hooks/useCreateStory";
 
-const CreateStory = () => {
+function CreateStory() {
   const { isError, submitting, createStory } = useCreateStory();
 
   return (
@@ -12,6 +13,6 @@ const CreateStory = () => {
       handleCreateStory={createStory}
     />
   );
-};
+}
 
 export default CreateStory;

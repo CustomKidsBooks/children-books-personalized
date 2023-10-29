@@ -1,7 +1,7 @@
 export interface BookValues {
   id: number;
   title: string;
-  desc?: string;
+  subject?: string;
   author?: string;
   page?: number;
   image?: string;
@@ -9,6 +9,7 @@ export interface BookValues {
 }
 
 export interface CreateStoryFormValues {
+  userEmail?: string;
   title: string;
   ageGroup: string;
   privacy:string;
@@ -16,17 +17,6 @@ export interface CreateStoryFormValues {
   page: number;
   lesson?: string;
   characters?: AdditionalField[];
-}
-
-export interface LoginFormValues {
-  email: string;
-  password: string;
-}
-
-export interface SignUpFormValues {
-  name: string;
-  email: string;
-  password: string;
 }
 
 export interface AdditionalField {
