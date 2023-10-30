@@ -9,7 +9,7 @@ interface UserProfileValues {
 }
 
 const UserProfile = ({ user }: UserProfileValues) => {
-  const [privacy, setPrivacy] = useState("public");
+  const [privacy, setPrivacy] = useState("all");
 
   return (
     <>
@@ -51,13 +51,14 @@ const UserProfile = ({ user }: UserProfileValues) => {
             </h1>
           </div>
           <div className="flex justify-center gap-3 items-center mt-5 md:mt-0 md:me-10">
-            <label className="label-input font-bold">Privacy</label>
+            <label className="label-input font-bold">Sort</label>
             <select
               name="privacy"
               value={privacy}
               onChange={(e) => setPrivacy(e.target.value)}
               className="flex rounded-lg my-3 p-3 text-base md:text-lg lg:text-xl text-black outline-0 shadow"
             >
+              <option value="all">All</option>
               <option value="public">Public</option>
               <option value="private">Private</option>
             </select>
