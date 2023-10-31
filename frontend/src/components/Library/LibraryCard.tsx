@@ -12,15 +12,22 @@ import { BookValues } from "@utils/interfaces";
 interface LibraryValues {
   userID?: string | null;
   search?: string;
+  privacy?: string;
 }
 
-const LibraryCard = ({ userID, search }: LibraryValues) => {
+const LibraryCard = ({ userID, search, privacy }: LibraryValues) => {
   const router = useRouter();
   const { isLoading, isError, bookData } = useLibraryCard(userID);
 
-  const books: BookValues[] = search
+  let books: BookValues[] = search
     ? bookData.filter((book) => book.tag?.toLowerCase().includes(search.trim()))
     : bookData;
+
+  if (privacy !== "all") {
+    books = userID
+      ? books.filter((book) => book.privacy === privacy)
+      : books.filter((book) => book.privacy === "public");
+  }
 
   if (isLoading) {
     return <LibrarySkeleton />;
@@ -71,7 +78,7 @@ const LibraryCard = ({ userID, search }: LibraryValues) => {
                   icon={faChildReaching}
                   className="fa-icon place-self-center"
                 />
-                <p className="text-pine-green">2-3</p>
+                <p className="text-pine-green">{book.ageGroup}</p>
               </div>
             </div>
             <div>{book.tag && <Tag tag={book.tag} />}</div>

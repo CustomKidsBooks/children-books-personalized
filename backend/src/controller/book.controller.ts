@@ -24,14 +24,15 @@ export const BookController = {
   /** ======== Create a Book ======== **/
 
   createBook: async (req: Request, res: Response) => {
-    const { title, age, subject, characters, lesson, page, privacy } =
+    const { title, ageGroup, subject, characters, lesson, page, privacy } =
       req.body;
     let newBook: Book | undefined;
+        
     try {
       const bookRepository = AppDataSource.getRepository(Book);
 
       // Query to call OpenAi api to create book cover
-      let imageDesc = `for a story book "${title}" for kids age ${age}`;
+      let imageDesc = `for a story book "${title}" for kids age ${ageGroup}`;
       imageDesc += subject ? ` about ${subject}` : "";
 
       let charactersInfo = ""; // Initialize an empty string to store character information
@@ -61,6 +62,7 @@ export const BookController = {
           userID: uid ?? null,
           title,
           subject,
+          ageGroup,
           characters: charactersInfo,
           lesson,
           page,
@@ -72,7 +74,7 @@ export const BookController = {
         await bookRepository.save(newBook);
 
         //Query to create the requested book content
-        let desc = `create a ${page} page story book titled "${title}" with ${age}-year-old readers, with one paragraph per page`;
+        let desc = `create a ${page} page story book titled "${title}" with ${ageGroup}-year-old readers, with one paragraph per page`;
         desc += subject ? ` about ${subject}` : "";
 
         if (characters.length > 0) {

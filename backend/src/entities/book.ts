@@ -11,9 +11,12 @@ export class Book {
 
   @Column()
   title!: string;
-
+    
   @Column()
   subject!: string;
+  
+  @Column()
+  ageGroup!: string;
 
   @Column({ nullable: true, length: 500 })
   characters!: string;
