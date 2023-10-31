@@ -56,7 +56,6 @@ const useGetBookPages = (id: number): GetBookValues => {
       })
       .catch((err) => {
         setIsError(true);
-        console.log(err);
       })
       .finally(() => setIsLoading(false));
   }, [

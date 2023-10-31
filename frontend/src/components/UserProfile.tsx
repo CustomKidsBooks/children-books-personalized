@@ -51,7 +51,7 @@ const UserProfile = ({ user }: UserProfileValues) => {
             </h1>
           </div>
           <div className="flex justify-center gap-3 items-center mt-5 md:mt-0 md:me-10">
-            <label className="label-input font-bold">Filter</label>
+            <label className="label-input font-bold">Content Privacy</label>
             <select
               name="privacy"
               value={privacy}

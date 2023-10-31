@@ -19,7 +19,6 @@ const useLibraryCard = (userID?: string | null) => {
       })
       .catch((err) => {
         setIsError(true);
-        console.log(err);
       })
       .finally(() => setIsLoading(false));
   }, []);
