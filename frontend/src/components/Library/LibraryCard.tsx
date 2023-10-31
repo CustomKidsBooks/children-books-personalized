@@ -78,7 +78,7 @@ const LibraryCard = ({ userID, search, privacy }: LibraryValues) => {
                   icon={faChildReaching}
                   className="fa-icon place-self-center"
                 />
-                <p className="text-pine-green">2-3</p>
+                <p className="text-pine-green">{book.ageGroup}</p>
               </div>
             </div>
             <div>{book.tag && <Tag tag={book.tag} />}</div>

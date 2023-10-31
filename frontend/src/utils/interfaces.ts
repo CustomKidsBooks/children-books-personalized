@@ -2,6 +2,7 @@ export interface BookValues {
   id: number;
   title: string;
   subject?: string;
+  ageGroup?:string;
   author?: string;
   page?: number;
   image?: string;
