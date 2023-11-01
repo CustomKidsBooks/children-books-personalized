@@ -1,18 +1,22 @@
-import { axiosInstance } from "@services/api-client";
+import { useUser } from "@auth0/nextjs-auth0/client";
 import { CreateStoryFormValues } from "@utils/interfaces";
+import axios from "axios";
 import { useState } from "react";
 
 const useCreateStory = () => {
+  const { user, error, isLoading } = useUser();
   const [submitting, setIsSubmitting] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
 
+  const url = user ? `/api/protected/create_book/${user.sub}` : `/api/create_book`;
+
   const createStory = async (values: CreateStoryFormValues) => {
     setIsSubmitting(true);
-    await axiosInstance
-      .post("/api/create_book", {
+    await axios
+      .post(url, {
         title: values.title,
         ageGroup: values.ageGroup,
-        privacy:values.privacy,
+        privacy: values.privacy,
         subject: values.subject,
         page: values.page,
         characters: values.characters,

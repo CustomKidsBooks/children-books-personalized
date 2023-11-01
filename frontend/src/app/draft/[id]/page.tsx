@@ -44,7 +44,7 @@ const Draft = ({ params }: { params: DraftValues }) => {
             <span className="font-semibold">Title :</span> {bookData?.title}
           </h2>
           <h2 className="text-xl mt-3">
-            <span className="font-semibold">Story :</span> {bookData?.desc}{" "}
+            <span className="font-semibold">Story :</span> {bookData?.subject}{" "}
           </h2>
           <h2 className="text-xl mt-3 font-semibold">
             Back to{" "}

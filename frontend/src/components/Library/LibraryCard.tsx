@@ -6,20 +6,28 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Tag from "../Tag";
 import LibrarySkeleton from "./LibraryCard.skeleton";
-import useLibraryCard from "./hooks/useLibraryCard";
+import useLibraryCard from "../hooks/useLibraryCard";
 import { BookValues } from "@utils/interfaces";
 
 interface LibraryValues {
+  userID?: string | null;
   search?: string;
+  privacy?: string;
 }
 
-const LibraryCard = ({ search }: LibraryValues) => {
+const LibraryCard = ({ userID, search, privacy }: LibraryValues) => {
   const router = useRouter();
-  const { isLoading, isError, bookData } = useLibraryCard();
+  const { isLoading, isError, bookData } = useLibraryCard(userID);
 
-  const books: BookValues[] = search
+  let books: BookValues[] = search
     ? bookData.filter((book) => book.tag?.toLowerCase().includes(search.trim()))
     : bookData;
+
+  if (privacy !== "all") {
+    books = userID
+      ? books.filter((book) => book.privacy === privacy)
+      : books.filter((book) => book.privacy === "public");
+  }
 
   if (isLoading) {
     return <LibrarySkeleton />;
@@ -27,6 +35,14 @@ const LibraryCard = ({ search }: LibraryValues) => {
 
   if (isError) {
     return <div>Error...</div>;
+  }
+
+  if (bookData.length === 0) {
+    return (
+      <section>
+        <h1 className="text p-4">You don't have any book!</h1>
+      </section>
+    );
   }
 
   return (
@@ -62,7 +78,7 @@ const LibraryCard = ({ search }: LibraryValues) => {
                   icon={faChildReaching}
                   className="fa-icon place-self-center"
                 />
-                <p className="text-pine-green">2-3</p>
+                <p className="text-pine-green">{book.ageGroup}</p>
               </div>
             </div>
             <div>{book.tag && <Tag tag={book.tag} />}</div>

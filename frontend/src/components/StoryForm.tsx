@@ -16,12 +16,14 @@ interface CreateStoryFormProps {
   isError: boolean;
   submitting: boolean;
   handleCreateStory: (values: CreateStoryFormValues) => Promise<void>;
+  userID?: string | null;
 }
 
 const StoryForm: React.FC<CreateStoryFormProps> = ({
   isError,
   submitting,
   handleCreateStory,
+  userID,
 }) => {
   const {
     values,
@@ -114,21 +116,23 @@ const StoryForm: React.FC<CreateStoryFormProps> = ({
                 ) : null}
               </div>
 
-              <div className="md:flex items-center">
-                <label htmlFor="privacy" className="label-input font-bold">
-                  Privacy
-                  <span className="asterisk">*</span>
-                </label>
-                <ReusableInput
-                  id="privacy"
-                  name="privacy"
-                  type="select"
-                  value={values.privacy}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  options={privacyList}
-                />
-              </div>
+              {userID && (
+                <div className="md:flex items-center">
+                  <label htmlFor="privacy" className="label-input font-bold">
+                    Privacy
+                    <span className="asterisk">*</span>
+                  </label>
+                  <ReusableInput
+                    id="privacy"
+                    name="privacy"
+                    type="select"
+                    value={values.privacy}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    options={privacyList}
+                  />
+                </div>
+              )}
               <div>
                 {touched.privacy && errors.privacy ? (
                   <div className="asterisk">{errors.privacy}</div>

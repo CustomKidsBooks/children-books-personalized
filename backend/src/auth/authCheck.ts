@@ -29,4 +29,4 @@ const authMiddleware = jwt({
   algorithms: ["RS256"],
 });
 
-module.exports = authMiddleware;
+module.exports = {authMiddleware};

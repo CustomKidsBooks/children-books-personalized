@@ -1,17 +1,17 @@
-import { AppDataSource } from "../db/connect";
+import { Request, Response } from "express";
+import fs from "fs";
+import path from "path";
 import { DeepPartial, FindOneOptions } from "typeorm";
+import { AppDataSource } from "../db/connect";
 import { Book } from "../entities/book";
 import { Page } from "../entities/page";
-import { Request, Response } from "express";
 import log from "../logger";
-import { generateBookText, generateImage } from "../service/openai.service";
 import {
   downloadCoverImageLocally,
   downloadPagesImageLocally,
   getPagesFromContent,
 } from "../service/book.service";
-import fs from "fs";
-import path from "path";
+import { generateBookText, generateImage } from "../service/openai.service";
 import nodemailer from "nodemailer";
 import { generatePdfDoc, generateWordDoc } from "../utils";
 
@@ -24,15 +24,15 @@ export const BookController = {
   /** ======== Create a Book ======== **/
 
   createBook: async (req: Request, res: Response) => {
-    const { userId, title, age, subject, characters, lesson, page, privacy } =
+    const { title, ageGroup, subject, characters, lesson, page, privacy } =
       req.body;
     let newBook: Book | undefined;
-
+        
     try {
       const bookRepository = AppDataSource.getRepository(Book);
 
       // Query to call OpenAi api to create book cover
-      let imageDesc = `for a story book "${title}" for kids age ${age}`;
+      let imageDesc = `for a story book "${title}" for kids age ${ageGroup}`;
       imageDesc += subject ? ` about ${subject}` : "";
 
       let charactersInfo = ""; // Initialize an empty string to store character information
@@ -56,10 +56,13 @@ export const BookController = {
       if (imageUrl) {
         const localImagePath = await downloadCoverImageLocally(imageUrl);
 
+        const uid = (req as any).auth?.sub;
+
         newBook = bookRepository.create({
-          userId,
+          userID: uid ?? null,
           title,
           subject,
+          ageGroup,
           characters: charactersInfo,
           lesson,
           page,
@@ -71,7 +74,7 @@ export const BookController = {
         await bookRepository.save(newBook);
 
         //Query to create the requested book content
-        let desc = `create a ${page} page story book titled "${title}" with ${age}-year-old readers, with one paragraph per page`;
+        let desc = `create a ${page} page story book titled "${title}" with ${ageGroup}-year-old readers, with one paragraph per page`;
         desc += subject ? ` about ${subject}` : "";
 
         if (characters.length > 0) {
@@ -122,6 +125,26 @@ export const BookController = {
     try {
       const bookRepository = AppDataSource.getRepository(Book);
       const books = await bookRepository.find();
+      res.json(books);
+    } catch (error) {
+      log.error("Error retrieving books:", error);
+      res
+        .status(500)
+        .json({ error: "An error occurred while retrieving books" });
+    }
+  },
+
+  /** ======== Fetch user Books ======== **/
+
+  fetchUserBooks: async (req: Request, res: Response) => {
+    try {
+      const userID = req.params.userID;
+      const bookRepository = AppDataSource.getRepository(Book);
+      const books = await bookRepository.find({ where: { userID: userID } });
+
+      if (!books) {
+        return res.status(404).json({ error: "Books not found" });
+      }
       res.json(books);
     } catch (error) {
       log.error("Error retrieving books:", error);

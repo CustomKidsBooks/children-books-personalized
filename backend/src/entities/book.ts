@@ -7,13 +7,16 @@ export class Book {
   id!: number;
 
   @Column({ nullable: true })
-  userId!: number;
+  userID!: string;
 
   @Column()
   title!: string;
-
+    
   @Column()
   subject!: string;
+  
+  @Column()
+  ageGroup!: string;
 
   @Column({ nullable: true, length: 500 })
   characters!: string;
