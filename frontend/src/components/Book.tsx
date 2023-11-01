@@ -66,8 +66,12 @@ const Book = ({ id }: BookValues) => {
             />
           </Button>
         </div>
-        <div className="h-[480px] w-4/6 flex rounded-lg overflow-hidden drop-shadow-xl display_book">
-          <div className="w-3/4">
+        <div className="h-[480px] w-4/6 flex flex-col md:flex-row rounded-lg overflow-hidden drop-shadow-xl">
+          <span
+            className="md:absolute md:block md:z-[1] md:border md:border-slate-300 md:border-solid md:inset-x-2/4 md:inset-y-0"
+            area-hidden="true"
+          ></span>
+          <div className="md:w-3/4">
             <div className="relative h-full w-full">
               {previewImage && (
                 <div>
@@ -106,22 +110,22 @@ const Book = ({ id }: BookValues) => {
               <p className="absolute bottom-3 left-5 font-bold">{pageNumber}</p>
             </div>
           </div>
-          <div className="w-1/4 bg-yellow relative flex items-center font-quicksand font-semibold">
+          <div className="md:w-1/4  overflow-auto scrollbar bg-yellow relative flex items-start font-quicksand font-semibold">
             {editParagraph ? (
               <textarea
-                className="m-4 leading-10 text-xl tracking-widest box-border h-full bg-yellow-200"
+                className="mx-2 relative z-[10] w-full scrollbar leading-10 text-base md:text-xl tracking-widest box-border h-full bg-yellow-200"
                 rows={8}
                 ref={paragraphRef}
                 defaultValue={paragraph}
                 name="paragraph"
               />
             ) : (
-              <p className="m-4 leading-10 text-2xl tracking-widest font-semibold">
+              <p className="m-4 leading-10 text-base md:text-2xl tracking-widest font-semibold">
                 {paragraph}
               </p>
             )}
 
-            <div className="absolute bottom-3 right-5">{pageNumber + 1}</div>
+            <div className="fixed bottom-3 right-5">{pageNumber + 1}</div>
           </div>
         </div>
         <div className="w-1/6 flex justify-center text-green-500">
