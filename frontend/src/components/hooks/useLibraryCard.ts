@@ -1,4 +1,3 @@
-import { useUser } from "@auth0/nextjs-auth0/client";
 import { BookValues } from "@utils/interfaces";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -9,7 +8,6 @@ const useLibraryCard = (
   search?: string,
   booksPerPage?: number
 ) => {
-  const { user } = useUser();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
   const [bookData, setBookData] = useState<BookValues[]>([]);
@@ -17,8 +15,6 @@ const useLibraryCard = (
   const url = userID
     ? `/api/protected/books/${userID}`
     : `/api/books?page=${currentPage}&limit=${booksPerPage}&search=${search}`;
-
-  // TODO : Implement Abort request in case of search to cancel the unwanted request while typing the search
 
   useEffect(() => {
     axios

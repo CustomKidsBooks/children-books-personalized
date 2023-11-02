@@ -21,11 +21,11 @@ app.use(express.urlencoded({ extended: false }));
 
 async function initialize() {
   try {
-    await AppDataSource.initialize(); // Establish the database connection
+    await AppDataSource.initialize();
     log.info("Database connection established successfully!");
   } catch (error) {
     log.error("Error during database connection initialization:", error);
-    throw error; // Rethrow the error to be caught in the main catch block
+    throw error;
   }
 }
 

@@ -7,10 +7,6 @@ export default async function handler(
 ) {
   const { slug } = req.query;
   const slugUrl: string = Array.isArray(slug) ? slug.join("/") : "";
-
-  //  Changed the slugurl to url in GET request for getting queries in backend for pagination
-  //  not sure how to send queries to backend without changing in this way
-
   const url = req.url;
 
   if (req.method === "GET") {

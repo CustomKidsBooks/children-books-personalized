@@ -40,9 +40,7 @@ const LibraryCard = ({
   if (userID && privacy !== "all") {
     books = books.filter((book) => book.privacy === privacy);
   }
-  // let books: BookValues[] = search
-  //   ? bookData.filter((book) => book.tag?.toLowerCase().includes(search.trim()))
-  //   : bookData;
+  
   if (isLoading) {
     return <LibrarySkeleton />;
   }

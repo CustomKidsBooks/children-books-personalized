@@ -12,7 +12,7 @@ const UserLibrary = () => {
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
-  const BOOKSPERPAGE = 12;
+  const booksPerPage = 8;
   const tag: string =
     "  1. #FallStorybook  2. #KidsFallAdventure  3. #AutumnFantasy";
 
@@ -68,7 +68,7 @@ const UserLibrary = () => {
         search={search}
         currentPage={currentPage}
         getTotalPages={getTotalPages}
-        booksPerPage={BOOKSPERPAGE}
+        booksPerPage={booksPerPage}
       />
 
       <div className="my-16">
