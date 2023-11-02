@@ -30,6 +30,11 @@ const UserLibrary = () => {
     setTotalPages(totalPages);
   };
 
+  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value.toLocaleLowerCase());
+    setCurrentPage(1);
+  };
+
   return (
     <section className="p-10 h-auto">
       <div className="relative shrink flex-center">
@@ -50,9 +55,7 @@ const UserLibrary = () => {
             type="text"
             placeholder="Search here"
             value={search}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setSearch(e.target.value.toLocaleLowerCase())
-            }
+            onChange={handleSearch}
             className="w-full text font-bold tracking-widest p-2 focus:outline-none focus:ring focus:border-pink-300"
           />
           <FontAwesomeIcon
