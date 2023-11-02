@@ -7,6 +7,10 @@ export default async function handler(
 ) {
   const { slug } = req.query;
   const slugUrl: string = Array.isArray(slug) ? slug.join("/") : "";
+
+  //  Changed the slugurl to url in GET request for getting queries in backend for pagination
+  //  not sure how to send queries to backend without changing in this way
+
   const url = req.url;
 
   if (req.method === "GET") {
@@ -22,12 +26,12 @@ export default async function handler(
   } else if (req.method === "POST") {
     await axiosInstance
       .post(`/api/${slugUrl}`, req.body)
-      .then((response) => 
+      .then((response) =>
         res.status(200).json({ message: "Book created successfully!" })
       )
       .catch((err) => res.status(500).json({ message: "Error" }));
   } else {
-    res.setHeader('Allow', ['GET', 'POST']);
-    res.status(405).json({ message: 'Method Not Allowed' });
+    res.setHeader("Allow", ["GET", "POST"]);
+    res.status(405).json({ message: "Method Not Allowed" });
   }
 }

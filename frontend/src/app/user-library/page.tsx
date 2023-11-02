@@ -6,25 +6,27 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
+import { Button } from "../../components/ui/Button";
 
 const UserLibrary = () => {
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
+  const BOOKSPERPAGE = 12;
   const tag: string =
     "  1. #FallStorybook  2. #KidsFallAdventure  3. #AutumnFantasy";
 
-  const handlePrevious = () => {
+  const displayPreviousPage = () => {
     if (currentPage > 1) {
       setCurrentPage((prevState) => prevState - 1);
     }
   };
-  const handleNext = () => {
+  const displayNextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage((prevState) => prevState + 1);
     }
   };
-  const getTotalPages = (totalPages: number) => {
+  const getTotalPages = (totalPages: number): void => {
     setTotalPages(totalPages);
   };
 
@@ -63,28 +65,56 @@ const UserLibrary = () => {
         search={search}
         currentPage={currentPage}
         getTotalPages={getTotalPages}
+        booksPerPage={BOOKSPERPAGE}
       />
 
-      <div className="mt-20">
-        <ul className="flex justify-center gap-3">
-          <li onClick={handlePrevious} className="inline-block cursor-pointer">
-            Prev
-          </li>
+      <div className="my-16">
+        <div className="flex justify-center items-center gap-3">
+          <Button
+            onClick={displayPreviousPage}
+            className="shadow-none disabled:opacity-50"
+            disabled={currentPage === 1 ? true : false}
+          >
+            <Image
+              src="/assets/backward-arrow.svg"
+              alt="backward-arrow"
+              width={15}
+              height={3}
+              className="hover:cursor-pointer fill-amber-100"
+            />
+          </Button>
+
           {Array.from(Array(totalPages), (e, i) => {
             return (
-              <li
+              <div
                 key={i}
                 onClick={() => setCurrentPage(i + 1)}
-                className="inline-block cursor-pointer border px-2"
+                className={
+                  currentPage === i + 1
+                    ? "bg-pink border-black rounded-full text-white"
+                    : ""
+                }
               >
-                {i + 1}
-              </li>
+                <button className="border rounded-full py-2 px-4 cursor-pointer font-quicksand font-bold">
+                  {i + 1}
+                </button>
+              </div>
             );
           })}
-          <li onClick={handleNext} className="inline-block cursor-pointer">
-            Next
-          </li>
-        </ul>
+          <Button
+            onClick={displayNextPage}
+            className="shadow-none disabled:opacity-50"
+            disabled={currentPage === totalPages ? true : false}
+          >
+            <Image
+              src="/assets/forward-arrow.svg"
+              alt="forward-arrow"
+              width={15}
+              height={3}
+              className="hover:cursor-pointer"
+            />
+          </Button>
+        </div>
       </div>
     </section>
   );

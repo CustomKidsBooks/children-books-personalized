@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import fs from "fs";
 import path from "path";
-import { DeepPartial, FindOneOptions,Like} from "typeorm";
+import { DeepPartial, FindOneOptions, Like } from "typeorm";
 import { AppDataSource } from "../db/connect";
 import { Book } from "../entities/book";
 import { Page } from "../entities/page";
@@ -27,7 +27,7 @@ export const BookController = {
     const { title, ageGroup, subject, characters, lesson, page, privacy } =
       req.body;
     let newBook: Book | undefined;
-        
+
     try {
       const bookRepository = AppDataSource.getRepository(Book);
 
@@ -122,24 +122,33 @@ export const BookController = {
   /** ======== Fetch all Book ======== **/
 
   fetchBooks: async (req: Request, res: Response) => {
-    try {    
-      const page= Number(req.query.page);
-      const limit= Number(req.query.limit);
-      const search = req.query.search;            
-      
+    try {
+      const page = Number(req.query.page);
+      const limit = Number(req.query.limit);
+      const search = req.query.search;
+      let books;
+      let totalPages;
+
       const bookRepository = AppDataSource.getRepository(Book);
-      const booksAndCount = await bookRepository.findAndCount({
-      where:{privacy:"public", title: Like(`%${search}%`),},
-      skip: (page-1)*limit,
-      take: limit*1,
-    })
 
-      const books = booksAndCount[0]     
-      const count = booksAndCount[1];
-
-      const totalPages = Math.ceil(count / limit);
-
-      res.json({books,totalPages});
+      if (page) {
+        const booksAndCount = await bookRepository.findAndCount({
+          where: { privacy: "public", title: Like(`%${search}%`) },
+          skip: (page - 1) * limit,
+          take: limit * 1,
+        });
+        books = booksAndCount[0];
+        const count = booksAndCount[1];
+        totalPages = Math.ceil(count / limit);
+      } else {
+        books = await bookRepository
+          .createQueryBuilder("book")
+          .orderBy("RAND()")
+          .take(limit)
+          .getMany();
+        totalPages = 1;
+      }
+      res.json({ books, totalPages });
     } catch (error) {
       log.error("Error retrieving books:", error);
       res

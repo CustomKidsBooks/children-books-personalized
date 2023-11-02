@@ -8,14 +8,14 @@ import Tag from "../Tag";
 import LibrarySkeleton from "./LibraryCard.skeleton";
 import useLibraryCard from "../hooks/useLibraryCard";
 import { BookValues } from "@utils/interfaces";
-import { useEffect, useState } from "react";
 
 interface LibraryValues {
   userID?: string | null;
   search?: string;
   privacy?: string;
   currentPage?: number;
-  getTotalPages?: Function;
+  booksPerPage?: number;
+  getTotalPages?: (arg: number) => void;
 }
 
 const LibraryCard = ({
@@ -24,33 +24,25 @@ const LibraryCard = ({
   privacy,
   currentPage,
   getTotalPages,
+  booksPerPage,
 }: LibraryValues) => {
   const router = useRouter();
   const { isLoading, isError, bookData, totalPages } = useLibraryCard(
     userID,
     currentPage,
-    search
+    search,
+    booksPerPage
   );
 
-  useEffect(() => {
-    const setTotalPages = () => {
-      getTotalPages(totalPages);
-    };
-    setTotalPages();
-  }, [totalPages]);
+  getTotalPages ? getTotalPages(totalPages) : "";
 
   let books: BookValues[] = bookData;
-
+  if (userID && privacy !== "all") {
+    books = books.filter((book) => book.privacy === privacy);
+  }
   // let books: BookValues[] = search
   //   ? bookData.filter((book) => book.tag?.toLowerCase().includes(search.trim()))
   //   : bookData;
-
-  if (userID || privacy !== "All") {
-    books = userID
-      ? books.filter((book) => book.privacy === privacy)
-      : books.filter((book) => book.privacy === "public");
-  }
-
   if (isLoading) {
     return <LibrarySkeleton />;
   }
@@ -69,10 +61,10 @@ const LibraryCard = ({
 
   return (
     <section className="py-10">
-      <div className="place-items-center lg:grid lg:grid-cols-4 gap-4 flex overflow-x-auto">
+      <div className="py-3 place-items-center lg:grid lg:grid-cols-4 gap-4 flex overflow-x-auto scrollbar">
         {books.map((book) => (
           <div
-            className="card snap-center transition duration-300 ease-in-out hover:scale-110"
+            className="cursor-pointer card snap-center transition duration-300 ease-in-out hover:scale-105"
             key={book.id}
             onClick={() => router.push(`/draft/${book.id}`)}
           >
@@ -80,7 +72,7 @@ const LibraryCard = ({
               <Image
                 src={
                   book.image
-                    ? `/assets/images/family.jpg`
+                    ? `http://localhost:5001/${book.image}`
                     : "/assets/images/family.jpg"
                 }
                 alt="book_cover"

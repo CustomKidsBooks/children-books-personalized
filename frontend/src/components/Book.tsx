@@ -101,9 +101,10 @@ const Book = ({ id }: BookValues) => {
                   </label>
                 </div>
               ) : (
-                <img
+                <Image
                   src={`http://localhost:5001/${image}`}
-                  alt=""
+                  alt="book_cover"
+                  fill={true}
                   className="h-full w-full"
                 />
               )}
