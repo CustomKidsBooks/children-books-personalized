@@ -8,22 +8,44 @@ import Tag from "../Tag";
 import LibrarySkeleton from "./LibraryCard.skeleton";
 import useLibraryCard from "../hooks/useLibraryCard";
 import { BookValues } from "@utils/interfaces";
+import { useEffect, useState } from "react";
 
 interface LibraryValues {
   userID?: string | null;
   search?: string;
   privacy?: string;
+  currentPage?: number;
+  getTotalPages?: Function;
 }
 
-const LibraryCard = ({ userID, search, privacy }: LibraryValues) => {
+const LibraryCard = ({
+  userID,
+  search,
+  privacy,
+  currentPage,
+  getTotalPages,
+}: LibraryValues) => {
   const router = useRouter();
-  const { isLoading, isError, bookData } = useLibraryCard(userID);
+  const { isLoading, isError, bookData, totalPages } = useLibraryCard(
+    userID,
+    currentPage,
+    search
+  );
 
-  let books: BookValues[] = search
-    ? bookData.filter((book) => book.tag?.toLowerCase().includes(search.trim()))
-    : bookData;
+  useEffect(() => {
+    const setTotalPages = () => {
+      getTotalPages(totalPages);
+    };
+    setTotalPages();
+  }, [totalPages]);
 
-  if (privacy !== "all") {
+  let books: BookValues[] = bookData;
+
+  // let books: BookValues[] = search
+  //   ? bookData.filter((book) => book.tag?.toLowerCase().includes(search.trim()))
+  //   : bookData;
+
+  if (userID || privacy !== "All") {
     books = userID
       ? books.filter((book) => book.privacy === privacy)
       : books.filter((book) => book.privacy === "public");

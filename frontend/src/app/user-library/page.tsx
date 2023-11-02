@@ -9,9 +9,24 @@ import { ChangeEvent, useState } from "react";
 
 const UserLibrary = () => {
   const [search, setSearch] = useState("");
-
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
   const tag: string =
     "  1. #FallStorybook  2. #KidsFallAdventure  3. #AutumnFantasy";
+
+  const handlePrevious = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevState) => prevState - 1);
+    }
+  };
+  const handleNext = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prevState) => prevState + 1);
+    }
+  };
+  const getTotalPages = (totalPages: number) => {
+    setTotalPages(totalPages);
+  };
 
   return (
     <section className="p-10 h-auto">
@@ -44,7 +59,33 @@ const UserLibrary = () => {
           />
         </div>
       </div>
-      <LibraryCard search={search} />
+      <LibraryCard
+        search={search}
+        currentPage={currentPage}
+        getTotalPages={getTotalPages}
+      />
+
+      <div className="mt-20">
+        <ul className="flex justify-center gap-3">
+          <li onClick={handlePrevious} className="inline-block cursor-pointer">
+            Prev
+          </li>
+          {Array.from(Array(totalPages), (e, i) => {
+            return (
+              <li
+                key={i}
+                onClick={() => setCurrentPage(i + 1)}
+                className="inline-block cursor-pointer border px-2"
+              >
+                {i + 1}
+              </li>
+            );
+          })}
+          <li onClick={handleNext} className="inline-block cursor-pointer">
+            Next
+          </li>
+        </ul>
+      </div>
     </section>
   );
 };

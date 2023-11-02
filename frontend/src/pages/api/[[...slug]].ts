@@ -7,10 +7,11 @@ export default async function handler(
 ) {
   const { slug } = req.query;
   const slugUrl: string = Array.isArray(slug) ? slug.join("/") : "";
+  const url = req.url;
 
   if (req.method === "GET") {
     await axiosInstance
-      .get(`/api/${slugUrl}`)
+      .get(`${url}`)
       .then((response) => {
         res.status(200).json(response.data);
       })
