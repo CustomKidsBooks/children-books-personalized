@@ -6,6 +6,28 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .scrollbar::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  .scrollbar::-webkit-scrollbar-track {
+    border-radius: 1rem;
+    background: #f7f4ed;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb {
+    background: #e0cbcb;
+    border-radius: 1rem;
+    border: 3px solid #f6f7ed;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #c0a0b9;
+  }
+}
+
+
 .font_feature {
   font-feature-settings: "clig" off, "liga" off;
 }
@@ -23,17 +45,7 @@
   transform: translate(-50%, -50%);
 }
 
-.display_book::before {
-  content: "";
-  position: absolute;
-  display: block;
-  z-index: 1;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  right: 50%;
-  border: 1px solid rgb(203 213 225);
-}
+
 
 @media only screen and (min-width: 922px) {
   .bg-reading-book {
@@ -100,3 +112,4 @@
 .label-text {
   @apply text-base md:text-lg font-bold font-quicksand;
 }
+

@@ -7,10 +7,11 @@ export default async function handler(
 ) {
   const { slug } = req.query;
   const slugUrl: string = Array.isArray(slug) ? slug.join("/") : "";
+  const url = req.url;
 
   if (req.method === "GET") {
     await axiosInstance
-      .get(`/api/${slugUrl}`)
+      .get(`${url}`)
       .then((response) => {
         res.status(200).json(response.data);
       })
@@ -21,12 +22,12 @@ export default async function handler(
   } else if (req.method === "POST") {
     await axiosInstance
       .post(`/api/${slugUrl}`, req.body)
-      .then((response) => 
+      .then((response) =>
         res.status(200).json({ message: "Book created successfully!" })
       )
       .catch((err) => res.status(500).json({ message: "Error" }));
   } else {
-    res.setHeader('Allow', ['GET', 'POST']);
-    res.status(405).json({ message: 'Method Not Allowed' });
+    res.setHeader("Allow", ["GET", "POST"]);
+    res.status(405).json({ message: "Method Not Allowed" });
   }
 }
