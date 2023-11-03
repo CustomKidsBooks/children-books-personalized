@@ -28,6 +28,4 @@ export const UserController = {
       });
     }
   },
-
-  // ... other controller methods ...
 };
