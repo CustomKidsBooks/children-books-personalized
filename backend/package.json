@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --config nodemon.json src/app.ts"
+    "dev": "nodemon --config nodemon.json src/app.ts",
+    "vercel-build": "echo hello"
   },
   "author": "",
   "license": "ISC",

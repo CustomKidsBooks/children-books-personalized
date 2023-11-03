@@ -44,3 +44,5 @@ async function startServer() {
     log.error("Error during server startup:", error);
   }
 })();
+
+export default app;
