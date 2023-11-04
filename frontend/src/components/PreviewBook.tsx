@@ -45,7 +45,7 @@ const PreviewBook = ({ id }: PreviewBookValues) => {
             <Image
               src={
                 book?.image
-                  ? `/assets/images/cover.jpg`
+                  ? `http://localhost:5001/${book.image}`
                   : "/assets/images/family.jpg"
               }
               alt="book cover"

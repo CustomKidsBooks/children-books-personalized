@@ -21,7 +21,6 @@ type PageData = {
 };
 
 export const BookController = {
-
   createBook: async (req: Request, res: Response) => {
     const { title, ageGroup, subject, characters, lesson, page, privacy } =
       req.body;
@@ -115,14 +114,16 @@ export const BookController = {
       const bookRepository = AppDataSource.getRepository(Book);
       if (page) {
         const booksAndCount = await bookRepository.findAndCount({
-          where: [{
-            privacy: "public",
-            title: Like(`%${search}%`),
-          },
-          {
-            privacy: "public",
-            tag: Like(`%${search}%`),
-          }],
+          where: [
+            {
+              privacy: "public",
+              title: Like(`%${search}%`),
+            },
+            {
+              privacy: "public",
+              tag: Like(`%${search}%`),
+            },
+          ],
           skip: (page - 1) * limit,
           take: limit,
         });
@@ -130,8 +131,14 @@ export const BookController = {
         const count = booksAndCount[1];
         totalPages = Math.ceil(count / limit);
       } else {
-        books = await bookRepository
-          .createQueryBuilder("book")
+        // books = await bookRepository
+        //   .createQueryBuilder("book")
+        //   .orderBy("RAND()")
+        //   .take(limit)
+        //   .getMany();
+        books = await AppDataSource.manager
+          .createQueryBuilder(Book, "book")
+          .where("book.privacy = :privacy", { privacy: "public" })
           .orderBy("RAND()")
           .take(limit)
           .getMany();
