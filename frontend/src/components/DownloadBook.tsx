@@ -22,7 +22,7 @@ const DownloadBook = ({ bookId }: { bookId: number }) => {
       <div className="flex flex-col gap-4 py-4 w-32">
         <Button
           onClick={() =>
-            handleDownload(`http://localhost:5001/api/download/story/pdf/${bookId}`, "PDF")
+            handleDownload(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/download/story/pdf/${bookId}`, "PDF")
           }
           intent="secondary"
           className="text font-bold"
@@ -31,7 +31,7 @@ const DownloadBook = ({ bookId }: { bookId: number }) => {
         </Button>
         <Button
           onClick={() =>
-            handleDownload(`http://localhost:5001/api/download/story/word/${bookId}`, "Word")
+            handleDownload(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/download/story/word/${bookId}`, "Word")
           }
           intent="secondary"
           className="text font-bold"
