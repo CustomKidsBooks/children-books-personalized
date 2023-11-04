@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import fs from "fs";
 import path from "path";
-import { DeepPartial, FindOneOptions } from "typeorm";
+import { DeepPartial, FindOneOptions, Like } from "typeorm";
 import { AppDataSource } from "../db/connect";
 import { Book } from "../entities/book";
 import { Page } from "../entities/page";
@@ -21,21 +21,18 @@ type PageData = {
 };
 
 export const BookController = {
-  /** ======== Create a Book ======== **/
 
   createBook: async (req: Request, res: Response) => {
     const { title, ageGroup, subject, characters, lesson, page, privacy } =
       req.body;
     let newBook: Book | undefined;
-        
+
     try {
       const bookRepository = AppDataSource.getRepository(Book);
-
-      // Query to call OpenAi api to create book cover
       let imageDesc = `for a story book "${title}" for kids age ${ageGroup}`;
       imageDesc += subject ? ` about ${subject}` : "";
 
-      let charactersInfo = ""; // Initialize an empty string to store character information
+      let charactersInfo = "";
 
       if (characters.length > 0) {
         characters.forEach(
@@ -45,17 +42,13 @@ export const BookController = {
         );
       }
 
-      imageDesc += charactersInfo; // Append the characters' information to the main description
-
+      imageDesc += charactersInfo;
       const imageUrl = await generateImage(imageDesc);
-
       const tagDesc = `create a three tags which are 8 characters long based on information below ${imageDesc}`;
       const tags = await generateBookText(tagDesc);
 
-      // Check if imageUrl is not undefined before proceeding
       if (imageUrl) {
         const localImagePath = await downloadCoverImageLocally(imageUrl);
-
         const uid = (req as any).auth?.sub;
 
         newBook = bookRepository.create({
@@ -73,10 +66,8 @@ export const BookController = {
 
         await bookRepository.save(newBook);
 
-        //Query to create the requested book content
         let desc = `create a ${page} page story book titled "${title}" with ${ageGroup}-year-old readers, with one paragraph per page`;
         desc += subject ? ` about ${subject}` : "";
-
         if (characters.length > 0) {
           characters.forEach(
             (character: { name: string; description: string }) => {
@@ -86,15 +77,9 @@ export const BookController = {
         }
 
         desc += lesson ? ` with a lesson: ${lesson}` : "";
-
-        // Generate book content using OpenAI
         const bookContent = await generateBookText(desc);
-
-        // Split book content into pages and paragraphs
         const paragraphsPerPage = 1;
         const pages = getPagesFromContent(bookContent, paragraphsPerPage);
-
-        // Save pages and their paragraphs to the database
         await savePagesToDatabase(pages, newBook.id);
       } else {
         log.error("Error: Image URL is missing.");
@@ -119,13 +104,40 @@ export const BookController = {
     }
   },
 
-  /** ======== Fetch all Book ======== **/
-
   fetchBooks: async (req: Request, res: Response) => {
     try {
+      const page = Number(req.query.page);
+      const limit = Number(req.query.limit);
+      const search = req.query.search;
+      let books;
+      let totalPages;
+
       const bookRepository = AppDataSource.getRepository(Book);
-      const books = await bookRepository.find();
-      res.json(books);
+      if (page) {
+        const booksAndCount = await bookRepository.findAndCount({
+          where: [{
+            privacy: "public",
+            title: Like(`%${search}%`),
+          },
+          {
+            privacy: "public",
+            tag: Like(`%${search}%`),
+          }],
+          skip: (page - 1) * limit,
+          take: limit,
+        });
+        books = booksAndCount[0];
+        const count = booksAndCount[1];
+        totalPages = Math.ceil(count / limit);
+      } else {
+        books = await bookRepository
+          .createQueryBuilder("book")
+          .orderBy("RAND()")
+          .take(limit)
+          .getMany();
+        totalPages = 1;
+      }
+      res.json({ books, totalPages });
     } catch (error) {
       log.error("Error retrieving books:", error);
       res
@@ -133,8 +145,6 @@ export const BookController = {
         .json({ error: "An error occurred while retrieving books" });
     }
   },
-
-  /** ======== Fetch user Books ======== **/
 
   fetchUserBooks: async (req: Request, res: Response) => {
     try {
@@ -154,8 +164,6 @@ export const BookController = {
     }
   },
 
-  /** ======== Fetch a Book by ID with it's related page ======== **/
-
   fetchCoverAndPagesById: async (req: Request, res: Response) => {
     try {
       const bookId = parseInt(req.params.id, 10);
@@ -164,15 +172,12 @@ export const BookController = {
       }
 
       const bookRepository = AppDataSource.getRepository(Book);
-
-      // Define options for findOne
       const options: FindOneOptions<Book> = {
         where: { id: bookId },
         relations: ["pages"],
       };
 
       const book = await bookRepository.findOne(options);
-
       if (!book) {
         return res.status(404).json({ error: "Book not found" });
       }
@@ -185,8 +190,6 @@ export const BookController = {
         .json({ error: "An error occurred while retrieving book" });
     }
   },
-
-  /** ======== Fetch pages of a book ======== **/
 
   fetchPagesForBook: async (req: Request, res: Response) => {
     try {
@@ -205,11 +208,9 @@ export const BookController = {
     }
   },
 
-  /** ======== Update Specific Book ======== **/
-
   updateBookHandler: async (req: Request, res: Response) => {
     const id = parseInt(req.params.id);
-    const { title, subject, charName, charDesc, lesson, privacy } = req.body;
+    const { title, subject, lesson, privacy } = req.body;
 
     try {
       const bookRepository = AppDataSource.getRepository(Book);
@@ -219,11 +220,9 @@ export const BookController = {
         return res.status(404).json({ success: 0, message: "Book not found" });
       }
 
-      // Check if a new image is being uploaded
       const image = req.body.image;
 
       if (image) {
-        // Delete the existing image
         if (book.image) {
           const imageName = path.basename(book.image);
           const imagePath = path.join(
@@ -237,25 +236,20 @@ export const BookController = {
           }
         }
 
-        // Save the new image to the "book_covers" directory
         const newImageName = `${path.basename(image)}`;
         const newImagePath = path.join(
           __dirname,
           `../../images/book_covers/${newImageName}`
         );
         fs.writeFileSync(newImagePath, image, "base64");
-
-        // Update the book's image field with the new image path
         book.image = `images/page/${newImageName}`;
       }
 
-      // Update book fields
       book.title = title;
       book.subject = subject;
       book.lesson = lesson;
       book.privacy = privacy;
 
-      // Save changes
       await bookRepository.save(book);
       return res
         .status(200)
@@ -269,11 +263,8 @@ export const BookController = {
     }
   },
 
-  /** ======== Update Specific page ======== **/
-
   updatePageHandler: async (req: Request, res: Response) => {
     const pageId = parseInt(req.params.pageId);
-
     const { paragraph } = req.body;
 
     try {
@@ -284,9 +275,7 @@ export const BookController = {
         return res.status(404).json({ success: 0, message: "Page not found" });
       }
 
-      // Check if a new image is being uploaded
       if (req.file) {
-        // Delete the existing image if it exists
         if (page.image) {
           const imageName = path.basename(page.image);
           const imagePath = path.join(
@@ -299,17 +288,13 @@ export const BookController = {
             log.error("Error deleting image file:", error);
           }
         }
-
-        // Update the image path in the database
         page.image = `images/page/${req.file.filename}`;
       }
 
-      // Update page content
       if (paragraph) {
         page.paragraph = paragraph;
       }
 
-      // Save changes
       await pageRepository.save(page);
       return res
         .status(200)
@@ -322,8 +307,6 @@ export const BookController = {
       });
     }
   },
-
-  /** ======== Delete Specific Book ======== **/
 
   deleteBookHandler: async (req: Request, res: Response) => {
     const id = parseInt(req.params.id);
@@ -340,7 +323,6 @@ export const BookController = {
         return res.status(404).json({ success: 0, message: "Book not found" });
       }
 
-      // Delete the associated pages and their images
       const pageIds = book.pages.map((page) => page.id);
       const pageRepository = AppDataSource.getRepository(Page);
       const pages = await pageRepository.find({
@@ -349,17 +331,14 @@ export const BookController = {
 
       for (const page of pages) {
         if (page.image) {
-          // Extract the image file name
           const imageName = path.basename(page.image);
 
-          // Get the file path
           const imagePath = path.join(
             __dirname,
             `../../images/page/${imageName}`
           );
 
           try {
-            // Delete the file
             fs.unlinkSync(imagePath);
           } catch (error) {
             log.error("Error deleting image file:", error);
@@ -367,29 +346,22 @@ export const BookController = {
         }
       }
 
-      // Delete the book image
       if (book.image) {
-        // Extract the book image file name
         const bookImageName = path.basename(book.image);
 
-        // Get the file path
         const bookImagePath = path.join(
           __dirname,
           `../../images/bookCover/${bookImageName}`
         );
 
         try {
-          // Delete the file
           fs.unlinkSync(bookImagePath);
         } catch (error) {
           log.error("Error deleting book image file:", error);
         }
       }
 
-      // Delete the associated pages
       await pageRepository.delete(pageIds);
-
-      // Then delete the book
       await bookRepository.remove(book);
       return res.status(200).json({
         success: 1,
@@ -435,7 +407,6 @@ export const BookController = {
         .json({ error: "An error occurred while downloading the PDF" });
     }
   },
-  /** ======== Delete Specific page ======== **/
 
   deletePageHandler: async (req: Request, res: Response) => {
     const pageId = parseInt(req.params.pageId);
@@ -448,26 +419,21 @@ export const BookController = {
         return res.status(404).json({ success: 0, message: "Page not found" });
       }
 
-      // Delete the page image if it exists
       if (page.image) {
-        // Extract the image file name
         const imageName = path.basename(page.image);
 
-        // Get the file path
         const imagePath = path.join(
           __dirname,
           `../../images/page/${imageName}`
         );
 
         try {
-          // Delete the file
           fs.unlinkSync(imagePath);
         } catch (error) {
           log.error("Error deleting page image file:", error);
         }
       }
 
-      // Then delete the page
       await pageRepository.remove(page);
       return res.status(200).json({
         success: 1,
@@ -544,7 +510,6 @@ export const BookController = {
   sendBookAsWord: async (req: Request, res: Response) => {
     await BookController.sendEmail(req, res, "Word");
   },
-  // ... other methods ...
 };
 
 async function savePagesToDatabase(pages: PageData[], bookId: number) {
@@ -577,7 +542,6 @@ async function savePagesToDatabase(pages: PageData[], bookId: number) {
   });
 
   const resolvedPages = await Promise.all(newPages);
-
   const validNewPages = resolvedPages.filter((page) => page !== null);
 
   try {

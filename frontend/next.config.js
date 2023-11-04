@@ -2,11 +2,10 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['127.0.0.1']
+    domains: ["localhost"],
   },
 };
 
 module.exports = nextConfig;
-
 
 //http://localhost:5001/

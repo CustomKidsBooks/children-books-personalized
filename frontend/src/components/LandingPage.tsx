@@ -73,7 +73,7 @@ const LandingPage = () => {
             Library
           </h1>
         </div>
-        <LibraryCard />
+        <LibraryCard booksPerPage={4} />
       </section>
       <section className="bg-ellipse-landing-page bg-no-repeat bg-right sm:bg-none">
         <div className="py-10 w-5/6 mx-auto lg:h-[600px] sm:h-auto">

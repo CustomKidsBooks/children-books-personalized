@@ -13,22 +13,34 @@ interface LibraryValues {
   userID?: string | null;
   search?: string;
   privacy?: string;
+  currentPage?: number;
+  booksPerPage?: number;
+  getTotalPages?: (arg: number) => void;
 }
 
-const LibraryCard = ({ userID, search, privacy }: LibraryValues) => {
+const LibraryCard = ({
+  userID,
+  search,
+  privacy,
+  currentPage,
+  getTotalPages,
+  booksPerPage,
+}: LibraryValues) => {
   const router = useRouter();
-  const { isLoading, isError, bookData } = useLibraryCard(userID);
+  const { isLoading, isError, bookData, totalPages } = useLibraryCard(
+    userID,
+    currentPage,
+    search,
+    booksPerPage
+  );
 
-  let books: BookValues[] = search
-    ? bookData.filter((book) => book.tag?.toLowerCase().includes(search.trim()))
-    : bookData;
+  getTotalPages ? getTotalPages(totalPages) : "";
 
-  if (privacy !== "all") {
-    books = userID
-      ? books.filter((book) => book.privacy === privacy)
-      : books.filter((book) => book.privacy === "public");
+  let books: BookValues[] = bookData;
+  if (userID && privacy !== "all") {
+    books = books.filter((book) => book.privacy === privacy);
   }
-
+  
   if (isLoading) {
     return <LibrarySkeleton />;
   }
@@ -47,10 +59,10 @@ const LibraryCard = ({ userID, search, privacy }: LibraryValues) => {
 
   return (
     <section className="py-10">
-      <div className="place-items-center lg:grid lg:grid-cols-4 gap-4 flex overflow-x-auto">
+      <div className="py-3 place-items-center lg:grid lg:grid-cols-4 gap-4 flex overflow-x-auto scrollbar">
         {books.map((book) => (
           <div
-            className="card snap-center transition duration-300 ease-in-out hover:scale-110"
+            className="cursor-pointer card snap-center transition duration-300 ease-in-out hover:scale-105"
             key={book.id}
             onClick={() => router.push(`/draft/${book.id}`)}
           >
@@ -58,7 +70,7 @@ const LibraryCard = ({ userID, search, privacy }: LibraryValues) => {
               <Image
                 src={
                   book.image
-                    ? `/assets/images/family.jpg`
+                    ? `http://localhost:5001/${book.image}`
                     : "/assets/images/family.jpg"
                 }
                 alt="book_cover"
