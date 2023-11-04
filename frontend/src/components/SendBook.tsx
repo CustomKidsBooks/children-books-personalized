@@ -32,7 +32,7 @@ const SendBook = ({ bookId }: { bookId: number }) => {
   };
 
   const sendEmail = (selectedFormat: string, recipientEmail: string) => {
-    fetch(`http://localhost:5001/api/sendBookAs${selectedFormat}/${bookId}`, {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/sendBookAs${selectedFormat}/${bookId}`, {
       method: "POST",
       body: JSON.stringify({ bookId, recipientEmail }),
       headers: {
