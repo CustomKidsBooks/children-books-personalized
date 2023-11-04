@@ -6,6 +6,7 @@ import "reflect-metadata";
 import { AppDataSource } from "./db/connect";
 import log from "./logger";
 import routes from "./routes";
+import serverless from "serverless-http";
 
 const expressConfig = config.get("express") as {
   port: number;
@@ -18,6 +19,7 @@ app.use("/images", express.static(path.join(__dirname, "../images")));
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+//app.use('/.netlify/functions/api', routes);
 
 async function initialize() {
   try {
@@ -46,3 +48,4 @@ async function startServer() {
 })();
 
 export default app;
+//module.exports.handler = serverless(app);

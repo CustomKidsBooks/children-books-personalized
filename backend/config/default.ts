@@ -5,7 +5,7 @@ export default {
     apiKey: process.env.OPENAI_API_KEY,
   },
   express: {
-    port: 5001,
+    port: process.env.PORT ?? 5001,
     host: "localhost",
   },
   database: {
