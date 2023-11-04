@@ -12,4 +12,10 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_DATABASE,
   entities: [Book, Page, User],
   synchronize: true, // Auto-create or update database schema (development only),
+  "ssl": true,
+  "extra": {
+    "ssl": {
+      "rejectUnauthorized": false
+    }
+  }
 });
