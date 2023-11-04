@@ -11,7 +11,6 @@ export const AppDataSource = new DataSource({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
   entities: [Book, Page, User],
-  synchronize: true, // Auto-create or update database schema (development only),
   "ssl": true,
   "extra": {
     "ssl": {
