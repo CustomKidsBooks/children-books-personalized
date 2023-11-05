@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --config nodemon.json src/app.ts",
-    "build": "netlify deploy --prod"
+    "dev": "nodemon --config nodemon.json src/app.ts"
   },
   "author": "",
   "license": "ISC",
@@ -31,9 +30,7 @@
     "path": "^0.12.7",
     "pdfkit": "^0.13.0",
     "typeorm": "^0.3.17",
-    "winston": "^3.10.0",
-    "netlify-lambda": "^1.4.3",
-    "serverless-http": "^1.9.1"
+    "winston": "^3.10.0"
   },
   "devDependencies": {
     "@types/body-parser": "^1.19.2",
