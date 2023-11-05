@@ -36,6 +36,6 @@ export class Book {
   @Column({ type: "enum", enum: ["public", "private"], default: "public" })
   privacy!: "public" | "private";
 
-  @OneToMany(() => Page, (page) => page.book, { cascade: ["remove"] })
+  @OneToMany(() => Page, (page) => page.book, { cascade: ["remove"] ,  createForeignKeyConstraints: false})
   pages!: Page[];
 }
