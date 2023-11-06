@@ -102,7 +102,7 @@ const Book = ({ id }: BookValues) => {
                 </div>
               ) : (
                 <Image
-                  src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/${image}`}
+                  src={`${image}`}
                   alt="book_cover"
                   fill={true}
                   className="h-full w-full"

@@ -47,7 +47,7 @@ export const BookController = {
       const tags = await generateBookText(tagDesc);
 
       if (imageUrl) {
-        const localImagePath = await downloadCoverImageLocally(imageUrl);
+        const uploadedImageUrl = await downloadCoverImageLocally(imageUrl);
         const uid = (req as any).auth?.sub;
 
         newBook = bookRepository.create({
@@ -60,7 +60,7 @@ export const BookController = {
           page,
           privacy,
           tag: tags,
-          image: localImagePath,
+          image: uploadedImageUrl,
         });
 
         await bookRepository.save(newBook);
@@ -534,11 +534,11 @@ async function savePagesToDatabase(pages: PageData[], bookId: number) {
       return null;
     }
 
-    const localImagePath = await downloadPagesImageLocally(imageUrl);
+    const uploadedImageUrl = await downloadPagesImageLocally(imageUrl);
 
     return {
       paragraph,
-      image: localImagePath,
+      image: uploadedImageUrl,
       book: { id: bookId },
     };
   });

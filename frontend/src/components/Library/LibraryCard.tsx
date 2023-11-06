@@ -68,11 +68,7 @@ const LibraryCard = ({
           >
             <div className="object-contain h-[164px] w-[280px] relative">
               <Image
-                src={
-                  book.image
-                    ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/${book.image}`
-                    : "/assets/images/family.jpg"
-                }
+                src={book.image ? `${book.image}` : "/assets/images/family.jpg"}
                 alt="book_cover"
                 fill={true}
               />
