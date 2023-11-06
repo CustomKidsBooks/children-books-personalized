@@ -70,7 +70,7 @@ const LibraryCard = ({
               <Image
                 src={
                   book.image
-                    ? `http://localhost:5001/${book.image}`
+                    ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/${book.image}`
                     : "/assets/images/family.jpg"
                 }
                 alt="book_cover"

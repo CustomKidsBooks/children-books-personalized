@@ -2,11 +2,10 @@ import log from "../logger";
 const { expressjwt: jwt } = require("express-jwt");
 const jwksRsa = require("jwks-rsa");
 
-const baseUrl = process.env.AUTH0_BASE_URL;
 const issuerBaseUrl = process.env.AUTH0_ISSUER_BASE_URL;
 const audience = process.env.AUTH0_AUDIENCE;
 
-if (!baseUrl || !issuerBaseUrl) {
+if ( !issuerBaseUrl) {
   throw new Error(
     "Please make sure that the file .env.local is in place and populated"
   );

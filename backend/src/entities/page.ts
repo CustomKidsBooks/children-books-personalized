@@ -18,7 +18,7 @@ export class Page {
   @Column({ nullable: true, type: "varchar", default: null })
   image!: string;
 
-  @ManyToOne(() => Book, (book) => book.pages)
+  @ManyToOne(() => Book, (book) => book.pages , {createForeignKeyConstraints: false}) 
   @JoinColumn({ name: "bookId" }) // Specify the foreign key column name
   book!: Book;
 }
