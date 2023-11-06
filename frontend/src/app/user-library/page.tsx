@@ -12,20 +12,12 @@ const UserLibrary = () => {
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
+  const [firstPage, setFirstPage] = useState<number>(1);
   const booksPerPage = 8;
+  const pagesToDisplay = 3;
   const tag: string =
     "  1. #FallStorybook  2. #KidsFallAdventure  3. #AutumnFantasy";
 
-  const displayPreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage((prevState) => prevState - 1);
-    }
-  };
-  const displayNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage((prevState) => prevState + 1);
-    }
-  };
   const getTotalPages = (totalPages: number): void => {
     setTotalPages(totalPages);
   };
@@ -33,6 +25,21 @@ const UserLibrary = () => {
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value.toLocaleLowerCase());
     setCurrentPage(1);
+    setFirstPage(1);
+  };
+
+  const displayPreviousPages = () => {
+    if (firstPage > pagesToDisplay) {
+      setFirstPage(() => firstPage - pagesToDisplay);
+      setCurrentPage(() => firstPage - pagesToDisplay);
+    }
+  };
+
+  const displayNextPages = () => {
+    if (firstPage <= totalPages - pagesToDisplay) {
+      setFirstPage(() => firstPage + pagesToDisplay);
+      setCurrentPage(() => firstPage + pagesToDisplay);
+    }
   };
 
   return (
@@ -72,11 +79,11 @@ const UserLibrary = () => {
       />
 
       <div className="my-16">
-        <div className="flex justify-center items-center gap-3">
+        <div className="flex justify-between sm:justify-center items-center gap-2 md:gap-3">
           <Button
-            onClick={displayPreviousPage}
+            onClick={displayPreviousPages}
             className="shadow-none disabled:opacity-50"
-            disabled={currentPage === 1 ? true : false}
+            disabled={firstPage <= 3 ? true : false}
           >
             <Image
               src="/assets/backward-arrow.svg"
@@ -87,27 +94,34 @@ const UserLibrary = () => {
             />
           </Button>
 
-          {Array.from(Array(totalPages), (e, i) => {
+          {firstPage > pagesToDisplay ? <div>...</div> : ""}
+
+          {Array.from(Array(pagesToDisplay), (e, i) => {
             return (
-              <div
-                key={i}
-                onClick={() => setCurrentPage(i + 1)}
-                className={
-                  currentPage === i + 1
-                    ? "bg-pink border-black rounded-full text-white"
-                    : ""
-                }
-              >
-                <button className="border rounded-full py-2 px-4 cursor-pointer font-quicksand font-bold">
-                  {i + 1}
-                </button>
+              <div key={i}>
+                {firstPage + i <= totalPages && (
+                  <div
+                    onClick={() => setCurrentPage(firstPage + i)}
+                    className={
+                      currentPage === firstPage + i
+                        ? "bg-pink border-black rounded-full text-white"
+                        : ""
+                    }
+                  >
+                    <button className="border rounded-full text-sm md:text-base py-2 px-3 md:py-2 md:px-4 cursor-pointer font-quicksand font-bold">
+                      {firstPage + i}
+                    </button>
+                  </div>
+                )}
               </div>
             );
           })}
+          {firstPage <= totalPages - pagesToDisplay ? <div>...</div> : ""}
+
           <Button
-            onClick={displayNextPage}
+            onClick={displayNextPages}
             className="shadow-none disabled:opacity-50"
-            disabled={currentPage === totalPages ? true : false}
+            disabled={firstPage > totalPages - 3 ? true : false}
           >
             <Image
               src="/assets/forward-arrow.svg"

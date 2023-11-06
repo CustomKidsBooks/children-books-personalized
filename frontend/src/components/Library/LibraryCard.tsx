@@ -40,7 +40,7 @@ const LibraryCard = ({
   if (userID && privacy !== "all") {
     books = books.filter((book) => book.privacy === privacy);
   }
-  
+
   if (isLoading) {
     return <LibrarySkeleton />;
   }
@@ -81,7 +81,7 @@ const LibraryCard = ({
               <p
                 className={`${
                   book.title.length > 13 ? "text text-xl" : "text"
-                }`}
+                } text-ellipsis overflow-hidden`}
               >
                 {book.title}
               </p>
@@ -90,7 +90,7 @@ const LibraryCard = ({
                   icon={faChildReaching}
                   className="fa-icon place-self-center"
                 />
-                <p className="text-pine-green">{book.ageGroup}</p>
+                <p className="text-pine-green w-[36px]">{book.ageGroup}</p>
               </div>
             </div>
             <div>{book.tag && <Tag tag={book.tag} />}</div>
