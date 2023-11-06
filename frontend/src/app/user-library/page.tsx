@@ -30,15 +30,15 @@ const UserLibrary = () => {
 
   const displayPreviousPages = () => {
     if (firstPage > pagesToDisplay) {
-      setFirstPage(firstPage - pagesToDisplay);
-      setCurrentPage(firstPage - pagesToDisplay);
+      setFirstPage(() => firstPage - pagesToDisplay);
+      setCurrentPage(() => firstPage - pagesToDisplay);
     }
   };
 
   const displayNextPages = () => {
     if (firstPage <= totalPages - pagesToDisplay) {
-      setFirstPage(firstPage + pagesToDisplay);
-      setCurrentPage(firstPage + pagesToDisplay);
+      setFirstPage(() => firstPage + pagesToDisplay);
+      setCurrentPage(() => firstPage + pagesToDisplay);
     }
   };
 

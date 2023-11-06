@@ -131,11 +131,6 @@ export const BookController = {
         const count = booksAndCount[1];
         totalPages = Math.ceil(count / limit);
       } else {
-        // books = await bookRepository
-        //   .createQueryBuilder("book")
-        //   .orderBy("RAND()")
-        //   .take(limit)
-        //   .getMany();
         books = await AppDataSource.manager
           .createQueryBuilder(Book, "book")
           .where("book.privacy = :privacy", { privacy: "public" })
