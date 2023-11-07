@@ -60,6 +60,7 @@ const LibraryCard = ({
   return (
     <section className="py-10">
       <div className="py-3 place-items-center lg:grid lg:grid-cols-4 gap-4 flex overflow-x-auto scrollbar">
+
         {books.map((book) => (
           <div
             className="cursor-pointer card snap-center transition duration-300 ease-in-out hover:scale-105"
