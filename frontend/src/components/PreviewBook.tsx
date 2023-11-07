@@ -45,7 +45,7 @@ const PreviewBook = ({ id }: PreviewBookValues) => {
             <Image
               src={
                 book?.image
-                  ? `/assets/images/cover.jpg`
+                  ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/${book.image}`
                   : "/assets/images/family.jpg"
               }
               alt="book cover"
