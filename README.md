@@ -40,10 +40,10 @@ Welcome to the Tiny Tale, an AI-Powered Children's Books Platform! Our mission i
 - **Including Faces in Stories:** Let kids and parents become part of the story.
 
 ## Getting Started
-To begin using our platform, visit [website link]() and create an account.
+To begin using our platform, visit [https://tinytalepersonalized.vercel.app/]() and create an account.
 
 ## Installation
-No installation is required for users. Developers can clone the repository and follow the instructions in the [developer documentation]().
+No installation is required for users. Developers can clone the repository and follow the instructions in the [https://docs.google.com/document/d/110pwcU5dyrSYHE4NlL5pHmn7OlhYsvfVaUiEitf4yPk/edit#heading=h.qqq5oruv2fp1]().
 
 ## License
 This project is licensed under the [MIT License]().
