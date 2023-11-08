@@ -8,13 +8,15 @@ import { CreateStoryFormValues } from "@utils/interfaces";
 import { createStoryValidationSchema } from "@utils/storyValidation";
 import { getIn, useFormik } from "formik";
 import Image from "next/image";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import ReusableInput from "./ReusableInput";
 import CreateStorySkeleton from "./skeleton/CreateStory.skeleton";
+import CreateStoryResponseModal from "@components/create-story-model/createStoryResponse";
 
 interface CreateStoryFormProps {
   isError: boolean;
   submitting: boolean;
+  bookID: string;
   handleCreateStory: (values: CreateStoryFormValues) => Promise<void>;
   userID?: string | null;
 }
@@ -22,6 +24,7 @@ interface CreateStoryFormProps {
 const StoryForm: React.FC<CreateStoryFormProps> = ({
   isError,
   submitting,
+  bookID,
   handleCreateStory,
   userID,
 }) => {
@@ -50,12 +53,35 @@ const StoryForm: React.FC<CreateStoryFormProps> = ({
     },
   });
 
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const handleModalClose = () => {
+    setIsModalVisible(false);
+  };
+
+  useEffect(() => {
+    if (isError || bookID !== "") {
+      setIsModalVisible(true);
+    }
+    return () => {};
+  }, [isError, bookID]);
+
   if (submitting) {
     return <CreateStorySkeleton />;
   }
 
   return (
     <>
+      {isModalVisible && (
+        <div>
+          <CreateStoryResponseModal
+            onClose={handleModalClose}
+            isVisible={true}
+            bookID={bookID}
+            isError={isError}
+          />
+        </div>
+      )}
       <section className="w-full py-10 lg:px-10 lg:pb-20">
         <div className="flex px-10">
           <div className="relative">
