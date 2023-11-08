@@ -1,7 +1,9 @@
+import config from "config";
 import axios from "axios";
 import fs from "fs";
 import { Book } from "../entities/book";
 import { AppDataSource } from "../db/connect";
+import { uploadImages } from "./image.service";
 
 export async function downloadCoverImageLocally(
   imageUrl: string
@@ -9,10 +11,10 @@ export async function downloadCoverImageLocally(
   try {
     const response = await axios.get(imageUrl, { responseType: "arraybuffer" });
     const imageBuffer = Buffer.from(response.data, "binary");
-    const localImagePath = `images/bookCover/${Date.now()}_image.jpg`;
-    fs.writeFileSync(localImagePath, imageBuffer);
+    const directoryPath = "ChildrenBook/CoverImage";
+    const uploadedImageUrl = await uploadImages(imageBuffer, directoryPath);
 
-    return localImagePath;
+    return uploadedImageUrl;
   } catch (error) {
     console.error("Error downloading image:", error);
     throw error;
@@ -23,11 +25,11 @@ export async function downloadPagesImageLocally(
 ): Promise<string> {
   try {
     const response = await axios.get(imageUrl, { responseType: "arraybuffer" });
-    const imageBuffer = Buffer.from(response.data, "binary");
-    const localImagePath = `images/page/${Date.now()}_image.jpg`;
-    fs.writeFileSync(localImagePath, imageBuffer);
 
-    return localImagePath;
+    const imageBuffer = Buffer.from(response.data, "binary");
+    const directoryPath = "ChildrenBook/PagesImage";
+    const uploadedImageUrl = await uploadImages(imageBuffer, directoryPath);
+    return uploadedImageUrl;
   } catch (error) {
     console.error("Error downloading image:", error);
     throw error;
@@ -67,6 +69,7 @@ export async function fetchStoryDataForPDF(id: number) {
       throw new Error("Book not found");
     }
     const { title, image } = book;
+
     const pages = book.pages || [];
     return { title, pages, image };
   } catch (error) {

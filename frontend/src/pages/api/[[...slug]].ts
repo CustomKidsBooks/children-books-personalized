@@ -22,9 +22,7 @@ export default async function handler(
   } else if (req.method === "POST") {
     await axiosInstance
       .post(`/api/${slugUrl}`, req.body)
-      .then((response) =>
-        res.status(200).json({ message: "Book created successfully!" })
-      )
+      .then((response) => res.status(200).json(response.data))
       .catch((err) => res.status(500).json({ message: "Error" }));
   } else {
     res.setHeader("Allow", ["GET", "POST"]);
