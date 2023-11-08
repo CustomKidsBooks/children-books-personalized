@@ -55,7 +55,7 @@ const StoryForm: React.FC<CreateStoryFormProps> = ({
 
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const handleModelClose = () => {
+  const handleModalClose = () => {
     setIsModalVisible(false);
   };
 
@@ -75,7 +75,7 @@ const StoryForm: React.FC<CreateStoryFormProps> = ({
       {isModalVisible && (
         <div>
           <CreateStoryResponseModal
-            onClose={handleModelClose}
+            onClose={handleModalClose}
             isVisible={true}
             bookID={bookID}
             isError={isError}

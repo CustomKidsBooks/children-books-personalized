@@ -6,10 +6,10 @@ import { LinkButton } from "@ui/LinkButton";
 import Image from "next/image";
 import StartStep from "./StartStep";
 import LandinPageSkeleton from "./skeleton/LandinPage.skeleton";
+import LibrarySkeleton from "./Library/LibraryCard.skeleton";
 
 const LandingPage = () => {
-  const { user, error, isLoading } = useUser();
-
+  const { error, isLoading } = useUser();
   if (isLoading) return <LandinPageSkeleton />;
   if (error) return <div>{error.message}</div>;
 
@@ -73,7 +73,11 @@ const LandingPage = () => {
             Library
           </h1>
         </div>
-        <LibraryCard booksPerPage={4} />
+        {isLoading ? (
+          <LibrarySkeleton />
+        ) : (
+          <LibraryCard booksPerPage={4} />
+        )}
       </section>
       <section className="bg-ellipse-landing-page bg-no-repeat bg-right sm:bg-none">
         <div className="py-10 w-5/6 mx-auto lg:h-[600px] sm:h-auto">
