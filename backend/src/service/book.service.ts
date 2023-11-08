@@ -69,6 +69,7 @@ export async function fetchStoryDataForPDF(id: number) {
       throw new Error("Book not found");
     }
     const { title, image } = book;
+
     const pages = book.pages || [];
     return { title, pages, image };
   } catch (error) {
