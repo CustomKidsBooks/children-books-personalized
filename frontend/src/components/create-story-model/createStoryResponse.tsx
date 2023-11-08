@@ -26,13 +26,11 @@ const createStoryResponseModal: React.FC<createStoryModalProps> = ({
           <div>
             {isError && (
               <div className="flex flex-col items-center gap-2 text-red-700">
-                <p>Error</p>
-                <p>Please Contact US</p>
+                <p>Please Try Again Later</p>
+                <p>Or Contact Us At</p>
                 <p>TinyTaleCreators@gmail.com</p>
-                <p>Try Again Later</p>
               </div>
             )}
-
             {bookID !== "" && (
               <div className="flex flex-col items-center gap-10">
                 <p className="text-center font-semibold">

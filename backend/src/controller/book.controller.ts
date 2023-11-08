@@ -28,7 +28,7 @@ export const BookController = {
 
     try {
       const bookRepository = AppDataSource.getRepository(Book);
-      let imageDesc = `for a story book "${title}" for kids age ${ageGroup}`;
+      let imageDesc = `for a story book "${title}" for kids age ${ageGroup} in English language`;
       imageDesc += subject ? ` about ${subject}` : "";
 
       let charactersInfo = "";

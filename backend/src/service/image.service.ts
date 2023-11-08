@@ -5,7 +5,8 @@ import {
   getDownloadURL,
   uploadBytesResumable,
 } from "firebase/storage";
-// Your web app's Firebase configuration
+
+
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_APIKEY,
   authDomain: process.env.FIREBASE_AUTHDOMAIN,
@@ -15,7 +16,6 @@ const firebaseConfig = {
   appId: process.env.FIREBASE_APPID,
 };
 
-// Initialize Firebase
 const firebaseapp = initializeApp(firebaseConfig);
 const storage = getStorage(firebaseapp);
 
