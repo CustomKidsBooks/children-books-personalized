@@ -33,8 +33,8 @@ const createStoryResponseModal: React.FC<createStoryModalProps> = ({
             )}
             {bookID !== "" && (
               <div className="flex flex-col items-center gap-10">
-                <p className="text-center font-semibold">
-                  Your BooK has been created Successfully
+                <p className="text-center font-semibold text-pink">
+                  Your book has been successfully created.
                 </p>
                 <div>
                   <a

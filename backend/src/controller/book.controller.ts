@@ -30,7 +30,6 @@ export const BookController = {
       const bookRepository = AppDataSource.getRepository(Book);
       let imageDesc = `for a story book "${title}" for kids age ${ageGroup} in English language`;
       imageDesc += subject ? ` about ${subject}` : "";
-
       let charactersInfo = "";
 
       if (characters.length > 0) {
@@ -40,7 +39,6 @@ export const BookController = {
           }
         );
       }
-
       imageDesc += charactersInfo;
       const imageUrl = await generateImage(imageDesc);
       const tagDesc = `create a three tags which are 8 characters long based on information below ${imageDesc}`;
@@ -74,7 +72,6 @@ export const BookController = {
             }
           );
         }
-
         desc += lesson ? ` with a lesson: ${lesson}` : "";
         const bookContent = await generateBookText(desc);
         const paragraphsPerPage = 1;
@@ -110,7 +107,6 @@ export const BookController = {
       const search = req.query.search;
       let books;
       let totalPages;
-
       const bookRepository = AppDataSource.getRepository(Book);
       if (page) {
         const booksAndCount = await bookRepository.findAndCount({
@@ -217,11 +213,9 @@ export const BookController = {
     try {
       const bookRepository = AppDataSource.getRepository(Book);
       const book = await bookRepository.findOne({ where: { id } });
-
       if (!book) {
         return res.status(404).json({ success: 0, message: "Book not found" });
       }
-
       const image = req.body.image;
 
       if (image) {
@@ -246,7 +240,6 @@ export const BookController = {
         fs.writeFileSync(newImagePath, image, "base64");
         book.image = `images/page/${newImageName}`;
       }
-
       book.title = title;
       book.subject = subject;
       book.lesson = lesson;
@@ -272,7 +265,6 @@ export const BookController = {
     try {
       const pageRepository = AppDataSource.getRepository(Page);
       const page = await pageRepository.findOne({ where: { id: pageId } });
-
       if (!page) {
         return res.status(404).json({ success: 0, message: "Page not found" });
       }
@@ -292,7 +284,6 @@ export const BookController = {
         }
         page.image = `images/page/${req.file.filename}`;
       }
-
       if (paragraph) {
         page.paragraph = paragraph;
       }
@@ -324,7 +315,6 @@ export const BookController = {
       if (!book) {
         return res.status(404).json({ success: 0, message: "Book not found" });
       }
-
       const pageIds = book.pages.map((page) => page.id);
       const pageRepository = AppDataSource.getRepository(Page);
       const pages = await pageRepository.find({
@@ -334,12 +324,10 @@ export const BookController = {
       for (const page of pages) {
         if (page.image) {
           const imageName = path.basename(page.image);
-
           const imagePath = path.join(
             __dirname,
             `../../images/page/${imageName}`
           );
-
           try {
             fs.unlinkSync(imagePath);
           } catch (error) {
@@ -350,12 +338,10 @@ export const BookController = {
 
       if (book.image) {
         const bookImageName = path.basename(book.image);
-
         const bookImagePath = path.join(
           __dirname,
           `../../images/bookCover/${bookImageName}`
         );
-
         try {
           fs.unlinkSync(bookImagePath);
         } catch (error) {
@@ -416,14 +402,11 @@ export const BookController = {
     try {
       const pageRepository = AppDataSource.getRepository(Page);
       const page = await pageRepository.findOne({ where: { id: pageId } });
-
       if (!page) {
         return res.status(404).json({ success: 0, message: "Page not found" });
       }
-
       if (page.image) {
         const imageName = path.basename(page.image);
-
         const imagePath = path.join(
           __dirname,
           `../../images/page/${imageName}`
@@ -533,7 +516,6 @@ async function savePagesToDatabase(pages: PageData[], bookId: number) {
       errors.push(error);
       return null;
     }
-
     const uploadedImageUrl = await downloadPagesImageLocally(imageUrl);
 
     return {
@@ -542,7 +524,6 @@ async function savePagesToDatabase(pages: PageData[], bookId: number) {
       book: { id: bookId },
     };
   });
-
   const resolvedPages = await Promise.all(newPages);
   const validNewPages = resolvedPages.filter((page) => page !== null);
 

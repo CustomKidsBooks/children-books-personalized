@@ -15,7 +15,6 @@ const firebaseConfig = {
   messagingSenderId: process.env.VITE_FIREBASE_MESSAGINGSENDERID,
   appId: process.env.FIREBASE_APPID,
 };
-
 const firebaseapp = initializeApp(firebaseConfig);
 const storage = getStorage(firebaseapp);
 
@@ -28,9 +27,7 @@ export const uploadImages = async (
   )}-image.jpg`;
 
   const storageRef = ref(storage, `${directoryPath}/${imageName}`);
-
   const metadata = { contentType: "image/jpeg" };
-
   const snapshot = await uploadBytesResumable(
     storageRef,
     imageBuffer,
