@@ -26,11 +26,7 @@ export default function (app: Express) {
 
   app.put("/api/books/:id", BookController.updateBookHandler);
 
-  app.put(
-    "/api/pages/:pageId",
-    upload.single("image"),
-    BookController.updatePageHandler
-  );
+  app.put("/api/pages/:pageId", BookController.updatePageHandler);
 
   app.delete("/api/books/:id", BookController.deleteBookHandler);
 
