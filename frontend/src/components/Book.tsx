@@ -58,8 +58,6 @@ const Book = ({ id }: BookValues) => {
 
   const updatePageInDB = async () => {
     const deleteImageName = pageImage.split("2F")[2].split("?")[0];
-    console.log("Old Image Url", pageImage);
-    console.log("Old Image Name", deleteImageName);
     await updateBookPages(paragraphRef.current?.value, previewImage);
     const desertRef = ref(
       storage,
