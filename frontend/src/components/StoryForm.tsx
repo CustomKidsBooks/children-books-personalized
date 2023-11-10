@@ -2,7 +2,6 @@
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "@ui/Button";
-import { Heading } from "@ui/Heading";
 import { ageGroupList, privacyList } from "@utils/constants";
 import { CreateStoryFormValues } from "@utils/interfaces";
 import { createStoryValidationSchema } from "@utils/storyValidation";
@@ -36,7 +35,6 @@ const StoryForm: React.FC<CreateStoryFormProps> = ({
     touched,
     handleSubmit,
     setFieldValue,
-    getFieldProps,
   } = useFormik<CreateStoryFormValues>({
     initialValues: {
       title: "",
