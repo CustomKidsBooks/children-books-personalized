@@ -115,7 +115,8 @@ const Book = ({ id }: BookValues) => {
                     className="preview"
                     src={`${previewImage}`}
                     alt=""
-                    fill={true}
+                    height={200}
+                    width={200}
                   />
                 </div>
               ) : editImage ? (
@@ -139,7 +140,8 @@ const Book = ({ id }: BookValues) => {
                 <Image
                   src={`${pageImage}`}
                   alt="book_cover"
-                  fill={true}
+                  height={200}
+                  width={200}
                   className="h-full w-full"
                 />
               )}
