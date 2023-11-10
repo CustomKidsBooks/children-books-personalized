@@ -43,11 +43,7 @@ const PreviewBook = ({ id }: PreviewBookValues) => {
         <div className="lg:w-2/4">
           <div className="preview-card object-contain w-full">
             <Image
-              src={
-                book?.image
-                  ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/${book.image}`
-                  : "/assets/images/family.jpg"
-              }
+              src={book?.image ? `${book.image}` : "/assets/images/family.jpg"}
               alt="book cover"
               width={506}
               height={486}

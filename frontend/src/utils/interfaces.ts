@@ -2,19 +2,19 @@ export interface BookValues {
   id: number;
   title: string;
   subject?: string;
-  ageGroup?:string;
+  ageGroup?: string;
   author?: string;
   page?: number;
   image?: string;
   tag?: string;
-  privacy?:string;
+  privacy?: string;
 }
 
 export interface CreateStoryFormValues {
   userEmail?: string;
   title: string;
   ageGroup: string;
-  privacy:string;
+  privacy: string;
   subject: string;
   page: number;
   lesson?: string;
@@ -72,4 +72,11 @@ export interface ToastModalProps {
   isVisible: boolean;
   onClose: () => void;
   message: string;
+}
+
+export interface createStoryModalProps extends ModalProps {
+  height?: string;
+  width?: string;
+  bookID?: string;
+  isError?: boolean;
 }

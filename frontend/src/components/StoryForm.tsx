@@ -2,19 +2,20 @@
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "@ui/Button";
-import { Heading } from "@ui/Heading";
 import { ageGroupList, privacyList } from "@utils/constants";
 import { CreateStoryFormValues } from "@utils/interfaces";
 import { createStoryValidationSchema } from "@utils/storyValidation";
 import { getIn, useFormik } from "formik";
 import Image from "next/image";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import ReusableInput from "./ReusableInput";
 import CreateStorySkeleton from "./skeleton/CreateStory.skeleton";
+import CreateStoryResponseModal from "@components/create-story-model/createStoryResponse";
 
 interface CreateStoryFormProps {
   isError: boolean;
   submitting: boolean;
+  bookID: string;
   handleCreateStory: (values: CreateStoryFormValues) => Promise<void>;
   userID?: string | null;
 }
@@ -22,9 +23,12 @@ interface CreateStoryFormProps {
 const StoryForm: React.FC<CreateStoryFormProps> = ({
   isError,
   submitting,
+  bookID,
   handleCreateStory,
   userID,
 }) => {
+  const [loading, setLoading] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const {
     values,
     handleChange,
@@ -33,7 +37,6 @@ const StoryForm: React.FC<CreateStoryFormProps> = ({
     touched,
     handleSubmit,
     setFieldValue,
-    getFieldProps,
   } = useFormik<CreateStoryFormValues>({
     initialValues: {
       title: "",
@@ -50,9 +53,40 @@ const StoryForm: React.FC<CreateStoryFormProps> = ({
     },
   });
 
+  const handleModalClose = () => {
+    setIsModalVisible(false);
+  };
+
+  useEffect(() => {
+    if (isError || bookID !== "") {
+      setIsModalVisible(true);
+    }
+    return () => { };
+  }, [isError, bookID]);
+
   if (submitting) {
     return <CreateStorySkeleton />;
   }
+  const handleClickCreateStory = async () => {
+    if (loading) return; // Prevent multiple clicks
+    setLoading(true);
+    try {
+      const bookID = await handleCreateStory(values);
+      console.log("bookId", bookID);
+      // Here, you should have a way to know when the book generation is complete,
+      // for example, by checking the status of the book creation in your API.
+      // You might need to make additional API calls or use a real-time notification system.
+      // For the sake of this example, let's assume that the book generation
+      // is considered complete when you receive the new book ID.
+      // Now, you can wait until the book is generated before showing the modal.
+      // You should implement this part based on your actual API and logic.
+      if (bookID) {
+        setIsModalVisible(true);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -206,73 +240,73 @@ const StoryForm: React.FC<CreateStoryFormProps> = ({
                 </div>
                 {values.characters && values.characters.length > 0
                   ? (values.characters || []).map((character, index) => (
-                      <div key={index} className="flex flex-col mt-1">
-                        <div className="md:flex items-center justify-between px-1">
-                          <label
-                            htmlFor={`characters.${index}.name`}
-                            className="label-input font-medium"
-                          >
-                            Name:
-                          </label>
-                          <ReusableInput
-                            type="text"
-                            id={`characters.${index}.name`}
-                            name={`characters.${index}.name`}
-                            onChange={handleChange}
-                            value={character.name}
-                            placeholder="Name"
-                            onBlur={handleBlur}
-                            className="w-full"
-                          />
-                        </div>
-                        <div className="asterisk">
-                          {errors.characters && (
-                            <div>
-                              {getIn(errors, `characters.${index}.name`)}
-                            </div>
-                          )}
-                        </div>
-                        <div className="md:flex items-center justify-between px-1">
-                          <label
-                            htmlFor={`characters.${index}.description`}
-                            className="label-input font-medium"
-                          >
-                            Description:
-                          </label>
-                          <ReusableInput
-                            type="text"
-                            id={`characters.${index}.description`}
-                            name={`characters.${index}.description`}
-                            onChange={handleChange}
-                            value={character.description}
-                            onBlur={handleBlur}
-                            placeholder={`Ex. Description of the character`}
-                            rows={2}
-                          />
-                        </div>
-                        <div className="asterisk">
-                          {errors.characters && (
-                            <div>
-                              {getIn(errors, `characters.${index}.description`)}
-                            </div>
-                          )}
-                        </div>
-                        <button
-                          className="text-pink p-3"
-                          type="button"
-                          onClick={() => {
-                            const updatedCharacters = [
-                              ...(values.characters || []),
-                            ];
-                            updatedCharacters.splice(index, 1);
-                            setFieldValue("characters", updatedCharacters);
-                          }}
+                    <div key={index} className="flex flex-col mt-1">
+                      <div className="md:flex items-center justify-between px-1">
+                        <label
+                          htmlFor={`characters.${index}.name`}
+                          className="label-input font-medium"
                         >
-                          Remove Character
-                        </button>
-                        <hr className="bg-pink h-0.5 mx-10" />
+                          Name:
+                        </label>
+                        <ReusableInput
+                          type="text"
+                          id={`characters.${index}.name`}
+                          name={`characters.${index}.name`}
+                          onChange={handleChange}
+                          value={character.name}
+                          placeholder="Name"
+                          onBlur={handleBlur}
+                          className="w-full"
+                        />
                       </div>
-                    ))
+                      <div className="asterisk">
+                        {errors.characters && (
+                          <div>
+                            {getIn(errors, `characters.${index}.name`)}
+                          </div>
+                        )}
+                      </div>
+                      <div className="md:flex items-center justify-between px-1">
+                        <label
+                          htmlFor={`characters.${index}.description`}
+                          className="label-input font-medium"
+                        >
+                          Description:
+                        </label>
+                        <ReusableInput
+                          type="text"
+                          id={`characters.${index}.description`}
+                          name={`characters.${index}.description`}
+                          onChange={handleChange}
+                          value={character.description}
+                          onBlur={handleBlur}
+                          placeholder={`Ex. Description of the character`}
+                          rows={2}
+                        />
+                      </div>
+                      <div className="asterisk">
+                        {errors.characters && (
+                          <div>
+                            {getIn(errors, `characters.${index}.description`)}
+                          </div>
+                        )}
+                      </div>
+                      <button
+                        className="text-pink p-3"
+                        type="button"
+                        onClick={() => {
+                          const updatedCharacters = [
+                            ...(values.characters || []),
+                          ];
+                          updatedCharacters.splice(index, 1);
+                          setFieldValue("characters", updatedCharacters);
+                        }}
+                      >
+                        Remove Character
+                      </button>
+                      <hr className="bg-pink h-0.5 mx-10" />
+                    </div>
+                  ))
                   : null}
 
                 <div className="md:flex items-center justify-between">
@@ -292,10 +326,19 @@ const StoryForm: React.FC<CreateStoryFormProps> = ({
                   ) : null}
                 </div>
                 <div className="pt-10">
-                  <Button type="submit" intent="pink" size="xl">
-                    Write my book!
+                  <Button type="button" intent="pink" size="xl" onClick={handleClickCreateStory}
+                    disabled={loading}>
+                    {loading ? "Loading..." : "Write my book!"}
                   </Button>
                 </div>
+                {isModalVisible && (
+                  <div>
+                    <CreateStoryResponseModal
+                      onClose={handleModalClose}
+                      isVisible={true}
+                      bookID={bookID}
+                      isError={isError}
+                    /></div>)}
               </div>
             </form>
           </div>
