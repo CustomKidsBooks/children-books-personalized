@@ -30,7 +30,8 @@ async function initialize() {
 
 async function startServer() {
   const { port, host } = expressConfig;
-  app.listen(port, host);
+  const server = app.listen(port, host);
+  server.setTimeout(0);
   log.info(`Server is listening at http://${host}:${port}`);
   routes(app);
 }

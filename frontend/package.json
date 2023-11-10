@@ -23,6 +23,7 @@
     "class-variance-authority": "^0.6.1",
     "eslint": "8.43.0",
     "eslint-config-next": "^13.4.7",
+    "firebase": "^10.6.0",
     "formik": "^2.4.2",
     "http-proxy": "^1.18.1",
     "next": "^14.0.1",

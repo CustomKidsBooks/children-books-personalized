@@ -24,8 +24,13 @@ export default async function handler(
       .post(`/api/${slugUrl}`, req.body)
       .then((response) => res.status(200).json(response.data))
       .catch((err) => res.status(500).json({ message: "Error" }));
+  } else if (req.method === "PUT") {
+    await axiosInstance
+      .put(`/api/${slugUrl}`, req.body)
+      .then((response) => res.status(200).json(response.data))
+      .catch((err) => res.status(500).json({ message: "Error" }));
   } else {
-    res.setHeader("Allow", ["GET", "POST"]);
+    res.setHeader("Allow", ["GET", "POST", "PUT"]);
     res.status(405).json({ message: "Method Not Allowed" });
   }
 }

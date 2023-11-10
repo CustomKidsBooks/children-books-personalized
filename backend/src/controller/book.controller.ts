@@ -260,8 +260,7 @@ export const BookController = {
 
   updatePageHandler: async (req: Request, res: Response) => {
     const pageId = parseInt(req.params.pageId);
-    const { paragraph } = req.body;
-
+    const { paragraph, newImageUrl } = req.body;
     try {
       const pageRepository = AppDataSource.getRepository(Page);
       const page = await pageRepository.findOne({ where: { id: pageId } });
@@ -269,20 +268,8 @@ export const BookController = {
         return res.status(404).json({ success: 0, message: "Page not found" });
       }
 
-      if (req.file) {
-        if (page.image) {
-          const imageName = path.basename(page.image);
-          const imagePath = path.join(
-            __dirname,
-            `../../images/page/${imageName}`
-          );
-          try {
-            fs.unlinkSync(imagePath);
-          } catch (error) {
-            log.error("Error deleting image file:", error);
-          }
-        }
-        page.image = `images/page/${req.file.filename}`;
+      if (newImageUrl) {
+        page.image = newImageUrl;
       }
       if (paragraph) {
         page.paragraph = paragraph;
