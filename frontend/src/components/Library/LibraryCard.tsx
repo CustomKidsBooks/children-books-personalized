@@ -77,17 +77,23 @@ const LibraryCard = ({
             <div className="p-2 flex justify-between items-center">
               <p
                 className={`${
-                  book.title.length > 13 ? "text text-xl" : "text"
-                } text-ellipsis overflow-hidden`}
+                  book.title.length > 13 ? "text text-xl" : "text-2xl"
+                } text-ellipsis overflow-hidden whitespace-nowrap`}
               >
                 {book.title}
               </p>
-              <div className="flex gap-2 ">
+              <div className="flex gap-2">
                 <FontAwesomeIcon
                   icon={faChildReaching}
                   className="fa-icon place-self-center"
                 />
-                <p className="text-pine-green w-[36px]">{book.ageGroup}</p>
+                <span
+                  className={`text-pine-green ${
+                    book.title.length > 13 ? "w-[45px]" : ""
+                  }`}
+                >
+                  {book.ageGroup}
+                </span>
               </div>
             </div>
             <div>{book.tag && <Tag tag={book.tag} />}</div>

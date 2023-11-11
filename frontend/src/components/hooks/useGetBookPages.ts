@@ -10,20 +10,19 @@ interface BookContentValues {
 interface GetBookValues {
   isLoading: boolean;
   isError: boolean;
-  message: string;
-  image: string;
-  previewImage: string | null;
-  setPreviewImage: Dispatch<SetStateAction<string | null>>;
-  paragraph: string;
-  editParagraph: boolean | null;
-  setEditParagraph: Dispatch<SetStateAction<boolean | null>>;
-  editImage: boolean | null;
-  setEditImage: Dispatch<SetStateAction<boolean | null>>;
   pageNumber: number;
+  pageImage: string;
+  pageParagraph: string;
   displayNextPage: () => void;
   displayPreviousPage: () => void;
-  updateBookPages: (paragraph?: string, image?: File) => void;
-  resetData: () => void;
+  editImage: boolean | null;
+  setEditImage: Dispatch<SetStateAction<boolean | null>>;
+  previewImage: string | null;
+  setPreviewImage: Dispatch<SetStateAction<string | null>>;
+  editParagraph: boolean | null;
+  setEditParagraph: Dispatch<SetStateAction<boolean | null>>;
+  updateBookPages: (paragraph?: string, image?: string | null) => void;
+  message: string;
 }
 
 const useGetBookPages = (id: number): GetBookValues => {
@@ -31,17 +30,15 @@ const useGetBookPages = (id: number): GetBookValues => {
   const [isError, setIsError] = useState<boolean>(false);
   const [bookContent, setBookContent] = useState<BookContentValues[]>([]);
 
-  const [page, setPage] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(0);
   const [pageId, setPageId] = useState<number | null>(null);
   const [pageNumber, setPageNumber] = useState<number>(1);
-  const [image, setImage] = useState<string>("");
-  const [paragraph, setParagraph] = useState<string>("");
+  const [pageImage, setPageImage] = useState<string>("");
+  const [pageParagraph, setPageParagraph] = useState<string>("");
 
   const [editParagraph, setEditParagraph] = useState<boolean | null>(null);
   const [editImage, setEditImage] = useState<boolean | null>(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
-
-  const [tryAgain, setTryAgain] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
 
   useEffect(() => {
@@ -49,60 +46,46 @@ const useGetBookPages = (id: number): GetBookValues => {
       .get(`/api/books/${id}/pages`)
       .then((res) => {
         setBookContent(res.data);
-        setPageId(res.data[page].id);
-        setImage(res.data[page].image);
-        setParagraph(res.data[page].paragraph);
-        setTryAgain(false);
+        setPageId(res.data[currentPage].id);
+        setPageImage(res.data[currentPage].image);
+        setPageParagraph(res.data[currentPage].paragraph);
       })
       .catch((err) => {
         setIsError(true);
       })
       .finally(() => setIsLoading(false));
-  }, [
-    id,
-    page,
-    pageNumber,
-    image,
-    paragraph,
-    pageId,
-    editParagraph,
-    editImage,
-    tryAgain,
-  ]);
+  }, [id, editParagraph, editImage]);
 
   const totalPages = bookContent.length;
 
   const displayNextPage = () => {
-    if (page < totalPages - 1) {
-      setPage((prevState) => prevState + 1);
+    if (currentPage < totalPages - 1) {
+      setCurrentPage((prevState) => prevState + 1);
       setPageNumber((prevState) => prevState + 2);
-      setImage(bookContent[page].image);
-      setParagraph(bookContent[page].paragraph);
+      setPageImage(bookContent[currentPage + 1].image);
+      setPageParagraph(bookContent[currentPage + 1].paragraph);
     }
   };
 
   const displayPreviousPage = () => {
-    if (page > 0) {
-      setPage((prevState) => prevState - 1);
+    if (currentPage > 0) {
+      setCurrentPage((prevState) => prevState - 1);
       setPageNumber((prevState) => prevState - 2);
-      setImage(bookContent[page].image);
-      setParagraph(bookContent[page].paragraph);
+      setPageImage(bookContent[currentPage - 1].image);
+      setPageParagraph(bookContent[currentPage - 1].paragraph);
     }
   };
 
-  const updateBookPages = async (paragraph?: string, image?: File) => {
-    const formData = new FormData();
-
-    paragraph
-      ? formData.append("paragraph", paragraph)
-      : image
-      ? formData.append("image", image)
-      : undefined;
-
+  const updateBookPages = async (
+    paragraph?: string,
+    newImageUrl?: string | null
+  ) => {
+    let formData = {
+      paragraph,
+      newImageUrl,
+    };
     await axiosInstance
-      .put(`/api/pages/${pageId}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      })
+      .put(`/api/pages/${pageId}`, formData)
       .then((res) => {
         setMessage(res.data.message);
         setEditParagraph(null);
@@ -116,30 +99,22 @@ const useGetBookPages = (id: number): GetBookValues => {
       .finally(() => setIsLoading(false));
   };
 
-  const resetData = () => {
-    setTryAgain(true);
-    setEditImage(false);
-    setEditParagraph(false);
-    setPreviewImage(null);
-  };
-
   return {
     isLoading,
     isError,
-    message,
-    image,
-    previewImage,
-    setPreviewImage,
-    paragraph,
     pageNumber,
-    editParagraph,
-    setEditParagraph,
-    editImage,
-    setEditImage,
+    pageImage,
+    pageParagraph,
     displayNextPage,
     displayPreviousPage,
+    editImage,
+    setEditImage,
+    previewImage,
+    setPreviewImage,
+    editParagraph,
+    setEditParagraph,
     updateBookPages,
-    resetData,
+    message,
   };
 };
 
