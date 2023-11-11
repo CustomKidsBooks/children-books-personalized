@@ -54,16 +54,7 @@ const useGetBookPages = (id: number): GetBookValues => {
         setIsError(true);
       })
       .finally(() => setIsLoading(false));
-  }, [
-    id,
-    currentPage,
-    pageNumber,
-    pageImage,
-    pageParagraph,
-    pageId,
-    editParagraph,
-    editImage,
-  ]);
+  }, [id, editParagraph, editImage]);
 
   const totalPages = bookContent.length;
 
@@ -71,8 +62,8 @@ const useGetBookPages = (id: number): GetBookValues => {
     if (currentPage < totalPages - 1) {
       setCurrentPage((prevState) => prevState + 1);
       setPageNumber((prevState) => prevState + 2);
-      setPageImage(bookContent[currentPage].image);
-      setPageParagraph(bookContent[currentPage].paragraph);
+      setPageImage(bookContent[currentPage + 1].image);
+      setPageParagraph(bookContent[currentPage + 1].paragraph);
     }
   };
 
@@ -80,8 +71,8 @@ const useGetBookPages = (id: number): GetBookValues => {
     if (currentPage > 0) {
       setCurrentPage((prevState) => prevState - 1);
       setPageNumber((prevState) => prevState - 2);
-      setPageImage(bookContent[currentPage].image);
-      setPageParagraph(bookContent[currentPage].paragraph);
+      setPageImage(bookContent[currentPage - 1].image);
+      setPageParagraph(bookContent[currentPage - 1].paragraph);
     }
   };
 

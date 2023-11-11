@@ -57,15 +57,19 @@ const Book = ({ id }: BookValues) => {
   };
 
   const updatePageInDB = async () => {
-    const deleteImageName = pageImage.split("2F")[2].split("?")[0];
-    await updateBookPages(paragraphRef.current?.value, previewImage);
-    const desertRef = ref(
-      storage,
-      `ChildrenBook/PagesImage/${deleteImageName}`
-    );
-    try {
-      await deleteObject(desertRef);
-    } catch (error) {}
+    if (editImage) {
+      const deleteImageName = pageImage.split("2F")[2].split("?")[0];
+      const desertRef = ref(
+        storage,
+        `ChildrenBook/PagesImage/${deleteImageName}`
+      );
+      try {
+        await deleteObject(desertRef);
+      } catch (error) {}
+    }
+    if (editParagraph !== null || editImage) {
+      await updateBookPages(paragraphRef.current?.value, previewImage);
+    }
   };
 
   const resetData = async () => {
@@ -112,7 +116,7 @@ const Book = ({ id }: BookValues) => {
               {previewImage ? (
                 <div>
                   <Image
-                    className="preview"
+                    className="preview h-full w-full"
                     src={`${previewImage}`}
                     alt=""
                     height={200}
@@ -203,10 +207,11 @@ const Book = ({ id }: BookValues) => {
         </div>
         <div className="mt-7 md:mt-5 flex flex-col md:flex-row md:space-x-10 md:justify-center">
           <Button
-            className="sm:w-3/4 md:w-2/4 text-center capitalize"
+            className="sm:w-3/4 md:w-2/4 text-center capitalize disabled:opacity-80"
             intent="pink"
             size="medium"
             onClick={updatePageInDB}
+            disabled={editImage || editParagraph ? false : true}
           >
             Done
           </Button>
@@ -215,7 +220,8 @@ const Book = ({ id }: BookValues) => {
           <Button
             onClick={resetData}
             intent="secondary"
-            className="bg-transparent underline underline-offset-3 shadow-none hover:bg-transparent hover:text-pink"
+            className="bg-transparent underline underline-offset-3 disabled:opacity-80 shadow-none hover:bg-transparent hover:text-pink"
+            disabled={editImage || editParagraph ? false : true}
           >
             Try Again!
           </Button>
