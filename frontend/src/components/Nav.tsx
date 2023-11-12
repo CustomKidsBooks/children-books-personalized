@@ -143,10 +143,10 @@ const Nav = () => {
                     Home
                   </a>
                   <a
-                    href="/create-story"
+                    href="/about-us"
                     onClick={() => setActiveLink("About us")}
                     className={`block lg:inline-block lg:mt-0 text-black hover:text-pink mx-4 ${
-                      pathname === "/create-story" ? "underline text-pink" : ""
+                      pathname === "/about-us" ? "underline text-pink" : ""
                     }`}
                   >
                     About us
