@@ -13,12 +13,14 @@ import {
   getDownloadURL,
   deleteObject,
 } from "firebase/storage";
+import { useRouter } from "next/navigation";
 
 interface BookValues {
   id: number;
 }
 
 const Book = ({ id }: BookValues) => {
+  const router = useRouter();
   let {
     isLoading,
     isError,
@@ -70,6 +72,8 @@ const Book = ({ id }: BookValues) => {
     if (editParagraph !== null || editImage) {
       await updateBookPages(paragraphRef.current?.value, previewImage);
     }
+
+    router.push(`/download/${id}`);
   };
 
   const resetData = async () => {
@@ -223,7 +227,7 @@ const Book = ({ id }: BookValues) => {
             className="bg-transparent underline underline-offset-3 disabled:opacity-80 shadow-none hover:bg-transparent hover:text-pink"
             disabled={editImage || editParagraph ? false : true}
           >
-            Try Again!
+            Undo All Changes!
           </Button>
         </div>
       </div>
