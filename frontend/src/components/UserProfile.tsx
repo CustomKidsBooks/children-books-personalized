@@ -18,7 +18,7 @@ const UserProfile = ({ user }: UserProfileValues) => {
           <div className="flex items-center">
             <div>
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-quicksand tracking-normal md:tracking-widest leading-none md:leading-normal lg:leading-loose">
-                Hi,
+                Hello,
               </h1>
             </div>
             <div className="">
