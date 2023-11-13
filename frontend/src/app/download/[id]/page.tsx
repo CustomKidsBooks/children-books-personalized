@@ -1,7 +1,7 @@
 import PreviewBook from "@components/PreviewBook";
 import Image from "next/image";
 
-const Preview = ({ params }: { params: { id: string } }) => {
+const DownloadBook = ({ params }: { params: { id: string } }) => {
   const id = Number(params.id);
   return (
     <section className="w-full p-10">
@@ -25,4 +25,4 @@ const Preview = ({ params }: { params: { id: string } }) => {
   );
 };
 
-export default Preview;
+export default DownloadBook;

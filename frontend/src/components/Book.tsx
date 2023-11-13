@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 import { Button } from "./ui/Button";
 import useGetBookPages from "./hooks/useGetBookPages";
-
 import { storage } from "../services/firebase";
 import {
   ref,
