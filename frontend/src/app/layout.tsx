@@ -1,13 +1,10 @@
-import { UserProvider } from "@auth0/nextjs-auth0/client";
+"use client"
+import { Auth0Provider } from '@auth0/auth0-react';
 import Footer from "@components/Footer";
 import Nav from "@components/Nav";
 import "@styles/globals.css";
 import React from "react";
 import { ModalProvider } from "../components/ModalProvider";
-
-export const metadata = {
-  title: "Children's Book",
-};
 
 export default function RootLayout({
   children,
@@ -16,7 +13,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <UserProvider>
+      <Auth0Provider domain={process.env.NEXT_PUBLIC_DOMAIN_AUTH !}
+        clientId={process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID !} 
+        authorizationParams={{
+          redirect_uri: process.env.NEXT_PUBLIC_AUTH0_BASE_URL,
+        }}
+       >
         <ModalProvider>
           <body>
             <div className="flex flex-col min-h-screen h-auto">
@@ -28,7 +30,7 @@ export default function RootLayout({
             </div>
           </body>
         </ModalProvider>
-      </UserProvider>
+      </Auth0Provider>
     </html>
   );
 }

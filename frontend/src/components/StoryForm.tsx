@@ -67,26 +67,6 @@ const StoryForm: React.FC<CreateStoryFormProps> = ({
   if (submitting) {
     return <CreateStorySkeleton />;
   }
-  const handleClickCreateStory = async () => {
-    if (loading) return; // Prevent multiple clicks
-    setLoading(true);
-    try {
-      const bookID = await handleCreateStory(values);
-      console.log("bookId", bookID);
-      // Here, you should have a way to know when the book generation is complete,
-      // for example, by checking the status of the book creation in your API.
-      // You might need to make additional API calls or use a real-time notification system.
-      // For the sake of this example, let's assume that the book generation
-      // is considered complete when you receive the new book ID.
-      // Now, you can wait until the book is generated before showing the modal.
-      // You should implement this part based on your actual API and logic.
-      if (bookID) {
-        setIsModalVisible(true);
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <>
@@ -326,9 +306,8 @@ const StoryForm: React.FC<CreateStoryFormProps> = ({
                   ) : null}
                 </div>
                 <div className="pt-10">
-                  <Button type="button" intent="pink" size="xl" onClick={handleClickCreateStory}
-                    disabled={loading}>
-                    {loading ? "Loading..." : "Write my book!"}
+                  <Button type="submit" intent="pink" size="xl">
+                    Write my book!
                   </Button>
                 </div>
                 {isModalVisible && (
@@ -338,7 +317,9 @@ const StoryForm: React.FC<CreateStoryFormProps> = ({
                       isVisible={true}
                       bookID={bookID}
                       isError={isError}
-                    /></div>)}
+                    />
+                  </div>
+                )}
               </div>
             </form>
           </div>
