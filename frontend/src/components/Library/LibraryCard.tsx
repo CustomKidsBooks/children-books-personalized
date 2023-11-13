@@ -64,7 +64,7 @@ const LibraryCard = ({
           <div
             className="cursor-pointer card snap-center transition duration-300 ease-in-out hover:scale-105"
             key={book.id}
-            onClick={() => router.push(`/draft/${book.id}`)}
+            onClick={() => router.push(`/view-book/${book.id}`)}
           >
             <div className="object-contain h-[164px] w-[280px] relative">
               <Image

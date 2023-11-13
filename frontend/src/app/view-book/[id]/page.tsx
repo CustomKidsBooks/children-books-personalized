@@ -1,7 +1,7 @@
-import PreviewBook from "@components/PreviewBook";
+import ViewBook from "@components/ViewBook";
 import Image from "next/image";
 
-const Preview = ({ params }: { params: { id: string } }) => {
+const ViewBookPage = ({ params }: { params: { id: string } }) => {
   const id = Number(params.id);
   return (
     <section className="w-full p-10">
@@ -19,10 +19,10 @@ const Preview = ({ params }: { params: { id: string } }) => {
         </div>
       </div>
       <div className="bg-reading-book bg-kid-opacity bg-right-top">
-        <PreviewBook id={id} />
+        <ViewBook id={id} />
       </div>
     </section>
   );
 };
 
-export default Preview;
+export default ViewBookPage;
