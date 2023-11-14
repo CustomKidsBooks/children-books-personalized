@@ -12,7 +12,7 @@ import NavbarSkeleton from "./skeleton/Navbar.skeleton";
 import { LinkButton } from "./ui/LinkButton";
 
 const Nav = () => {
-  const { user, error, isLoading, isAuthenticated, loginWithRedirect, logout } = useAuth0();
+  const { user, error, isLoading, loginWithRedirect, logout } = useAuth0();
   const pathname = usePathname();
   const [activeLink, setActiveLink] = useState<string | null>(null);
   const [isDropdownVisible, setDropdownVisible] = useState(false);
@@ -140,10 +140,11 @@ const Nav = () => {
                     Home
                   </a>
                   <a
-                    href="/create-story"
+                    href="/about-us"
                     onClick={() => setActiveLink("About us")}
-                    className={`block lg:inline-block lg:mt-0 text-black hover:text-pink mx-4 ${pathname === "/create-story" ? "underline text-pink" : ""
-                      }`}
+                    className={`block lg:inline-block lg:mt-0 text-black hover:text-pink mx-4 ${
+                      pathname === "/about-us" ? "underline text-pink" : ""
+                    }`}
                   >
                     About us
                   </a>
