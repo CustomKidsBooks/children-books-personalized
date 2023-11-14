@@ -43,7 +43,7 @@ const SendBook = ({ bookId }: { bookId: number }) => {
         if (response.ok) {
           setToastMessage(`Book sent as ${selectedFormat} via email successfully`);
           setToastVisible(true);
-          router.push(`/preview-book/${bookId}`);
+          router.push(`/download/${bookId}`);
         } else {
           setToastMessage(`Failed to send the book as ${selectedFormat} via email`);
         }
@@ -82,7 +82,6 @@ const SendBook = ({ bookId }: { bookId: number }) => {
             onEmailChange={handleEmailChange}
           />
         </Modal>
-
       )}
       <ToastModal isVisible={isToastVisible} message={toastMessage} onClose={() => setToastVisible(false)} />
     </div>
