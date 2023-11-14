@@ -1,11 +1,11 @@
 import Image from "next/image";
 import LibraryCard from "./Library/LibraryCard";
 import { LinkButton } from "./ui/LinkButton";
-import { UserProfile } from "@auth0/nextjs-auth0/client";
+import { User } from '@auth0/auth0-react';
 import { useState } from "react";
 
 interface UserProfileValues {
-  user: UserProfile;
+  user: User;
 }
 
 const UserProfile = ({ user }: UserProfileValues) => {

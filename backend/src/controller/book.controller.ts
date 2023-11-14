@@ -25,10 +25,10 @@ export const BookController = {
     const { title, ageGroup, subject, characters, lesson, page, privacy } =
       req.body;
     let newBook: Book | undefined;
-
+    
     try {
       const bookRepository = AppDataSource.getRepository(Book);
-      let imageDesc = `for a story book "${title}" for kids age ${ageGroup} in English language`;
+      let imageDesc = `for a story book "${title}" for kids age ${ageGroup} and avoid choosing images containing text`;
       imageDesc += subject ? ` about ${subject}` : "";
       let charactersInfo = "";
 
