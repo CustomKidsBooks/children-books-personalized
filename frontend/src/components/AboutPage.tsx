@@ -53,7 +53,7 @@ const AboutPage = () => {
         </div>
       </section>
       <section className="bg-ellipse-landing-page bg-no-repeat bg-right sm:bg-none">
-        <div className="py-10 w-5/6 mx-auto lg:h-[600px] sm:h-auto">
+        <div className="py-10 w-5/6 mx-auto lg:h-[400px] sm:h-auto">
           <div className="relative shrink">
             <div>
               <Image
@@ -67,13 +67,13 @@ const AboutPage = () => {
               </h1>
             </div>
           </div>
-          <h2 className="pt-10">
-            Welcome to the Tiny Tale, an AI-Powered Children`&apos;`s Books
-            Platform!
-            <br />
-            Our mission is to transform how children engage with stories by
-            combining technology and storytelling to create a personalized and
-            educational reading experience.
+          <h2 className="pt-10 lg:text-xl font-quicksand lg:font-semibold">
+            Welcome to the Tiny Tale, an AI-Powered Children&apos;s Books Platform!
+            <br />Our mission is to transform how children engage with stories by combining technology
+            <br />and storytelling to create a personalized and educational reading experience.
+            <br />We are committed to nurturing a love for reading, fostering creativity, and
+            <br />cultivating a thirst for knowledge. Join us on this magical quest to make
+            <br />learning an enchanting adventure for every child, one tiny tale at a time.
           </h2>
         </div>
       </section>
@@ -89,7 +89,7 @@ const AboutPage = () => {
             Library
           </h1>
         </div>
-        <LibraryCard />
+        <LibraryCard booksPerPage={4} />
       </section>
     </>
   );

@@ -12,7 +12,7 @@ import NavbarSkeleton from "./skeleton/Navbar.skeleton";
 import { LinkButton } from "./ui/LinkButton";
 
 const Nav = () => {
-  const { user, error, isLoading, isAuthenticated, loginWithRedirect, logout } = useAuth0();
+  const { user, error, isLoading, loginWithRedirect, logout } = useAuth0();
   const pathname = usePathname();
   const [activeLink, setActiveLink] = useState<string | null>(null);
   const [isDropdownVisible, setDropdownVisible] = useState(false);
