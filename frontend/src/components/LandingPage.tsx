@@ -1,6 +1,6 @@
 "use client";
 
-import { useUser } from "@auth0/nextjs-auth0/client";
+import { useAuth0 } from '@auth0/auth0-react';
 import LibraryCard from "@components/Library/LibraryCard";
 import { LinkButton } from "@ui/LinkButton";
 import Image from "next/image";
@@ -9,7 +9,7 @@ import LandinPageSkeleton from "./skeleton/LandinPage.skeleton";
 import LibrarySkeleton from "./Library/LibraryCard.skeleton";
 
 const LandingPage = () => {
-  const { error, isLoading } = useUser();
+  const { error, isLoading } = useAuth0();
   if (isLoading) return <LandinPageSkeleton />;
   if (error) return <div>{error.message}</div>;
 

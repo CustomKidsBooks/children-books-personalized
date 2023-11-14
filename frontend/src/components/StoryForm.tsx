@@ -27,6 +27,8 @@ const StoryForm: React.FC<CreateStoryFormProps> = ({
   handleCreateStory,
   userID,
 }) => {
+  const [loading, setLoading] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const {
     values,
     handleChange,
@@ -51,8 +53,6 @@ const StoryForm: React.FC<CreateStoryFormProps> = ({
     },
   });
 
-  const [isModalVisible, setIsModalVisible] = useState(false);
-
   const handleModalClose = () => {
     setIsModalVisible(false);
   };
@@ -61,7 +61,7 @@ const StoryForm: React.FC<CreateStoryFormProps> = ({
     if (isError || bookID !== "") {
       setIsModalVisible(true);
     }
-    return () => {};
+    return () => { };
   }, [isError, bookID]);
 
   if (submitting) {
@@ -70,16 +70,6 @@ const StoryForm: React.FC<CreateStoryFormProps> = ({
 
   return (
     <>
-      {isModalVisible && (
-        <div>
-          <CreateStoryResponseModal
-            onClose={handleModalClose}
-            isVisible={true}
-            bookID={bookID}
-            isError={isError}
-          />
-        </div>
-      )}
       <section className="w-full py-10 lg:px-10 lg:pb-20">
         <div className="flex px-10">
           <div className="relative">
@@ -230,73 +220,73 @@ const StoryForm: React.FC<CreateStoryFormProps> = ({
                 </div>
                 {values.characters && values.characters.length > 0
                   ? (values.characters || []).map((character, index) => (
-                      <div key={index} className="flex flex-col mt-1">
-                        <div className="md:flex items-center justify-between px-1">
-                          <label
-                            htmlFor={`characters.${index}.name`}
-                            className="label-input font-medium"
-                          >
-                            Name:
-                          </label>
-                          <ReusableInput
-                            type="text"
-                            id={`characters.${index}.name`}
-                            name={`characters.${index}.name`}
-                            onChange={handleChange}
-                            value={character.name}
-                            placeholder="Name"
-                            onBlur={handleBlur}
-                            className="w-full"
-                          />
-                        </div>
-                        <div className="asterisk">
-                          {errors.characters && (
-                            <div>
-                              {getIn(errors, `characters.${index}.name`)}
-                            </div>
-                          )}
-                        </div>
-                        <div className="md:flex items-center justify-between px-1">
-                          <label
-                            htmlFor={`characters.${index}.description`}
-                            className="label-input font-medium"
-                          >
-                            Description:
-                          </label>
-                          <ReusableInput
-                            type="text"
-                            id={`characters.${index}.description`}
-                            name={`characters.${index}.description`}
-                            onChange={handleChange}
-                            value={character.description}
-                            onBlur={handleBlur}
-                            placeholder={`Ex. Description of the character`}
-                            rows={2}
-                          />
-                        </div>
-                        <div className="asterisk">
-                          {errors.characters && (
-                            <div>
-                              {getIn(errors, `characters.${index}.description`)}
-                            </div>
-                          )}
-                        </div>
-                        <button
-                          className="text-pink p-3"
-                          type="button"
-                          onClick={() => {
-                            const updatedCharacters = [
-                              ...(values.characters || []),
-                            ];
-                            updatedCharacters.splice(index, 1);
-                            setFieldValue("characters", updatedCharacters);
-                          }}
+                    <div key={index} className="flex flex-col mt-1">
+                      <div className="md:flex items-center justify-between px-1">
+                        <label
+                          htmlFor={`characters.${index}.name`}
+                          className="label-input font-medium"
                         >
-                          Remove Character
-                        </button>
-                        <hr className="bg-pink h-0.5 mx-10" />
+                          Name:
+                        </label>
+                        <ReusableInput
+                          type="text"
+                          id={`characters.${index}.name`}
+                          name={`characters.${index}.name`}
+                          onChange={handleChange}
+                          value={character.name}
+                          placeholder="Name"
+                          onBlur={handleBlur}
+                          className="w-full"
+                        />
                       </div>
-                    ))
+                      <div className="asterisk">
+                        {errors.characters && (
+                          <div>
+                            {getIn(errors, `characters.${index}.name`)}
+                          </div>
+                        )}
+                      </div>
+                      <div className="md:flex items-center justify-between px-1">
+                        <label
+                          htmlFor={`characters.${index}.description`}
+                          className="label-input font-medium"
+                        >
+                          Description:
+                        </label>
+                        <ReusableInput
+                          type="text"
+                          id={`characters.${index}.description`}
+                          name={`characters.${index}.description`}
+                          onChange={handleChange}
+                          value={character.description}
+                          onBlur={handleBlur}
+                          placeholder={`Ex. Description of the character`}
+                          rows={2}
+                        />
+                      </div>
+                      <div className="asterisk">
+                        {errors.characters && (
+                          <div>
+                            {getIn(errors, `characters.${index}.description`)}
+                          </div>
+                        )}
+                      </div>
+                      <button
+                        className="text-pink p-3"
+                        type="button"
+                        onClick={() => {
+                          const updatedCharacters = [
+                            ...(values.characters || []),
+                          ];
+                          updatedCharacters.splice(index, 1);
+                          setFieldValue("characters", updatedCharacters);
+                        }}
+                      >
+                        Remove Character
+                      </button>
+                      <hr className="bg-pink h-0.5 mx-10" />
+                    </div>
+                  ))
                   : null}
 
                 <div className="md:flex items-center justify-between">
@@ -320,6 +310,16 @@ const StoryForm: React.FC<CreateStoryFormProps> = ({
                     Write my book!
                   </Button>
                 </div>
+                {isModalVisible && (
+                  <div>
+                    <CreateStoryResponseModal
+                      onClose={handleModalClose}
+                      isVisible={true}
+                      bookID={bookID}
+                      isError={isError}
+                    />
+                  </div>
+                )}
               </div>
             </form>
           </div>

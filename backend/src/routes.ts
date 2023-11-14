@@ -2,6 +2,8 @@ import { Express } from "express";
 import { BookController } from "./controller/book.controller";
 import { UserController } from "./controller/user.controller";
 import { upload } from "./middleware/uploadFile";
+import validationMW from "./middleware/validationMiddleware";
+import {createBookValSchema} from "./validations/createBookVal";
 
 export default function (app: Express) {
   const { authMiddleware } = require("./auth/authCheck");
@@ -10,11 +12,12 @@ export default function (app: Express) {
 
   app.get("/api/books/:bookId/pages", BookController.fetchPagesForBook);
 
-  app.post("/api/create_book", BookController.createBook);
+  app.post("/api/create_book", validationMW(createBookValSchema),  BookController.createBook);
 
   app.post(
     "/api/create_book/:userID",
     authMiddleware,
+    validationMW(createBookValSchema),
     BookController.createBook
   );
 

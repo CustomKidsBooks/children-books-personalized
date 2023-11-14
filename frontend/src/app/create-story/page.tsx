@@ -2,11 +2,11 @@
 
 import StoryForm from "@components/StoryForm";
 import useCreateStory from "@components/hooks/useCreateStory";
-import { useUser } from "@auth0/nextjs-auth0/client";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const CreateStory = () => {
   const { isError, submitting, bookID, createStory } = useCreateStory();
-  const { user } = useUser();
+  const { user } = useAuth0();
 
   return (
     <StoryForm
