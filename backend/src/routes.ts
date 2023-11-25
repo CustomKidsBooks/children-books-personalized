@@ -3,16 +3,22 @@ import { BookController } from "./controller/book.controller";
 import { UserController } from "./controller/user.controller";
 import { upload } from "./middleware/uploadFile";
 import validationMW from "./middleware/validationMiddleware";
-import {createBookValSchema} from "./validations/createBookVal";
+import { createBookValSchema } from "./validations/createBookVal";
 
 export default function (app: Express) {
   const { authMiddleware } = require("./auth/authCheck");
 
   app.post("/api/create_user", UserController.createUser);
 
+  app.delete("/api/users/:userID", UserController.deleteUser);
+
   app.get("/api/books/:bookId/pages", BookController.fetchPagesForBook);
 
-  app.post("/api/create_book", validationMW(createBookValSchema),  BookController.createBook);
+  app.post(
+    "/api/create_book",
+    validationMW(createBookValSchema),
+    BookController.createBook
+  );
 
   app.post(
     "/api/create_book/:userID",

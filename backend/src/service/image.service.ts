@@ -4,8 +4,8 @@ import {
   ref,
   getDownloadURL,
   uploadBytesResumable,
+  deleteObject,
 } from "firebase/storage";
-
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_APIKEY,
@@ -36,4 +36,15 @@ export const uploadImages = async (
 
   const uploadedImageUrl = await getDownloadURL(storageRef);
   return uploadedImageUrl;
+};
+
+export const deleteImageFromFirebase = async (
+  imageUrl: string | null,
+  directoryPath: string
+) => {
+  const deleteImageName = imageUrl?.split("2F")[2].split("?")[0];
+  const desertRef = ref(storage, `${directoryPath}/${deleteImageName}`);
+  try {
+    await deleteObject(desertRef);
+  } catch (error) {}
 };

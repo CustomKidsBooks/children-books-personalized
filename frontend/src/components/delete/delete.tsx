@@ -1,7 +1,10 @@
 "use client";
-import React from 'react';
-import Modal from './delModal';
+import React from "react";
+import Modal from "./delModal";
 import { DeleteModalProps } from "@utils/interfaces";
+import { useAuth0 } from "@auth0/auth0-react";
+import { axiosInstance } from "@services/api-client";
+import { useState } from "react";
 
 const DeleteModal: React.FC<DeleteModalProps> = ({
   onClose,
@@ -13,9 +16,25 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
   height,
   isVisible,
 }) => {
+  const { user, logout } = useAuth0();
+
+  const [isError, setIsError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   const confirm = () => {
-    onConfirm && onConfirm();
-    close();
+    setIsLoading(true);
+    setIsError(false);
+    axiosInstance
+      .delete(`/api/users/${user?.sub}`)
+      .then((res) => {
+        if (res.data.success === 1) {
+          logout({ logoutParams: { returnTo: window.location.origin } });
+        }
+      })
+      .catch((err) => {
+        setIsError(true);
+      })
+      .finally(() => setIsLoading(false));
   };
 
   const close = () => onClose();
@@ -29,6 +48,8 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
       isVisible={isVisible}
       onConfirm={confirm}
     >
+      {isLoading && <div>Loading.....</div>}
+      {isError && <div> Error while Deleting the User</div>}
       <div className="p-4">
         <p className="mb-8">
           {text}
@@ -38,7 +59,10 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
         </p>
         <div className="mt-4 flex justify-end">
           {cancel && (
-            <button onClick={close} className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow float-right mt-0 me-5">
+            <button
+              onClick={close}
+              className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow float-right mt-0 me-5"
+            >
               Cancel
             </button>
           )}
