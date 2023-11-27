@@ -16,16 +16,23 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
   height,
   isVisible,
 }) => {
-  const { user, logout } = useAuth0();
+  const { user, logout, getAccessTokenSilently } = useAuth0();
 
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const confirm = () => {
+  const confirm = async () => {
     setIsLoading(true);
     setIsError(false);
+    const token = await getAccessTokenSilently({
+      authorizationParams: {
+        audience: `${process.env.NEXT_PUBLIC_AUTH0_AUDIENCE}`,
+      },
+    });
     axiosInstance
-      .delete(`/api/users/${user?.sub}`)
+      .delete(`/api/users/${user?.sub}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
       .then((res) => {
         if (res.data.success === 1) {
           logout({ logoutParams: { returnTo: window.location.origin } });
