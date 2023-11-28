@@ -76,7 +76,7 @@ const Book = ({ id, isAuthenticated }: BookValues) => {
     const selectedFiles = event.target.files as FileList;
     let imageName = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
 
-    const storageRef = ref(storage, `ChildrenBook/EditedImage/${imageName}`);
+    const storageRef = ref(storage, `ChildrenBook/PagesImage/${imageName}`);
     const snapshot = await uploadBytes(storageRef, selectedFiles[0]);
     const uploadedImageurl = await getDownloadURL(storageRef);
     setPreviewImage((prevState) => uploadedImageurl);
