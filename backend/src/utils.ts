@@ -18,7 +18,17 @@ import {
 import PDFDocument from "pdfkit";
 import axios from "axios";
 
-export async function generatePdfDoc(bookId: number) {
+interface pageValues {
+  id: number;
+  image: string;
+  paragraph: string;
+}
+
+export async function generatePdfDoc(
+  bookTitle: string,
+  coverImage: string | null,
+  pages: pageValues[]
+) {
   const frameX = 30;
   const frameWidth = 550;
 
@@ -40,10 +50,10 @@ export async function generatePdfDoc(bookId: number) {
   }
 
   try {
-    const { title, image, pages } = await fetchStoryDataForPDF(bookId);
-    if (!title) {
-      throw new Error("Story not found");
-    }
+    // const { title, image, pages } = await fetchStoryDataForPDF(bookId);
+    // if (!title) {
+    //   throw new Error("Story not found");
+    // }
 
     const doc = new PDFDocument();
     let pageNumber = 1;
@@ -58,10 +68,12 @@ export async function generatePdfDoc(bookId: number) {
       .font("Times-Roman")
       .fillColor("green")
       .fontSize(20)
-      .text(title, { align: "center", underline: true });
+      .text(bookTitle, { align: "center", underline: true });
 
-    if (image) {
-      const response = await axios.get(image, { responseType: "arraybuffer" });
+    if (coverImage) {
+      const response = await axios.get(coverImage, {
+        responseType: "arraybuffer",
+      });
       const imageBuffer = Buffer.from(response.data);
       const imageWidth = imageConfig.width;
       const imagePadding = 40;
@@ -138,7 +150,6 @@ export async function generatePdfDoc(bookId: number) {
     }
     doc.end();
     return {
-      title,
       doc,
     };
   } catch (error) {
@@ -147,17 +158,18 @@ export async function generatePdfDoc(bookId: number) {
   }
 }
 
-export async function generateWordDoc(bookId: number) {
+export async function generateWordDoc(
+  bookTitle: string,
+  coverImage: string,
+  pages: pageValues[]
+) {
   try {
-    const bookData = await fetchStoryDataForWord(bookId);
-    if (!bookData) {
-      throw new Error("Book data not found");
-    }
-    const { title, paragraphs, image, images } = bookData;
     let pageNumber = 1;
-    const response = await axios.get(image, { responseType: "arraybuffer" });
+    const response = await axios.get(coverImage, {
+      responseType: "arraybuffer",
+    });
     const imgBuffer = Buffer.from(response.data);
-    const imageBuffer = image ? imgBuffer : Buffer.alloc(0);
+    const imageBuffer = coverImage ? imgBuffer : Buffer.alloc(0);
     const imageOptions: IImageOptions = {
       data: imageBuffer,
       transformation: {
@@ -197,7 +209,7 @@ export async function generateWordDoc(bookId: number) {
               alignment: AlignmentType.CENTER,
               children: [
                 new TextRun({
-                  text: title,
+                  text: bookTitle,
                   bold: true,
                   color: "008000",
                   size: 36,
@@ -222,6 +234,8 @@ export async function generateWordDoc(bookId: number) {
       ],
     });
 
+    const paragraphs = pages.map((page) => page.paragraph);
+    const images = pages.map((page) => page.image);
     for (let i = 0; i < paragraphs.length; i++) {
       const paragraph = paragraphs[i];
       const imageSrc = images[i];
@@ -271,7 +285,7 @@ export async function generateWordDoc(bookId: number) {
     }
     const buffer = await Packer.toBuffer(doc);
     return {
-      title,
+      bookTitle,
       buffer,
     };
   } catch (error) {
