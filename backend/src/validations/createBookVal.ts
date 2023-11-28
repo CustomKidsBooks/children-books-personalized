@@ -44,7 +44,7 @@ export const createBookValSchema: ValidationSchema = Yup.object().shape(
               ? (schema
                   .min(5, "Description must be at least 5 characters long")
                   .max(
-                    20,
+                    30,
                     "Description is too Long!"
                   ) as Yup.StringSchema<string>)
               : (schema

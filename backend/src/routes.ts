@@ -3,7 +3,9 @@ import { BookController } from "./controller/book.controller";
 import { UserController } from "./controller/user.controller";
 import { upload } from "./middleware/uploadFile";
 import validationMW from "./middleware/validationMiddleware";
+import validFetchBookMW from "./middleware/validFetchbookMW";
 import {createBookValSchema} from "./validations/createBookVal";
+import {fetchBooksVal} from "./validations/fetchBooksVal";
 
 export default function (app: Express) {
   const { authMiddleware } = require("./auth/authCheck");
@@ -21,7 +23,7 @@ export default function (app: Express) {
     BookController.createBook
   );
 
-  app.get("/api/books", BookController.fetchBooks);
+  app.get("/api/books", validFetchBookMW(fetchBooksVal), BookController.fetchBooks);
 
   app.get("/api/books/:userID", authMiddleware, BookController.fetchUserBooks);
 

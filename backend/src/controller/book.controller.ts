@@ -216,6 +216,7 @@ export const BookController = {
       if (!book) {
         return res.status(404).json({ success: 0, message: "Book not found" });
       }
+
       const image = req.body.image;
 
       if (image) {
