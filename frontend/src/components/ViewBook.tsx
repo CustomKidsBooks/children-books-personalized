@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/Button";
 import useGetBookPages from "./hooks/useGetBookPages";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface BookValues {
   id: number;
@@ -18,20 +18,16 @@ interface pageValues {
 }
 
 const ViewBook = ({ id }: BookValues) => {
-  const [book, setBook] = useState<pageValues[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(0);
 
   let { isLoading, isError, bookContent } = useGetBookPages(id);
 
   const totalPages = bookContent.length;
-  let pageParagraph = book[currentPage]?.paragraph;
-  let pageImage = book[currentPage]?.image;
+  let pageParagraph = bookContent[currentPage]?.paragraph;
+  let pageImage = bookContent[currentPage]?.image;
   let pageNumber = currentPage * 2 + 1;
 
   const router = useRouter();
-  useEffect(() => {
-    setBook(bookContent);
-  }, [bookContent]);
 
   const displayPreviousPage = () => {
     if (currentPage > 0) {

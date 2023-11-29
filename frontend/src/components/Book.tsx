@@ -19,35 +19,27 @@ interface BookValues {
   id: number;
   isAuthenticated: boolean;
 }
-interface pageValues {
-  id: number;
-  image: string;
-  paragraph: string | undefined;
-}
 
 const Book = ({ id, isAuthenticated }: BookValues) => {
-  const [book, setBook] = useState<pageValues[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(0);
 
-  const [editParagraph, setEditParagraph] = useState<boolean>(false);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [editImage, setEditImage] = useState<boolean>(false);
   const [editedImages, setEditedImages] = useState<string[]>([]);
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [editParagraph, setEditParagraph] = useState<boolean>(false);
   const [isEdited, setIsEdited] = useState<boolean>(false);
 
   const paragraphRef = useRef<HTMLTextAreaElement>(null);
 
-  let { isLoading, isError, bookContent } = useGetBookPages(id);
+  let { isLoading, isError, bookContent, setEditBookContent, editBookContent } =
+    useGetBookPages(id);
 
-  const totalPages = bookContent.length;
-  let pageId = book[currentPage]?.id;
-  let pageParagraph = book[currentPage]?.paragraph;
-  let pageImage = book[currentPage]?.image;
+  const totalPages = editBookContent.length;
+  let pageId = editBookContent[currentPage]?.id;
+  let pageParagraph = editBookContent[currentPage]?.paragraph;
+  let pageImage = editBookContent[currentPage]?.image;
   let pageNumber = currentPage * 2 + 1;
   const router = useRouter();
-  useEffect(() => {
-    setBook(bookContent);
-  }, [bookContent]);
 
   const displayPreviousPage = () => {
     if (currentPage > 0) {
@@ -75,7 +67,7 @@ const Book = ({ id, isAuthenticated }: BookValues) => {
     if (previewImage) {
       setEditedImages((prevState) => [...prevState, previewImage]);
       pageImage = previewImage;
-      const updatedBook = book.map((page) => {
+      const updatedBook = editBookContent.map((page) => {
         if (page.id === pageId) {
           return {
             ...page,
@@ -85,7 +77,7 @@ const Book = ({ id, isAuthenticated }: BookValues) => {
           return page;
         }
       });
-      setBook(updatedBook);
+      setEditBookContent(updatedBook);
     }
     setPreviewImage(null);
   };
@@ -93,7 +85,7 @@ const Book = ({ id, isAuthenticated }: BookValues) => {
   const handleUpdateParagraph = () => {
     if (paragraphRef.current?.value !== undefined) {
       pageParagraph = paragraphRef.current?.value;
-      const updatedBook = book.map((page) => {
+      const updatedBook = editBookContent.map((page) => {
         if (page.id === pageId) {
           return {
             ...page,
@@ -103,7 +95,7 @@ const Book = ({ id, isAuthenticated }: BookValues) => {
           return page;
         }
       });
-      setBook(updatedBook);
+      setEditBookContent(updatedBook);
     }
   };
 
@@ -111,7 +103,7 @@ const Book = ({ id, isAuthenticated }: BookValues) => {
     try {
       const response = await axios.post(
         url,
-        { pages: book },
+        { pages: editBookContent },
         { responseType: "arraybuffer" }
       );
       const blob = new Blob([response.data], {
@@ -129,7 +121,7 @@ const Book = ({ id, isAuthenticated }: BookValues) => {
       const response = await axios.put(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/books/${id}/pages`,
         {
-          pages: book,
+          pages: editBookContent,
         }
       );
       setEditedImages([]);
@@ -154,7 +146,7 @@ const Book = ({ id, isAuthenticated }: BookValues) => {
 
   const reset = async () => {
     setCurrentPage(0);
-    setBook(bookContent);
+    setEditBookContent(bookContent);
     setIsEdited(false);
     await deleteImagesFromFirebase();
   };
