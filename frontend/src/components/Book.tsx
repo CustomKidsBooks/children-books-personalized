@@ -29,10 +29,41 @@ const Book = ({ id, isAuthenticated }: BookValues) => {
   const [editParagraph, setEditParagraph] = useState<boolean>(false);
   const [isEdited, setIsEdited] = useState<boolean>(false);
 
-  const paragraphRef = useRef<HTMLTextAreaElement>(null);
+  const [isDeleteImages, setIsDeleteImages] = useState<boolean>(false);
+
+  useEffect(() => {
+    const deleteImagesFromFirebase = async () => {
+      for (const image of editedImages) {
+        const imageNameToDelete = image.split("2F")[2].split("?")[0];
+
+        const desertRef = ref(
+          storage,
+          `ChildrenBook/PagesImage/${imageNameToDelete}`
+        );
+        await deleteObject(desertRef);
+      }
+      setEditedImages([]);
+    };
+
+    deleteImagesFromFirebase();
+    window.addEventListener("beforeunload", reset);
+    return () => {
+      deleteImagesFromFirebase();
+      window.removeEventListener("beforeunload", reset);
+    };
+  }, [isDeleteImages]);
+
+  const reset = async () => {
+    setCurrentPage(0);
+    setEditBookContent(bookContent);
+    setIsEdited(false);
+    setIsDeleteImages(true);
+  };
 
   let { isLoading, isError, bookContent, setEditBookContent, editBookContent } =
     useGetBookPages(id);
+
+  const paragraphRef = useRef<HTMLTextAreaElement>(null);
 
   const totalPages = editBookContent.length;
   let pageId = editBookContent[currentPage]?.id;
@@ -129,26 +160,6 @@ const Book = ({ id, isAuthenticated }: BookValues) => {
     } catch (error) {
       alert("Error : Try Again");
     }
-  };
-
-  const deleteImagesFromFirebase = async () => {
-    for (const image of editedImages) {
-      const deleteImageName = image.split("2F")[2].split("?")[0];
-
-      const desertRef = ref(
-        storage,
-        `ChildrenBook/PagesImage/${deleteImageName}`
-      );
-      await deleteObject(desertRef);
-    }
-    setEditedImages([]);
-  };
-
-  const reset = async () => {
-    setCurrentPage(0);
-    setEditBookContent(bookContent);
-    setIsEdited(false);
-    await deleteImagesFromFirebase();
   };
 
   if (isLoading) {
