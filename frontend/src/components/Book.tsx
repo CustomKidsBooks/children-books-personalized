@@ -26,49 +26,38 @@ interface pageValues {
 }
 
 const Book = ({ id, isAuthenticated }: BookValues) => {
-  let { isLoading, isError, bookContent } = useGetBookPages(id);
-
   const [book, setBook] = useState<pageValues[]>([]);
-  const [pageNumber, setPageNumber] = useState<number>(1);
-  const [pageParagraph, setPageParagraph] = useState<string | undefined>("");
-  const [pageImage, setPageImage] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(0);
-  const [totalPages, setTotalPages] = useState<number>(0);
 
-  const [isEdited, setIsEdited] = useState<boolean>(false);
-  const [pageId, setPageId] = useState<number>(0);
   const [editParagraph, setEditParagraph] = useState<boolean>(false);
   const [editImage, setEditImage] = useState<boolean>(false);
   const [editedImages, setEditedImages] = useState<string[]>([]);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [isEdited, setIsEdited] = useState<boolean>(false);
+
   const paragraphRef = useRef<HTMLTextAreaElement>(null);
 
+  let { isLoading, isError, bookContent } = useGetBookPages(id);
+
+  const totalPages = bookContent.length;
+  let pageId = book[currentPage]?.id;
+  let pageParagraph = book[currentPage]?.paragraph;
+  let pageImage = book[currentPage]?.image;
+  let pageNumber = currentPage * 2 + 1;
   const router = useRouter();
   useEffect(() => {
-    setBook((prevState) => bookContent);
-    setPageParagraph(book[0]?.paragraph);
-    setPageImage(book[0]?.image);
-    setTotalPages(book.length);
-    setPageId(book[0]?.id);
+    setBook(bookContent);
   }, [bookContent]);
 
   const displayPreviousPage = () => {
     if (currentPage > 0) {
-      setCurrentPage((preState) => currentPage - 1);
-      setPageParagraph((prevState) => book[currentPage - 1].paragraph);
-      setPageImage((prevState) => book[currentPage - 1]?.image);
-      setPageId((prevState) => book[currentPage - 1]?.id);
-      setPageNumber((prevState) => prevState - 2);
+      setCurrentPage((prevState) => prevState - 1);
     }
   };
 
   const displayNextPage = () => {
     if (currentPage < totalPages - 1) {
       setCurrentPage((preState) => preState + 1);
-      setPageParagraph((prevState) => book[currentPage + 1]?.paragraph);
-      setPageImage((prevState) => book[currentPage + 1]?.image);
-      setPageId((prevState) => book[currentPage + 1]?.id);
-      setPageNumber((prevState) => prevState + 2);
     }
   };
 
@@ -79,31 +68,13 @@ const Book = ({ id, isAuthenticated }: BookValues) => {
     const storageRef = ref(storage, `ChildrenBook/PagesImage/${imageName}`);
     const snapshot = await uploadBytes(storageRef, selectedFiles[0]);
     const uploadedImageurl = await getDownloadURL(storageRef);
-    setPreviewImage((prevState) => uploadedImageurl);
-  };
-
-  const handleUpdateParagraph = () => {
-    if (paragraphRef.current?.value !== undefined) {
-      setPageParagraph(paragraphRef.current?.value);
-      const updatedBook = book.map((b) => {
-        if (b.id === pageId) {
-          return {
-            ...b,
-            paragraph: paragraphRef.current?.value,
-          };
-        } else {
-          return b;
-        }
-      });
-
-      setBook((prevstate) => updatedBook);
-    }
+    setPreviewImage(uploadedImageurl);
   };
 
   const handleUpdateImage = () => {
     if (previewImage) {
-      setPageImage(previewImage);
       setEditedImages((prevState) => [...prevState, previewImage]);
+      pageImage = previewImage;
       const updatedBook = book.map((page) => {
         if (page.id === pageId) {
           return {
@@ -114,9 +85,26 @@ const Book = ({ id, isAuthenticated }: BookValues) => {
           return page;
         }
       });
-      setBook((prevstate) => updatedBook);
+      setBook(updatedBook);
     }
     setPreviewImage(null);
+  };
+
+  const handleUpdateParagraph = () => {
+    if (paragraphRef.current?.value !== undefined) {
+      pageParagraph = paragraphRef.current?.value;
+      const updatedBook = book.map((page) => {
+        if (page.id === pageId) {
+          return {
+            ...page,
+            paragraph: paragraphRef.current?.value,
+          };
+        } else {
+          return page;
+        }
+      });
+      setBook(updatedBook);
+    }
   };
 
   const handleDownload = async (url: string, filetype: string) => {
@@ -136,18 +124,6 @@ const Book = ({ id, isAuthenticated }: BookValues) => {
     }
   };
 
-  const deleteImagesFromFirebase = async () => {
-    for (const image of editedImages) {
-      const deleteImageName = image.split("2F")[2].split("?")[0];
-
-      const desertRef = ref(
-        storage,
-        `ChildrenBook/PagesImage/${deleteImageName}`
-      );
-      await deleteObject(desertRef);
-    }
-  };
-
   const updateCreatedBook = async () => {
     try {
       const response = await axios.put(
@@ -162,19 +138,25 @@ const Book = ({ id, isAuthenticated }: BookValues) => {
       alert("Error : Try Again");
     }
   };
+
+  const deleteImagesFromFirebase = async () => {
+    for (const image of editedImages) {
+      const deleteImageName = image.split("2F")[2].split("?")[0];
+
+      const desertRef = ref(
+        storage,
+        `ChildrenBook/PagesImage/${deleteImageName}`
+      );
+      await deleteObject(desertRef);
+    }
+    setEditedImages([]);
+  };
+
   const reset = async () => {
-    setPageNumber((prevState) => {
-      return 1;
-    });
     setCurrentPage(0);
-    setBook((prevState) => bookContent);
-    setPageParagraph((prevState) => bookContent[0]?.paragraph);
-    setPageImage((prevState) => bookContent[0]?.image);
-    setTotalPages((prevState) => bookContent.length);
-    setPageId((prevState) => bookContent[0]?.id);
+    setBook(bookContent);
     setIsEdited(false);
     await deleteImagesFromFirebase();
-    setEditedImages([]);
   };
 
   if (isLoading) {

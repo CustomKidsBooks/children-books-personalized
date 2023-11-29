@@ -18,38 +18,30 @@ interface pageValues {
 }
 
 const ViewBook = ({ id }: BookValues) => {
+  const [book, setBook] = useState<pageValues[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(0);
+
   let { isLoading, isError, bookContent } = useGetBookPages(id);
 
-  const [book, setBook] = useState<pageValues[]>([]);
-  const [pageNumber, setPageNumber] = useState<number>(1);
-  const [pageParagraph, setPageParagraph] = useState<string>("");
-  const [pageImage, setPageImage] = useState<string>("");
-  const [currentPage, setCurrentPage] = useState<number>(0);
-  const [totalPages, setTotalPages] = useState<number>(0);
+  const totalPages = bookContent.length;
+  let pageParagraph = book[currentPage]?.paragraph;
+  let pageImage = book[currentPage]?.image;
+  let pageNumber = currentPage * 2 + 1;
 
   const router = useRouter();
   useEffect(() => {
-    setBook((prevState) => bookContent);
-    setPageParagraph(bookContent[0]?.paragraph);
-    setPageImage(bookContent[0]?.image);
-    setTotalPages(book.length);
+    setBook(bookContent);
   }, [bookContent]);
 
   const displayPreviousPage = () => {
     if (currentPage > 0) {
-      setCurrentPage((preState) => currentPage - 1);
-      setPageParagraph((prevState) => bookContent[currentPage - 1]?.paragraph);
-      setPageImage((prevState) => bookContent[currentPage - 1]?.image);
-      setPageNumber((prevState) => prevState - 2);
+      setCurrentPage((prevState) => prevState - 1);
     }
   };
 
   const displayNextPage = () => {
     if (currentPage < totalPages - 1) {
       setCurrentPage((preState) => preState + 1);
-      setPageParagraph((prevState) => bookContent[currentPage + 1]?.paragraph);
-      setPageImage((prevState) => bookContent[currentPage + 1]?.image);
-      setPageNumber((prevState) => prevState + 2);
     }
   };
 
@@ -69,6 +61,7 @@ const ViewBook = ({ id }: BookValues) => {
             <Button
               onClick={displayPreviousPage}
               className="shadow-none disabled:opacity-50"
+              disabled={currentPage === 0 ? true : false}
             >
               <Image
                 src="/assets/backward-arrow.svg"
@@ -110,6 +103,7 @@ const ViewBook = ({ id }: BookValues) => {
             <Button
               onClick={displayNextPage}
               className="shadow-none disabled:opacity-50"
+              disabled={currentPage === totalPages - 1 ? true : false}
             >
               <Image
                 src="/assets/forward-arrow.svg"

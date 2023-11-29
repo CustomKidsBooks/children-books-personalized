@@ -5,7 +5,7 @@ import Book from "@components/Book";
 import useGetBook from "@components/hooks/useGetBook";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface DraftValues {
   id: number;
@@ -17,7 +17,7 @@ const Draft = ({ params }: { params: DraftValues }) => {
   const { isLoading, isError, bookData } = useGetBook(id);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
-  useState(() => {
+  useEffect(() => {
     if (user?.sub && user?.sub === bookData?.userID) {
       setIsAuthenticated(true);
     }
