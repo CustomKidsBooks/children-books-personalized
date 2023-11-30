@@ -11,7 +11,7 @@ interface BookContextType {
   editedBook: BookContentValues[]; // Replace YourObjectType with the actual type of bookContent items
   updateEditedBookContent: (newBookContent: BookContentValues[]) => void;
   editedImages: string[];
-  updateEditedImages: (url: string | null) => void;
+  updateEditedImages: (newEditedImages: string[]) => void;
 }
 
 const BookContext = createContext<BookContextType | undefined>(undefined);
@@ -37,13 +37,8 @@ export const EditedBookProvider: React.FC<BookProviderProps> = ({
     setEditedBook(newBookContent);
   };
 
-  const updateEditedImages = (url: string | null) => {
-    if (url !== null) {
-      setEditedImages((prevState) => [...prevState, url!]);
-    }
-    if (url === "") {
-      setEditedImages([]);
-    }
+  const updateEditedImages = (newEditedImages: string[]) => {
+    setEditedImages(newEditedImages);
   };
 
   return (

@@ -13,42 +13,43 @@ import { storage } from "../../../services/firebase";
 import { ref, deleteObject } from "firebase/storage";
 
 const EditedBook = ({ params }: { params: { id: string } }) => {
-  const [removeEditedBook, setRemoveEditedBook] = useState<boolean>(false);
+  const [isCleanup, setIsCleanup] = useState<boolean>(false);
   const id = Number(params.id);
   const { bookData: book, isLoading, isError } = useGetBook(id);
 
-  const { updateEditedBookContent, editedImages, updateEditedImages } =
-    useEditedBookContext();
+  const {
+    updateEditedBookContent,
+    editedBook,
+    editedImages,
+    updateEditedImages,
+  } = useEditedBookContext();
+
+  console.log("Edited Images : ", editedImages);
+  console.log("Edited Book : ", editedBook);
 
   useEffect(() => {
-    const deleteImagesFromFirebase = async () => {
-      for (const image of editedImages) {
-        const imageNameToDelete = image.split("2F")[2].split("?")[0];
-
-        const desertRef = ref(
-          storage,
-          `ChildrenBook/PagesImage/${imageNameToDelete}`
-        );
-        await deleteObject(desertRef);
-      }
-      updateEditedImages(null);
-      updateEditedBookContent([]);
-    };
-
-    if (removeEditedBook) {
+    if (isCleanup) {
       deleteImagesFromFirebase();
     }
     window.addEventListener("beforeunload", cleanup);
     return () => {
-      if (removeEditedBook) {
-        deleteImagesFromFirebase();
-        window.removeEventListener("beforeunload", cleanup);
-      }
+      window.removeEventListener("beforeunload", cleanup);
     };
-  }, [removeEditedBook]);
+  }, [isCleanup]);
 
   const cleanup = () => {
-    setRemoveEditedBook(true);
+    setIsCleanup(true);
+  };
+
+  const deleteImagesFromFirebase = async () => {
+    for (const image of editedImages) {
+      const imageNameToDelete = image.split("2F")[2].split("?")[0];
+
+      const desertRef = ref(storage, `ChildrenBook/Image/${imageNameToDelete}`);
+      await deleteObject(desertRef);
+    }
+    updateEditedImages([]);
+    updateEditedBookContent([]);
   };
 
   if (isLoading) {

@@ -29,45 +29,46 @@ const Book = ({ id, isAuthenticated }: BookValues) => {
   const [editParagraph, setEditParagraph] = useState<boolean>(false);
   const [isEdited, setIsEdited] = useState<boolean>(false);
   const [isDownload, setIsDownload] = useState<boolean>(false);
-  const [isDeleteImages, setIsDeleteImages] = useState<boolean>(false);
+  const [isCleanup, setIsCleanup] = useState<boolean>(false);
+  const [editedImages, setEditedImages] = useState<string[]>([]);
 
   let { isLoading, isError, bookContent, setEditBookContent, editBookContent } =
     useGetBookPages(id);
 
-  const { editedImages, updateEditedImages, updateEditedBookContent } =
+  const { updateEditedImages, updateEditedBookContent } =
     useEditedBookContext();
 
   useEffect(() => {
-    const deleteImagesFromFirebase = async () => {
-      for (const image of editedImages) {
-        const imageNameToDelete = image.split("2F")[2].split("?")[0];
-
-        const desertRef = ref(
-          storage,
-          `ChildrenBook/PagesImage/${imageNameToDelete}`
-        );
-        await deleteObject(desertRef);
-      }
-      updateEditedImages(null);
-    };
-
-    if (!isDownload) {
+    if (isCleanup) {
       deleteImagesFromFirebase();
-      window.addEventListener("beforeunload", reset);
     }
+    window.addEventListener("beforeunload", cleanup);
+    window.addEventListener("popstate", cleanup);
     return () => {
-      if (!isDownload) {
-        deleteImagesFromFirebase();
-        window.removeEventListener("beforeunload", reset);
-      }
+      window.removeEventListener("beforeunload", cleanup);
+      window.removeEventListener("popstate", cleanup);
     };
-  }, [isDeleteImages]);
+  }, [isCleanup]);
+  const cleanup = () => {
+    alert("cleanup");
+    setIsCleanup(true);
+  };
+
+  const deleteImagesFromFirebase = async () => {
+    for (const image of editedImages) {
+      const imageNameToDelete = image.split("2F")[2].split("?")[0];
+
+      const desertRef = ref(storage, `ChildrenBook/Image/${imageNameToDelete}`);
+      await deleteObject(desertRef);
+    }
+    setEditedImages([]);
+  };
 
   const reset = async () => {
     setCurrentPage(0);
     setEditBookContent(bookContent);
     setIsEdited(false);
-    setIsDeleteImages(true);
+    deleteImagesFromFirebase();
   };
 
   const paragraphRef = useRef<HTMLTextAreaElement>(null);
@@ -95,7 +96,7 @@ const Book = ({ id, isAuthenticated }: BookValues) => {
     const selectedFiles = event.target.files as FileList;
     let imageName = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
 
-    const storageRef = ref(storage, `ChildrenBook/PagesImage/${imageName}`);
+    const storageRef = ref(storage, `ChildrenBook/Image/${imageName}`);
     const snapshot = await uploadBytes(storageRef, selectedFiles[0]);
     const uploadedImageurl = await getDownloadURL(storageRef);
     setPreviewImage(uploadedImageurl);
@@ -103,7 +104,7 @@ const Book = ({ id, isAuthenticated }: BookValues) => {
 
   const handleUpdateImage = () => {
     if (previewImage) {
-      updateEditedImages(previewImage);
+      setEditedImages((prev) => [...prev, previewImage]);
       pageImage = previewImage;
       const updatedBook = editBookContent.map((page) => {
         if (page.id === pageId) {
@@ -139,6 +140,7 @@ const Book = ({ id, isAuthenticated }: BookValues) => {
 
   const handleDownload = async () => {
     setIsDownload(true);
+    updateEditedImages(editedImages);
     updateEditedBookContent(editBookContent);
     router.push(`/download-editedbook/${id}`);
   };
@@ -151,7 +153,7 @@ const Book = ({ id, isAuthenticated }: BookValues) => {
           pages: editBookContent,
         }
       );
-      updateEditedImages(null);
+      setEditedImages([]);
       alert(response.data.message);
     } catch (error) {
       alert("Error : Try Again");
