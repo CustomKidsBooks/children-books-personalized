@@ -24,11 +24,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
   const confirm = async () => {
     setIsLoading(true);
     setIsError(false);
-    const token = await getAccessTokenSilently({
-      authorizationParams: {
-        audience: `${process.env.NEXT_PUBLIC_AUTH0_AUDIENCE}`,
-      },
-    });
+    const token = await getAccessTokenSilently();
     axiosInstance
       .delete(`/api/users/${user?.sub}`, {
         headers: { Authorization: `Bearer ${token}` },
