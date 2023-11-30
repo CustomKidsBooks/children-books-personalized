@@ -22,9 +22,7 @@ export const uploadImages = async (
   imageBuffer: Buffer,
   directoryPath: string
 ) => {
-  const imageName = `${Date.now()}-${Math.round(
-    Math.random() * 1e9
-  )}-image.jpg`;
+  const imageName = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
 
   const storageRef = ref(storage, `${directoryPath}/${imageName}`);
   const metadata = { contentType: "image/jpeg" };

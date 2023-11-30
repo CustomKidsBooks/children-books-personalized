@@ -41,9 +41,12 @@ export default function (app: Express) {
 
   app.delete("/api/pages/:pageId", BookController.deletePageHandler);
 
-  app.get("/api/download/story/pdf/:bookId", BookController.downloadStoryAsPDF);
+  app.post(
+    "/api/download/story/pdf/:bookId",
+    BookController.downloadStoryAsPDF
+  );
 
-  app.get(
+  app.post(
     "/api/download/story/word/:bookId",
     BookController.downloadStoryAsWord
   );
@@ -51,13 +54,4 @@ export default function (app: Express) {
   app.post("/api/sendBookAsPdf/:bookId", BookController.sendBookAsPdf);
 
   app.post("/api/sendBookAsWord/:bookId", BookController.sendBookAsWord);
-
-  app.post(
-    "/api/download/editedStory/pdf/:bookId",
-    BookController.downloadEditedStoryAsPDF
-  );
-  app.post(
-    "/api/download/editedStory/word/:bookId",
-    BookController.downloadEditedStoryAsWord
-  );
 }

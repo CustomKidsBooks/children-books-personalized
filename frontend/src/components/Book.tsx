@@ -14,6 +14,7 @@ import {
 } from "firebase/storage";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { useEditedBookContext } from "./context/EditedBookContext";
 
 interface BookValues {
   id: number;
@@ -25,11 +26,16 @@ const Book = ({ id, isAuthenticated }: BookValues) => {
 
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [editImage, setEditImage] = useState<boolean>(false);
-  const [editedImages, setEditedImages] = useState<string[]>([]);
   const [editParagraph, setEditParagraph] = useState<boolean>(false);
   const [isEdited, setIsEdited] = useState<boolean>(false);
-
+  const [isDownload, setIsDownload] = useState<boolean>(false);
   const [isDeleteImages, setIsDeleteImages] = useState<boolean>(false);
+
+  let { isLoading, isError, bookContent, setEditBookContent, editBookContent } =
+    useGetBookPages(id);
+
+  const { editedImages, updateEditedImages, updateEditedBookContent } =
+    useEditedBookContext();
 
   useEffect(() => {
     const deleteImagesFromFirebase = async () => {
@@ -42,14 +48,18 @@ const Book = ({ id, isAuthenticated }: BookValues) => {
         );
         await deleteObject(desertRef);
       }
-      setEditedImages([]);
+      updateEditedImages(null);
     };
 
-    deleteImagesFromFirebase();
-    window.addEventListener("beforeunload", reset);
-    return () => {
+    if (!isDownload) {
       deleteImagesFromFirebase();
-      window.removeEventListener("beforeunload", reset);
+      window.addEventListener("beforeunload", reset);
+    }
+    return () => {
+      if (!isDownload) {
+        deleteImagesFromFirebase();
+        window.removeEventListener("beforeunload", reset);
+      }
     };
   }, [isDeleteImages]);
 
@@ -59,9 +69,6 @@ const Book = ({ id, isAuthenticated }: BookValues) => {
     setIsEdited(false);
     setIsDeleteImages(true);
   };
-
-  let { isLoading, isError, bookContent, setEditBookContent, editBookContent } =
-    useGetBookPages(id);
 
   const paragraphRef = useRef<HTMLTextAreaElement>(null);
 
@@ -96,7 +103,7 @@ const Book = ({ id, isAuthenticated }: BookValues) => {
 
   const handleUpdateImage = () => {
     if (previewImage) {
-      setEditedImages((prevState) => [...prevState, previewImage]);
+      updateEditedImages(previewImage);
       pageImage = previewImage;
       const updatedBook = editBookContent.map((page) => {
         if (page.id === pageId) {
@@ -130,21 +137,10 @@ const Book = ({ id, isAuthenticated }: BookValues) => {
     }
   };
 
-  const handleDownload = async (url: string, filetype: string) => {
-    try {
-      const response = await axios.post(
-        url,
-        { pages: editBookContent },
-        { responseType: "arraybuffer" }
-      );
-      const blob = new Blob([response.data], {
-        type: `application/${filetype}`,
-      });
-      const downloadUrl = window.URL.createObjectURL(blob);
-      window.open(downloadUrl, "_blank");
-    } catch (error) {
-      alert("Could not download, Try Again");
-    }
+  const handleDownload = async () => {
+    setIsDownload(true);
+    updateEditedBookContent(editBookContent);
+    router.push(`/download-editedbook/${id}`);
   };
 
   const updateCreatedBook = async () => {
@@ -155,7 +151,7 @@ const Book = ({ id, isAuthenticated }: BookValues) => {
           pages: editBookContent,
         }
       );
-      setEditedImages([]);
+      updateEditedImages(null);
       alert(response.data.message);
     } catch (error) {
       alert("Error : Try Again");
@@ -280,14 +276,9 @@ const Book = ({ id, isAuthenticated }: BookValues) => {
                 className="w-full"
                 intent="teal"
                 size="medium"
-                onClick={() =>
-                  handleDownload(
-                    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/download/editedStory/pdf/${id}`,
-                    "pdf"
-                  )
-                }
+                onClick={() => setIsEdited(false)}
               >
-                Download PDF
+                Continue Editing
               </Button>
             </div>
             <div className="sm:w-3/4 text-center px-2 py-4">
@@ -295,14 +286,9 @@ const Book = ({ id, isAuthenticated }: BookValues) => {
                 className="w-full"
                 intent="teal"
                 size="medium"
-                onClick={() =>
-                  handleDownload(
-                    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/download/editedStory/word/${id}`,
-                    "msword"
-                  )
-                }
+                onClick={handleDownload}
               >
-                Download Word
+                Download
               </Button>
             </div>
           </div>
@@ -373,6 +359,9 @@ const Book = ({ id, isAuthenticated }: BookValues) => {
             </Button>
           </div>
         ) : (
+          ""
+        )}
+        {/* ) : (
           <div className="mt-7 md:mt-5 flex flex-col md:flex-row md:space-x-10 md:justify-center">
             <Button
               className="sm:w-3/4 md:w-2/4 text-center capitalize disabled:opacity-50"
@@ -383,7 +372,7 @@ const Book = ({ id, isAuthenticated }: BookValues) => {
               Edit Again
             </Button>
           </div>
-        )}
+        )} */}
         {isAuthenticated && isEdited ? (
           <div className="mt-7 md:mt-5 flex flex-col md:flex-row md:space-x-10 md:justify-center">
             <Button

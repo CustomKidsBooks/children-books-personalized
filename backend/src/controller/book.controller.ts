@@ -426,10 +426,12 @@ export const BookController = {
 
   downloadStoryAsWord: async (req: Request, res: Response) => {
     const bookId = parseInt(req.params.bookId);
+    const { editedBook } = req.body;
     try {
-      const { bookTitle, coverImage, pages } = await fetchStoryDataForPDF(
-        bookId
-      );
+      let { bookTitle, coverImage, pages } = await fetchStoryDataForPDF(bookId);
+      if (editedBook.length > 0) {
+        pages = editedBook;
+      }
       const { buffer } = await generateWordDoc(bookTitle, coverImage!, pages);
       res.setHeader("Content-Type", "application/msword");
       res.setHeader(
@@ -447,59 +449,20 @@ export const BookController = {
 
   downloadStoryAsPDF: async (req: Request, res: Response) => {
     const bookId = parseInt(req.params.bookId);
+    const { editedBook } = req.body;
+
     try {
-      const { bookTitle, coverImage, pages } = await fetchStoryDataForPDF(
-        bookId
-      );
-      if (!bookTitle) {
-        throw new Error("Story not found");
+      let { bookTitle, coverImage, pages } = await fetchStoryDataForPDF(bookId);
+
+      if (editedBook.length > 0) {
+        pages = editedBook;
       }
-      const { doc } = await generatePdfDoc(bookTitle, coverImage, pages);
-      res.setHeader(
-        "Content-Disposition",
-        `attachment; filename=${bookTitle}.pdf`
-      );
-      doc.pipe(res);
-    } catch (error) {
-      console.error("Error downloading PDF:", error);
-      return res
-        .status(500)
-        .json({ error: "An error occurred while downloading the PDF" });
-    }
-  },
 
-  downloadEditedStoryAsWord: async (req: Request, res: Response) => {
-    const bookId = parseInt(req.params.bookId);
-    const pages = req.body.pages;
-
-    try {
-      const { bookTitle, coverImage } = await fetchStoryDataForPDF(bookId);
-      const { buffer } = await generateWordDoc(bookTitle, coverImage!, pages);
-      res.setHeader("Content-Type", "application/msword");
-      res.setHeader(
-        "Content-Disposition",
-        `attachment; filename=${bookTitle}.docx`
-      );
-      res.send(buffer);
-    } catch (error) {
-      console.error("Error downloading Word document:", error);
-      return res.status(500).json({
-        error: "An error occurred while downloading the Word document",
-      });
-    }
-  },
-  downloadEditedStoryAsPDF: async (req: Request, res: Response) => {
-    const bookId = parseInt(req.params.bookId);
-    const pages = req.body.pages;
-
-    try {
-      const { bookTitle, coverImage } = await fetchStoryDataForPDF(bookId);
       if (!bookTitle) {
         throw new Error("Story not found");
       }
       const { doc } = await generatePdfDoc(bookTitle, coverImage, pages);
       res.setHeader("Content-Type", "application/pdf");
-
       res.setHeader(
         "Content-Disposition",
         `attachment; filename=${bookTitle}.pdf`
@@ -515,11 +478,15 @@ export const BookController = {
 
   sendEmail: async (req: Request, res: Response, emailType: string) => {
     try {
-      const { bookId, recipientEmail } = req.body;
+      const { bookId, recipientEmail, editedBook } = req.body;
+
       let title, content, subject;
-      const { bookTitle, coverImage, pages } = await fetchStoryDataForPDF(
-        bookId
-      );
+      let { bookTitle, coverImage, pages } = await fetchStoryDataForPDF(bookId);
+
+      if (editedBook.length > 0) {
+        pages = editedBook;
+      }
+
       if (!bookTitle) {
         throw new Error("Story not found");
       }
