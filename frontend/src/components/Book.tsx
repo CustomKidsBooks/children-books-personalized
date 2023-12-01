@@ -14,6 +14,7 @@ import {
 } from "firebase/storage";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { axiosInstance } from "@services/api-client";
 import { useEditedBookContext } from "./context/EditedBookContext";
 
 interface BookValues {
@@ -28,36 +29,30 @@ const Book = ({ id, isAuthenticated }: BookValues) => {
   const [editImage, setEditImage] = useState<boolean>(false);
   const [editParagraph, setEditParagraph] = useState<boolean>(false);
   const [isEdited, setIsEdited] = useState<boolean>(false);
-  const [isDownload, setIsDownload] = useState<boolean>(false);
   const [isCleanup, setIsCleanup] = useState<boolean>(false);
   const [editedImages, setEditedImages] = useState<string[]>([]);
-
   let { isLoading, isError, bookContent, setEditBookContent, editBookContent } =
     useGetBookPages(id);
 
   const { updateEditedImages, updateEditedBookContent } =
     useEditedBookContext();
-
+  const router = useRouter();
   useEffect(() => {
     if (isCleanup) {
-      deleteImagesFromFirebase();
+      setEditedImages([]);
     }
     window.addEventListener("beforeunload", cleanup);
-    window.addEventListener("popstate", cleanup);
     return () => {
       window.removeEventListener("beforeunload", cleanup);
-      window.removeEventListener("popstate", cleanup);
     };
   }, [isCleanup]);
-  const cleanup = () => {
-    alert("cleanup");
+
+  const cleanup = (event: Event) => {
     setIsCleanup(true);
   };
-
   const deleteImagesFromFirebase = async () => {
     for (const image of editedImages) {
       const imageNameToDelete = image.split("2F")[2].split("?")[0];
-
       const desertRef = ref(storage, `ChildrenBook/Image/${imageNameToDelete}`);
       await deleteObject(desertRef);
     }
@@ -78,7 +73,6 @@ const Book = ({ id, isAuthenticated }: BookValues) => {
   let pageParagraph = editBookContent[currentPage]?.paragraph;
   let pageImage = editBookContent[currentPage]?.image;
   let pageNumber = currentPage * 2 + 1;
-  const router = useRouter();
 
   const displayPreviousPage = () => {
     if (currentPage > 0) {
@@ -139,7 +133,6 @@ const Book = ({ id, isAuthenticated }: BookValues) => {
   };
 
   const handleDownload = async () => {
-    setIsDownload(true);
     updateEditedImages(editedImages);
     updateEditedBookContent(editBookContent);
     router.push(`/download-editedbook/${id}`);

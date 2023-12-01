@@ -24,12 +24,10 @@ const EditedBook = ({ params }: { params: { id: string } }) => {
     updateEditedImages,
   } = useEditedBookContext();
 
-  console.log("Edited Images : ", editedImages);
-  console.log("Edited Book : ", editedBook);
-
   useEffect(() => {
     if (isCleanup) {
-      deleteImagesFromFirebase();
+      updateEditedImages([]);
+      updateEditedBookContent([]);
     }
     window.addEventListener("beforeunload", cleanup);
     return () => {
