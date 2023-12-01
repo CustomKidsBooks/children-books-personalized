@@ -24,6 +24,7 @@ export default function (app: Express) {
     validationMW(createBookValSchema),
     BookController.createBook
   );
+  app.post("/api/generateImage", BookController.generateImageForPage);
 
   app.get("/api/books", BookController.fetchBooks);
 

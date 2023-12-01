@@ -31,6 +31,10 @@ const Book = ({ id, isAuthenticated }: BookValues) => {
   const [isEdited, setIsEdited] = useState<boolean>(false);
   const [isCleanup, setIsCleanup] = useState<boolean>(false);
   const [editedImages, setEditedImages] = useState<string[]>([]);
+
+  const [isGenerating, setIsGenerating] = useState<boolean>(false);
+  const [isNotGenerated, setIsNotGenerated] = useState<boolean>(false);
+
   let { isLoading, isError, bookContent, setEditBookContent, editBookContent } =
     useGetBookPages(id);
 
@@ -94,11 +98,27 @@ const Book = ({ id, isAuthenticated }: BookValues) => {
     const snapshot = await uploadBytes(storageRef, selectedFiles[0]);
     const uploadedImageurl = await getDownloadURL(storageRef);
     setPreviewImage(uploadedImageurl);
+    setEditedImages((prev) => [...prev, uploadedImageurl]);
+  };
+
+  const handleGenerateImage = async () => {
+    setIsGenerating(true);
+    setIsNotGenerated(false);
+    try {
+      const response = await axiosInstance.post("/api/generateImage", {
+        imageDesc: pageParagraph,
+      });
+      setPreviewImage(response.data.newImageUrl);
+      setEditedImages((prev) => [...prev, response.data.newImageUrl!]);
+    } catch (error) {
+      setIsNotGenerated(true);
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   const handleUpdateImage = () => {
     if (previewImage) {
-      setEditedImages((prev) => [...prev, previewImage]);
       pageImage = previewImage;
       const updatedBook = editBookContent.map((page) => {
         if (page.id === pageId) {
@@ -198,21 +218,41 @@ const Book = ({ id, isAuthenticated }: BookValues) => {
                   />
                 </div>
               ) : editImage ? (
-                <div className="h-full w-full flex items-center space-x-6 justify-center">
-                  <label className="block">
-                    <input
-                      type="file"
-                      className="block w-full text-sm text-slate-500
+                <div className="h-full w-full flex flex-col py-12 sm:py-0 items-center gap-12 justify-center">
+                  <div className="">
+                    <label className="block">
+                      <input
+                        type="file"
+                        className="block w-full text-sm text-slate-500
                     file:mr-4 file:py-2 file:px-4
                     file:rounded-full file:border-0
                     file:text-sm file:font-semibold
                     file:bg-violet-50 file:text-pink
                     hover:file:bg-violet-100
                   "
-                      name="image"
-                      onChange={uploadImage}
-                    />
-                  </label>
+                        name="image"
+                        onChange={uploadImage}
+                      />
+                    </label>
+                  </div>
+
+                  <div className="">
+                    <button
+                      onClick={handleGenerateImage}
+                      className="block mr-4 py-2 px-4 rounded-full border-0 text-sm font-semibold bg-violet-50 text-pink hover:bg-violet-100"
+                    >
+                      Generate New Image
+                    </button>
+
+                    {isGenerating && (
+                      <p className="mt-5 text-center">Generating....</p>
+                    )}
+                    {isNotGenerated && (
+                      <p className="mt-5 mx-3 text-red-500">
+                        Something Went wrong! Please Try Again
+                      </p>
+                    )}
+                  </div>
                 </div>
               ) : (
                 <Image

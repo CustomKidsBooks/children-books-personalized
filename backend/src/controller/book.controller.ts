@@ -424,6 +424,37 @@ export const BookController = {
     }
   },
 
+  generateImageForPage: async (req: Request, res: Response) => {
+    try {
+      const { imageDesc } = req.body;
+
+      console.log(imageDesc);
+
+      const imageUrl = await generateImage(imageDesc);
+
+      let uploadedImageUrl;
+
+      if (imageUrl === undefined) {
+        throw new Error();
+      }
+
+      if (imageUrl) {
+        uploadedImageUrl = await downloadCoverImageLocally(imageUrl);
+      }
+      return res.status(200).json({
+        success: 1,
+        newImageUrl: uploadedImageUrl,
+        message: "Book and associated pages deleted successfully",
+      });
+    } catch (error) {
+      return res.status(500).json({
+        success: 0,
+        message:
+          "An error occurred while deleting the book and associated pages",
+      });
+    }
+  },
+
   downloadStoryAsWord: async (req: Request, res: Response) => {
     const bookId = parseInt(req.params.bookId);
     const { editedBook } = req.body;
