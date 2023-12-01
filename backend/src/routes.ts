@@ -3,7 +3,7 @@ import { BookController } from "./controller/book.controller";
 import { UserController } from "./controller/user.controller";
 import { upload } from "./middleware/uploadFile";
 import validationMW from "./middleware/validationMiddleware";
-import {createBookValSchema} from "./validations/createBookVal";
+import { createBookValSchema } from "./validations/createBookVal";
 
 export default function (app: Express) {
   const { authMiddleware } = require("./auth/authCheck");
@@ -12,7 +12,11 @@ export default function (app: Express) {
 
   app.get("/api/books/:bookId/pages", BookController.fetchPagesForBook);
 
-  app.post("/api/create_book", validationMW(createBookValSchema),  BookController.createBook);
+  app.post(
+    "/api/create_book",
+    validationMW(createBookValSchema),
+    BookController.createBook
+  );
 
   app.post(
     "/api/create_book/:userID",
@@ -20,6 +24,7 @@ export default function (app: Express) {
     validationMW(createBookValSchema),
     BookController.createBook
   );
+  app.post("/api/generateImage", BookController.generateImageForPage);
 
   app.get("/api/books", BookController.fetchBooks);
 
@@ -29,15 +34,20 @@ export default function (app: Express) {
 
   app.put("/api/books/:id", BookController.updateBookHandler);
 
+  app.put("/api/books/:id/pages", BookController.updateBookPages);
+
   app.put("/api/pages/:pageId", BookController.updatePageHandler);
 
   app.delete("/api/books/:id", BookController.deleteBookHandler);
 
   app.delete("/api/pages/:pageId", BookController.deletePageHandler);
 
-  app.get("/api/download/story/pdf/:bookId", BookController.downloadStoryAsPDF);
+  app.post(
+    "/api/download/story/pdf/:bookId",
+    BookController.downloadStoryAsPDF
+  );
 
-  app.get(
+  app.post(
     "/api/download/story/word/:bookId",
     BookController.downloadStoryAsWord
   );
