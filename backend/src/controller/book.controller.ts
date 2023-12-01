@@ -427,17 +427,11 @@ export const BookController = {
   generateImageForPage: async (req: Request, res: Response) => {
     try {
       const { imageDesc } = req.body;
-
-      console.log(imageDesc);
-
       const imageUrl = await generateImage(imageDesc);
-
       let uploadedImageUrl;
-
       if (imageUrl === undefined) {
         throw new Error();
       }
-
       if (imageUrl) {
         uploadedImageUrl = await downloadCoverImageLocally(imageUrl);
       }
