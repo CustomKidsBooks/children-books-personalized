@@ -3,10 +3,9 @@ import { ValidationSchema } from "../validations/interface";
 
 export const fetchBooksVal: ValidationSchema = Yup.object().shape(
   {
-    limit: Yup.number().required("limit is required").min(8, "limit must be 8"),
+    limit: Yup.number().required("limit is required").min(4, "limit must be 4"),
     page: Yup.number()
       .min(1, "Page must be at least 1")
-      .max(10, "Page cannot greater than 10")
       .required("page is required"),
     search: Yup.string().when(["search"], (search: string[], schema) => {
       return search && search[0] && search[0] !== ""
