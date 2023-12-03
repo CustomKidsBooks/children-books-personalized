@@ -9,7 +9,7 @@ const useCreateStory = () => {
   const [isError, setIsError] = useState<boolean>(false);
   const [bookID, setBookID] = useState<string>("");
 
-  const userSubPath = user ? `/${user.sub}` : '';
+  const userSubPath = user ? `/${user.sub}` : "";
   const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/create_book${userSubPath}`;
 
   const createStory = async (values: CreateStoryFormValues) => {
@@ -18,12 +18,8 @@ const useCreateStory = () => {
     setIsError(false);
     try {
       if (user) {
-        const token = await getAccessTokenSilently({
-          authorizationParams: {
-            audience: `${process.env.NEXT_PUBLIC_AUTH0_AUDIENCE}`,
-          },
-        });
-  
+        const token = await getAccessTokenSilently();
+
         const response = await axios.post(
           url,
           {

@@ -10,6 +10,8 @@ export default function (app: Express) {
 
   app.post("/api/create_user", UserController.createUser);
 
+  app.delete("/api/users/:userID", authMiddleware, UserController.deleteUser);
+
   app.get("/api/books/:bookId/pages", BookController.fetchPagesForBook);
 
   app.post(

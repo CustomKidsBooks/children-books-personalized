@@ -17,7 +17,6 @@ interface PreviewBookValues {
 
 const PreviewBook = ({ id }: PreviewBookValues) => {
   const { bookData: book, isLoading, isError } = useGetBook(id);
-
   if (isLoading) {
     return <PreviewBookSkeleton />;
   }
@@ -35,7 +34,7 @@ const PreviewBook = ({ id }: PreviewBookValues) => {
             icon={faChildReaching}
             className="fa-icon place-self-center"
           />
-          <p className="text-pine-green">2-3</p>
+          <span className="text-pine-green">{book?.ageGroup}</span>
         </div>
       </div>
       <div className="mb-10">{book?.tag && <Tag tag={book.tag} />}</div>

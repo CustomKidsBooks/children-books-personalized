@@ -26,7 +26,7 @@ export const createBookValSchema: ValidationSchema = Yup.object().shape(
             characters && characters.length > 0
               ? (schema
                   .min(3, "Name must be at least 3 characters long")
-                  .max(12, "Name is too Long!") as Yup.StringSchema<string>)
+                  .max(15, "Name is too Long!") as Yup.StringSchema<string>)
               : (schema
                   .transform((value, originalValue) => {
                     if (value === "") {
@@ -44,7 +44,7 @@ export const createBookValSchema: ValidationSchema = Yup.object().shape(
               ? (schema
                   .min(5, "Description must be at least 5 characters long")
                   .max(
-                    20,
+                    30,
                     "Description is too Long!"
                   ) as Yup.StringSchema<string>)
               : (schema

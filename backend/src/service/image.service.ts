@@ -36,6 +36,16 @@ export const uploadImages = async (
   return uploadedImageUrl;
 };
 
+export const deleteImageFromFirebase = async (
+  imageUrl: string | null,
+  directoryPath: string
+) => {
+  const deleteImageName = imageUrl?.split("2F")[2].split("?")[0];
+  const desertRef = ref(storage, `${directoryPath}/${deleteImageName}`);
+  try {
+    await deleteObject(desertRef);
+  } catch (error) {}};
+  
 export const deleteImage = async (url: string, directoryPath: string) => {
   const deleteImageName = url.split("2F")[2].split("?")[0];
   const desertRef = ref(storage, `${directoryPath}/${deleteImageName}`);
