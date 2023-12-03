@@ -16,7 +16,7 @@ const useLibraryCard = (
   const [totalPages, setTotalPages] = useState<number>(0);
   const url = userID
     ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/books/${userID}`
-    : `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/books?page=${currentPage}&limit=${booksPerPage}&search=${search}`;
+    : `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/books?page=${currentPage || 1}&limit=${booksPerPage}&search=${search || ''}`;
 
   useEffect(() => {
     if (userID) {
