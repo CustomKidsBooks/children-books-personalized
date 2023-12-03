@@ -29,11 +29,15 @@ async function initialize() {
 }
 
 async function startServer() {
-  const { port, host } = expressConfig;
-  const server = app.listen(port, host);
-  server.setTimeout(0);
-  log.info(`Server is listening at http://${host}:${port}`);
-  routes(app);
+  try {
+    const { port, host } = expressConfig;
+    app.listen(port, host);
+    log.info(`Server is listening at http://${host}:${port}`);
+    routes(app);
+  } catch (error) {
+    log.error("Error during server startup:", error);
+    throw error;
+  }
 }
 
 (async () => {
