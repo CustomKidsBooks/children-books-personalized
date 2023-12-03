@@ -22,9 +22,7 @@ export const uploadImages = async (
   imageBuffer: Buffer,
   directoryPath: string
 ) => {
-  const imageName = `${Date.now()}-${Math.round(
-    Math.random() * 1e9
-  )}-image.jpg`;
+  const imageName = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
 
   const storageRef = ref(storage, `${directoryPath}/${imageName}`);
   const metadata = { contentType: "image/jpeg" };
@@ -38,13 +36,8 @@ export const uploadImages = async (
   return uploadedImageUrl;
 };
 
-export const deleteImageFromFirebase = async (
-  imageUrl: string | null,
-  directoryPath: string
-) => {
-  const deleteImageName = imageUrl?.split("2F")[2].split("?")[0];
+export const deleteImage = async (url: string, directoryPath: string) => {
+  const deleteImageName = url.split("2F")[2].split("?")[0];
   const desertRef = ref(storage, `${directoryPath}/${deleteImageName}`);
-  try {
-    await deleteObject(desertRef);
-  } catch (error) {}
+  await deleteObject(desertRef);
 };

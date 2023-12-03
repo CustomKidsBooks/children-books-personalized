@@ -26,6 +26,7 @@ export default function (app: Express) {
     validationMW(createBookValSchema),
     BookController.createBook
   );
+  app.post("/api/generateImage", BookController.generateImageForPage);
 
   app.get("/api/books", BookController.fetchBooks);
 
@@ -35,15 +36,20 @@ export default function (app: Express) {
 
   app.put("/api/books/:id", BookController.updateBookHandler);
 
+  app.put("/api/books/:id/pages", BookController.updateBookPages);
+
   app.put("/api/pages/:pageId", BookController.updatePageHandler);
 
   app.delete("/api/books/:id", BookController.deleteBookHandler);
 
   app.delete("/api/pages/:pageId", BookController.deletePageHandler);
 
-  app.get("/api/download/story/pdf/:bookId", BookController.downloadStoryAsPDF);
+  app.post(
+    "/api/download/story/pdf/:bookId",
+    BookController.downloadStoryAsPDF
+  );
 
-  app.get(
+  app.post(
     "/api/download/story/word/:bookId",
     BookController.downloadStoryAsWord
   );

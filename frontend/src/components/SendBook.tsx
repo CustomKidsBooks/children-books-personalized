@@ -4,8 +4,9 @@ import { ModalContext } from "./ModalProvider";
 import Modal from "@components/Modal";
 import SendEmailForm from "./SendEmailForm";
 import { SendEmailModalProps } from "@utils/interfaces";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 import ToastModal from "./ToastModal";
+import { useEditedBookContext } from "./context/EditedBookContext";
 
 const SendBook = ({ bookId }: { bookId: number }) => {
   const [recipientEmail, setRecipientEmailLocally] = useState<string>("");
@@ -13,7 +14,9 @@ const SendBook = ({ bookId }: { bookId: number }) => {
   const [selectedFormat, setSelectedFormat] = useState<string>("Pdf");
   const [toastMessage, setToastMessage] = useState<string>("");
   const [isToastVisible, setToastVisible] = useState(false);
-  const router = useRouter()
+  const router = useRouter();
+
+  const { editedBook } = useEditedBookContext();
 
   const handleEmailChange = (email: string) => {
     setRecipientEmailLocally(email);
@@ -32,24 +35,34 @@ const SendBook = ({ bookId }: { bookId: number }) => {
   };
 
   const sendEmail = (selectedFormat: string, recipientEmail: string) => {
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/sendBookAs${selectedFormat}/${bookId}`, {
-      method: "POST",
-      body: JSON.stringify({ bookId, recipientEmail }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
+    fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/sendBookAs${selectedFormat}/${bookId}`,
+      {
+        method: "POST",
+        body: JSON.stringify({ bookId, recipientEmail, editedBook }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
       .then((response) => {
         if (response.ok) {
-          setToastMessage(`Book sent as ${selectedFormat} via email successfully`);
+          setToastMessage(
+            `Book sent as ${selectedFormat} via email successfully`
+          );
           setToastVisible(true);
           router.push(`/download/${bookId}`);
         } else {
-          setToastMessage(`Failed to send the book as ${selectedFormat} via email`);
+          setToastMessage(
+            `Failed to send the book as ${selectedFormat} via email`
+          );
         }
       })
       .catch((error) => {
-        console.error(`Error sending the book as ${selectedFormat} via email:`, error);
+        console.error(
+          `Error sending the book as ${selectedFormat} via email:`,
+          error
+        );
       });
   };
 
@@ -57,16 +70,24 @@ const SendBook = ({ bookId }: { bookId: number }) => {
     <div className="items-center">
       <h1 className="font-bold text text-2xl lg:text-3xl">Send by email:</h1>
       <div className="flex flex-col gap-4 py-4 w-32">
-        <Button onClick={() => {
-          openModal("sendEmailModal");
-          setSelectedFormat("Pdf");
-        }} intent="secondary" className="text font-bold">
+        <Button
+          onClick={() => {
+            openModal("sendEmailModal");
+            setSelectedFormat("Pdf");
+          }}
+          intent="secondary"
+          className="text font-bold"
+        >
           PDF
         </Button>
-        <Button onClick={() => {
-          openModal("sendEmailModal");
-          setSelectedFormat("Word");
-        }} intent="secondary" className="text font-bold">
+        <Button
+          onClick={() => {
+            openModal("sendEmailModal");
+            setSelectedFormat("Word");
+          }}
+          intent="secondary"
+          className="text font-bold"
+        >
           Word
         </Button>
       </div>
@@ -83,7 +104,11 @@ const SendBook = ({ bookId }: { bookId: number }) => {
           />
         </Modal>
       )}
-      <ToastModal isVisible={isToastVisible} message={toastMessage} onClose={() => setToastVisible(false)} />
+      <ToastModal
+        isVisible={isToastVisible}
+        message={toastMessage}
+        onClose={() => setToastVisible(false)}
+      />
     </div>
   );
 };

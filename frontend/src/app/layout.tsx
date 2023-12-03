@@ -5,6 +5,7 @@ import Nav from "@components/Nav";
 import "@styles/globals.css";
 import React from "react";
 import { ModalProvider } from "../components/ModalProvider";
+import { EditedBookProvider } from "../components/context/EditedBookContext";
 
 export default function RootLayout({
   children,
@@ -23,15 +24,17 @@ export default function RootLayout({
         }}
       >
         <ModalProvider>
-          <body>
-            <div className="flex flex-col min-h-screen h-auto">
-              <main className="">
-                <Nav />
-                {children}
-              </main>
-              <Footer />
-            </div>
-          </body>
+          <EditedBookProvider>
+            <body>
+              <div className="flex flex-col min-h-screen h-auto">
+                <main className="">
+                  <Nav />
+                  {children}
+                </main>
+                <Footer />
+              </div>
+            </body>
+          </EditedBookProvider>
         </ModalProvider>
       </Auth0Provider>
     </html>

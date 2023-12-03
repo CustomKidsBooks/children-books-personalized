@@ -2,7 +2,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import { Button } from "./ui/Button";
 import useGetBookPages from "./hooks/useGetBookPages";
 import { storage } from "../services/firebase";
@@ -13,84 +13,173 @@ import {
   deleteObject,
 } from "firebase/storage";
 import { useRouter } from "next/navigation";
+import axios from "axios";
+import { axiosInstance } from "@services/api-client";
+import { useEditedBookContext } from "./context/EditedBookContext";
 
 interface BookValues {
   id: number;
+  isAuthenticated: boolean;
 }
 
-const Book = ({ id }: BookValues) => {
+const Book = ({ id, isAuthenticated }: BookValues) => {
+  const [currentPage, setCurrentPage] = useState<number>(0);
+
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [editImage, setEditImage] = useState<boolean>(false);
+  const [editParagraph, setEditParagraph] = useState<boolean>(false);
+  const [isEdited, setIsEdited] = useState<boolean>(false);
+  const [isCleanup, setIsCleanup] = useState<boolean>(false);
+  const [editedImages, setEditedImages] = useState<string[]>([]);
+
+  const [isGenerating, setIsGenerating] = useState<boolean>(false);
+  const [isNotGenerated, setIsNotGenerated] = useState<boolean>(false);
+
+  let { isLoading, isError, bookContent, setEditBookContent, editBookContent } =
+    useGetBookPages(id);
+
+  const { updateEditedImages, updateEditedBookContent } =
+    useEditedBookContext();
   const router = useRouter();
-  let {
-    isLoading,
-    isError,
-    pageNumber,
-    pageImage,
-    pageParagraph,
-    displayNextPage,
-    displayPreviousPage,
-    message,
-    previewImage,
-    setPreviewImage,
-    editParagraph,
-    setEditParagraph,
-    editImage,
-    setEditImage,
-    updateBookPages,
-  } = useGetBookPages(id);
+  useEffect(() => {
+    if (isCleanup) {
+      setEditedImages([]);
+    }
+    window.addEventListener("beforeunload", cleanup);
+    return () => {
+      window.removeEventListener("beforeunload", cleanup);
+    };
+  }, [isCleanup]);
+
+  const cleanup = (event: Event) => {
+    setIsCleanup(true);
+  };
+  const deleteImagesFromFirebase = async () => {
+    for (const image of editedImages) {
+      const imageNameToDelete = image.split("2F")[2].split("?")[0];
+      const desertRef = ref(storage, `ChildrenBook/Image/${imageNameToDelete}`);
+      await deleteObject(desertRef);
+    }
+    setEditedImages([]);
+  };
+
+  const reset = async () => {
+    setCurrentPage(0);
+    setEditBookContent(bookContent);
+    setIsEdited(false);
+    deleteImagesFromFirebase();
+  };
+
   const paragraphRef = useRef<HTMLTextAreaElement>(null);
+
+  const totalPages = editBookContent.length;
+  let pageId = editBookContent[currentPage]?.id;
+  let pageParagraph = editBookContent[currentPage]?.paragraph;
+  let pageImage = editBookContent[currentPage]?.image;
+  let pageNumber = currentPage * 2 + 1;
+
+  const displayPreviousPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage((prevState) => prevState - 1);
+    }
+  };
+
+  const displayNextPage = () => {
+    if (currentPage < totalPages - 1) {
+      setCurrentPage((preState) => preState + 1);
+    }
+  };
+
+  const uploadImage = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles = event.target.files as FileList;
+    let imageName = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+
+    const storageRef = ref(storage, `ChildrenBook/Image/${imageName}`);
+    const snapshot = await uploadBytes(storageRef, selectedFiles[0]);
+    const uploadedImageurl = await getDownloadURL(storageRef);
+    setPreviewImage(uploadedImageurl);
+    setEditedImages((prev) => [...prev, uploadedImageurl]);
+  };
+
+  const handleGenerateImage = async () => {
+    setIsGenerating(true);
+    setIsNotGenerated(false);
+    try {
+      const response = await axiosInstance.post("/api/generateImage", {
+        imageDesc: pageParagraph,
+      });
+      setPreviewImage(response.data.newImageUrl);
+      setEditedImages((prev) => [...prev, response.data.newImageUrl!]);
+    } catch (error) {
+      setIsNotGenerated(true);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const handleUpdateImage = () => {
+    if (previewImage) {
+      pageImage = previewImage;
+      const updatedBook = editBookContent.map((page) => {
+        if (page.id === pageId) {
+          return {
+            ...page,
+            image: previewImage,
+          };
+        } else {
+          return page;
+        }
+      });
+      setEditBookContent(updatedBook);
+    }
+    setPreviewImage(null);
+  };
+
+  const handleUpdateParagraph = () => {
+    if (paragraphRef.current?.value !== undefined) {
+      pageParagraph = paragraphRef.current?.value;
+      const updatedBook = editBookContent.map((page) => {
+        if (page.id === pageId) {
+          return {
+            ...page,
+            paragraph: paragraphRef.current?.value,
+          };
+        } else {
+          return page;
+        }
+      });
+      setEditBookContent(updatedBook);
+    }
+  };
+
+  const handleDownload = async () => {
+    updateEditedImages(editedImages);
+    updateEditedBookContent(editBookContent);
+    router.push(`/download-editedbook/${id}`);
+  };
+
+  const updateCreatedBook = async () => {
+    try {
+      const response = await axios.put(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/books/${id}/pages`,
+        {
+          pages: editBookContent,
+        }
+      );
+      setEditedImages([]);
+      alert(response.data.message);
+    } catch (error) {
+      alert("Error : Try Again");
+    }
+  };
 
   if (isLoading) {
     return <p>Loading...</p>;
   }
 
   if (isError) {
-    return <div>{message}</div>;
+    return <div>Error</div>;
   }
-
-  const uploadImage = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFiles = event.target.files as FileList;
-    let imageName = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
-
-    const storageRef = ref(storage, `ChildrenBook/PagesImage/${imageName}`);
-    const snapshot = await uploadBytes(storageRef, selectedFiles[0]);
-    const uploadedImageurl = await getDownloadURL(storageRef);
-    setPreviewImage((prevState) => uploadedImageurl);
-  };
-
-  const updatePageInDB = async () => {
-    if (editImage) {
-      const deleteImageName = pageImage.split("2F")[2].split("?")[0];
-      const desertRef = ref(
-        storage,
-        `ChildrenBook/PagesImage/${deleteImageName}`
-      );
-      try {
-        await deleteObject(desertRef);
-      } catch (error) {}
-    }
-    if (editParagraph !== null || editImage) {
-      await updateBookPages(paragraphRef.current?.value, previewImage);
-    }
-
-    router.push(`/download/${id}`);
-  };
-
-  const resetData = async () => {
-    if (previewImage) {
-      const deleteImageName = previewImage?.split("2F")[2].split("?")[0];
-      const desertRef = ref(
-        storage,
-        `ChildrenBook/PagesImage/${deleteImageName}`
-      );
-      try {
-        await deleteObject(desertRef);
-      } catch (error) {}
-    }
-    setEditParagraph(null);
-    setEditImage(false);
-    setPreviewImage(null);
-  };
-
   return (
     <section className="my-10 py-10">
       <div className="flex justify-around items-center">
@@ -98,7 +187,9 @@ const Book = ({ id }: BookValues) => {
           <Button
             onClick={displayPreviousPage}
             className="shadow-none disabled:opacity-50"
-            disabled={editImage || editParagraph ? true : false}
+            disabled={
+              editImage || editParagraph || currentPage === 0 ? true : false
+            }
           >
             <Image
               src="/assets/backward-arrow.svg"
@@ -127,25 +218,45 @@ const Book = ({ id }: BookValues) => {
                   />
                 </div>
               ) : editImage ? (
-                <div className="h-full w-full flex items-center space-x-6 justify-center">
-                  <label className="block">
-                    <input
-                      type="file"
-                      className="block w-full text-sm text-slate-500
+                <div className="h-full w-full flex flex-col py-12 sm:py-0 items-center gap-12 justify-center">
+                  <div className="">
+                    <label className="block">
+                      <input
+                        type="file"
+                        className="block w-full text-sm text-slate-500
                     file:mr-4 file:py-2 file:px-4
                     file:rounded-full file:border-0
                     file:text-sm file:font-semibold
                     file:bg-violet-50 file:text-pink
                     hover:file:bg-violet-100
                   "
-                      name="image"
-                      onChange={uploadImage}
-                    />
-                  </label>
+                        name="image"
+                        onChange={uploadImage}
+                      />
+                    </label>
+                  </div>
+
+                  <div className="">
+                    <button
+                      onClick={handleGenerateImage}
+                      className="block mr-4 py-2 px-4 rounded-full border-0 text-sm font-semibold bg-violet-50 text-pink hover:bg-violet-100"
+                    >
+                      Generate New Image
+                    </button>
+
+                    {isGenerating && (
+                      <p className="mt-5 text-center">Generating....</p>
+                    )}
+                    {isNotGenerated && (
+                      <p className="mt-5 mx-3 text-red-500">
+                        Something Went wrong! Please Try Again
+                      </p>
+                    )}
+                  </div>
                 </div>
               ) : (
                 <Image
-                  src={`${pageImage}`}
+                  src={`${pageImage ? pageImage : ""}`}
                   alt="book_cover"
                   height={200}
                   width={200}
@@ -169,7 +280,6 @@ const Book = ({ id }: BookValues) => {
                 {pageParagraph}
               </p>
             )}
-
             <div className="fixed bottom-3 right-5">{pageNumber + 1}</div>
           </div>
         </div>
@@ -177,7 +287,11 @@ const Book = ({ id }: BookValues) => {
           <Button
             onClick={displayNextPage}
             className="shadow-none disabled:opacity-50"
-            disabled={editImage || editParagraph ? true : false}
+            disabled={
+              editImage || editParagraph || currentPage === totalPages - 1
+                ? true
+                : false
+            }
           >
             <Image
               src="/assets/forward-arrow.svg"
@@ -190,41 +304,130 @@ const Book = ({ id }: BookValues) => {
         </div>
       </div>
       <div className="w-4/6 mx-auto my-10 py-10">
-        <div className="flex flex-col md:flex-row md:space-x-10 md:justify-center font-bold text-2xl">
-          <Button
-            className="sm:w-3/4 text-center px-2 py-4"
-            intent="teal"
-            size="medium"
-            onClick={() => setEditParagraph(true)}
-          >
-            Edit Paragraph
-          </Button>
-          <Button
-            className="sm:w-3/4 text-center mt-3 md:mt-0 px-2 py-4"
-            intent="teal"
-            size="medium"
-            onClick={() => setEditImage(true)}
-          >
-            Edit Image
-          </Button>
-        </div>
-        <div className="mt-7 md:mt-5 flex flex-col md:flex-row md:space-x-10 md:justify-center">
-          <Button
-            className="sm:w-3/4 md:w-2/4 text-center capitalize disabled:opacity-80"
-            intent="pink"
-            size="medium"
-            onClick={updatePageInDB}
-            disabled={editImage || editParagraph ? false : true}
-          >
-            Done
-          </Button>
-        </div>
+        {isEdited ? (
+          <div className="flex flex-col md:flex-row md:space-x-10 md:justify-center font-bold text-2xl">
+            <div className="sm:w-3/4 text-center mt-3 md:mt-0 px-2 py-4">
+              <Button
+                className="w-full"
+                intent="teal"
+                size="medium"
+                onClick={() => setIsEdited(false)}
+              >
+                Continue Editing
+              </Button>
+            </div>
+            <div className="sm:w-3/4 text-center px-2 py-4">
+              <Button
+                className="w-full"
+                intent="teal"
+                size="medium"
+                onClick={handleDownload}
+              >
+                Download
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <div className="flex flex-col md:flex-row md:space-x-10 md:justify-center font-bold text-2xl">
+            <div className="sm:w-3/4 text-center mt-3 md:mt-0 px-2 py-4">
+              {editImage ? (
+                <Button
+                  className="w-full"
+                  intent="teal"
+                  size="medium"
+                  onClick={() => {
+                    setEditImage(false);
+                    handleUpdateImage();
+                  }}
+                >
+                  update Image
+                </Button>
+              ) : (
+                <Button
+                  className="w-full"
+                  intent="teal"
+                  size="medium"
+                  onClick={() => setEditImage(true)}
+                >
+                  Edit Image
+                </Button>
+              )}
+            </div>
+
+            <div className="sm:w-3/4 text-center px-2 py-4">
+              {editParagraph ? (
+                <Button
+                  className="w-full"
+                  intent="teal"
+                  size="medium"
+                  onClick={() => {
+                    setEditParagraph(false);
+                    handleUpdateParagraph();
+                  }}
+                >
+                  Update Paragraph
+                </Button>
+              ) : (
+                <Button
+                  className="w-full"
+                  intent="teal"
+                  size="medium"
+                  onClick={() => setEditParagraph(true)}
+                >
+                  Edit Paragraph
+                </Button>
+              )}
+            </div>
+          </div>
+        )}
+
+        {!isEdited ? (
+          <div className="mt-7 md:mt-5 flex flex-col md:flex-row md:space-x-10 md:justify-center">
+            <Button
+              className="sm:w-3/4 md:w-2/4 text-center capitalize disabled:opacity-50"
+              intent="pink"
+              size="medium"
+              onClick={() => setIsEdited(true)}
+              disabled={editImage || editParagraph ? true : false}
+            >
+              Done
+            </Button>
+          </div>
+        ) : (
+          ""
+        )}
+        {/* ) : (
+          <div className="mt-7 md:mt-5 flex flex-col md:flex-row md:space-x-10 md:justify-center">
+            <Button
+              className="sm:w-3/4 md:w-2/4 text-center capitalize disabled:opacity-50"
+              intent="pink"
+              size="medium"
+              onClick={() => setIsEdited(false)}
+            >
+              Edit Again
+            </Button>
+          </div>
+        )} */}
+        {isAuthenticated && isEdited ? (
+          <div className="mt-7 md:mt-5 flex flex-col md:flex-row md:space-x-10 md:justify-center">
+            <Button
+              className="sm:w-3/4 md:w-2/4 text-center capitalize disabled:opacity-50"
+              intent="pink"
+              size="medium"
+              onClick={updateCreatedBook}
+            >
+              Update Created Book
+            </Button>
+          </div>
+        ) : (
+          ""
+        )}
         <div className="mt-5 sm:w-3/4 md:w-full text-center font-quicksand">
           <Button
-            onClick={resetData}
+            onClick={reset}
             intent="secondary"
-            className="bg-transparent underline underline-offset-3 disabled:opacity-80 shadow-none hover:bg-transparent hover:text-pink"
-            disabled={editImage || editParagraph ? false : true}
+            className="bg-transparent underline underline-offset-3 disabled:opacity-50 shadow-none hover:bg-transparent hover:text-pink"
+            disabled={editImage || editParagraph ? true : false}
           >
             Undo All Changes!
           </Button>
