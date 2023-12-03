@@ -8,6 +8,7 @@ export interface BookValues {
   image?: string;
   tag?: string;
   privacy?: string;
+  userID?: string;
 }
 
 export interface CreateStoryFormValues {

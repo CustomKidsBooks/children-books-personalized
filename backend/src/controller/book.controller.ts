@@ -14,7 +14,11 @@ import {
 import { generateBookText, generateImage } from "../service/openai.service";
 import nodemailer from "nodemailer";
 import { generatePdfDoc, generateWordDoc } from "../utils";
-
+import {
+  fetchStoryDataForWord,
+  fetchStoryDataForPDF,
+} from "../service/book.service";
+import { deleteImage } from "../service/image.service";
 type PageData = {
   pageNumber: number;
   paragraphs: string[];
@@ -25,7 +29,7 @@ export const BookController = {
     const { title, ageGroup, subject, characters, lesson, page, privacy } =
       req.body;
     let newBook: Book | undefined;
-    
+
     try {
       const bookRepository = AppDataSource.getRepository(Book);
       let imageDesc = `for a story book "${title}" for kids age ${ageGroup} and avoid choosing images containing text`;
@@ -206,6 +210,37 @@ export const BookController = {
     }
   },
 
+  updateBookPages: async (req: Request, res: Response) => {
+    const pages = req.body.pages;
+    try {
+      const pageRepository = AppDataSource.getRepository(Page);
+
+      for (const page of pages) {
+        const currentPage = await pageRepository.findOne({
+          where: { id: page.id },
+        });
+        if (!currentPage) {
+          return res
+            .status(404)
+            .json({ success: 0, message: "Page not found" });
+        }
+        await deleteImage(currentPage.image, "ChildrenBook/PagesImage");
+        currentPage!.image = page.image;
+        currentPage!.paragraph = page.paragraph;
+        await pageRepository.save(currentPage);
+      }
+
+      return res
+        .status(200)
+        .json({ success: 1, message: "Book updated successfully" });
+    } catch (error) {
+      log.error("Error updating book:", error);
+      return res.status(500).json({
+        success: 0,
+        message: "An error occurred while updating the book",
+      });
+    }
+  },
   updateBookHandler: async (req: Request, res: Response) => {
     const id = parseInt(req.params.id);
     const { title, subject, lesson, privacy } = req.body;
@@ -289,6 +324,43 @@ export const BookController = {
     }
   },
 
+  deletePageHandler: async (req: Request, res: Response) => {
+    const pageId = parseInt(req.params.pageId);
+
+    try {
+      const pageRepository = AppDataSource.getRepository(Page);
+      const page = await pageRepository.findOne({ where: { id: pageId } });
+      if (!page) {
+        return res.status(404).json({ success: 0, message: "Page not found" });
+      }
+      if (page.image) {
+        const imageName = path.basename(page.image);
+        const imagePath = path.join(
+          __dirname,
+          `../../images/page/${imageName}`
+        );
+
+        try {
+          fs.unlinkSync(imagePath);
+        } catch (error) {
+          log.error("Error deleting page image file:", error);
+        }
+      }
+
+      await pageRepository.remove(page);
+      return res.status(200).json({
+        success: 1,
+        message: "Page deleted successfully",
+      });
+    } catch (error) {
+      log.error("Error deleting page:", error);
+      return res.status(500).json({
+        success: 0,
+        message: "An error occurred while deleting the page",
+      });
+    }
+  },
+
   deleteBookHandler: async (req: Request, res: Response) => {
     const id = parseInt(req.params.id);
 
@@ -352,14 +424,45 @@ export const BookController = {
       });
     }
   },
+
+  generateImageForPage: async (req: Request, res: Response) => {
+    try {
+      const { imageDesc } = req.body;
+      const imageUrl = await generateImage(imageDesc);
+      let uploadedImageUrl;
+      if (imageUrl === undefined) {
+        throw new Error();
+      }
+      if (imageUrl) {
+        uploadedImageUrl = await downloadCoverImageLocally(imageUrl);
+      }
+      return res.status(200).json({
+        success: 1,
+        newImageUrl: uploadedImageUrl,
+        message: "Book and associated pages deleted successfully",
+      });
+    } catch (error) {
+      return res.status(500).json({
+        success: 0,
+        message:
+          "An error occurred while deleting the book and associated pages",
+      });
+    }
+  },
+
   downloadStoryAsWord: async (req: Request, res: Response) => {
     const bookId = parseInt(req.params.bookId);
+    const { editedBook } = req.body;
     try {
-      const { title, buffer } = await generateWordDoc(bookId);
+      let { bookTitle, coverImage, pages } = await fetchStoryDataForPDF(bookId);
+      if (editedBook.length > 0) {
+        pages = editedBook;
+      }
+      const { buffer } = await generateWordDoc(bookTitle, coverImage!, pages);
       res.setHeader("Content-Type", "application/msword");
       res.setHeader(
         "Content-Disposition",
-        `attachment; filename=${title}.docx`
+        `attachment; filename=${bookTitle}.docx`
       );
       res.send(buffer);
     } catch (error) {
@@ -372,9 +475,24 @@ export const BookController = {
 
   downloadStoryAsPDF: async (req: Request, res: Response) => {
     const bookId = parseInt(req.params.bookId);
+    const { editedBook } = req.body;
+
     try {
-      const { title, doc } = await generatePdfDoc(bookId);
-      res.setHeader("Content-Disposition", `attachment; filename=${title}.pdf`);
+      let { bookTitle, coverImage, pages } = await fetchStoryDataForPDF(bookId);
+
+      if (editedBook.length > 0) {
+        pages = editedBook;
+      }
+
+      if (!bookTitle) {
+        throw new Error("Story not found");
+      }
+      const { doc } = await generatePdfDoc(bookTitle, coverImage, pages);
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader(
+        "Content-Disposition",
+        `attachment; filename=${bookTitle}.pdf`
+      );
       doc.pipe(res);
     } catch (error) {
       console.error("Error downloading PDF:", error);
@@ -384,50 +502,23 @@ export const BookController = {
     }
   },
 
-  deletePageHandler: async (req: Request, res: Response) => {
-    const pageId = parseInt(req.params.pageId);
-
-    try {
-      const pageRepository = AppDataSource.getRepository(Page);
-      const page = await pageRepository.findOne({ where: { id: pageId } });
-      if (!page) {
-        return res.status(404).json({ success: 0, message: "Page not found" });
-      }
-      if (page.image) {
-        const imageName = path.basename(page.image);
-        const imagePath = path.join(
-          __dirname,
-          `../../images/page/${imageName}`
-        );
-
-        try {
-          fs.unlinkSync(imagePath);
-        } catch (error) {
-          log.error("Error deleting page image file:", error);
-        }
-      }
-
-      await pageRepository.remove(page);
-      return res.status(200).json({
-        success: 1,
-        message: "Page deleted successfully",
-      });
-    } catch (error) {
-      log.error("Error deleting page:", error);
-      return res.status(500).json({
-        success: 0,
-        message: "An error occurred while deleting the page",
-      });
-    }
-  },
   sendEmail: async (req: Request, res: Response, emailType: string) => {
     try {
-      const { bookId, recipientEmail } = req.body;
-      let title, content, subject;
+      const { bookId, recipientEmail, editedBook } = req.body;
 
+      let title, content, subject;
+      let { bookTitle, coverImage, pages } = await fetchStoryDataForPDF(bookId);
+
+      if (editedBook.length > 0) {
+        pages = editedBook;
+      }
+
+      if (!bookTitle) {
+        throw new Error("Story not found");
+      }
       if (emailType === "PDF") {
-        const { title: pdfTitle, doc } = await generatePdfDoc(bookId);
-        title = pdfTitle;
+        const { doc } = await generatePdfDoc(bookTitle, coverImage, pages);
+        title = bookTitle;
         const pdfBuffer = await new Promise((resolve) => {
           let buffers: Buffer[] = [];
           doc.on("data", buffers.push.bind(buffers));
@@ -438,8 +529,8 @@ export const BookController = {
         content = pdfBuffer as Buffer;
         subject = "Your Book's PDF Document is Ready for Download";
       } else if (emailType === "Word") {
-        const { title: wordTitle, buffer } = await generateWordDoc(bookId);
-        title = wordTitle;
+        const { buffer } = await generateWordDoc(bookTitle, coverImage!, pages);
+        title = bookTitle;
         content = buffer;
         subject = "Your Book's Word Document is Ready for Download";
       }

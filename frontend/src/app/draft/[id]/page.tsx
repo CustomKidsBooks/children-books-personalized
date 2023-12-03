@@ -1,17 +1,27 @@
 "use client";
 
+import { useAuth0 } from "@auth0/auth0-react";
 import Book from "@components/Book";
 import useGetBook from "@components/hooks/useGetBook";
 import Image from "next/image";
 import Link from "next/link";
+import { useState, useEffect } from "react";
 
 interface DraftValues {
   id: number;
 }
 
 const Draft = ({ params }: { params: DraftValues }) => {
+  const { user } = useAuth0();
   const id = Number(params.id);
   const { isLoading, isError, bookData } = useGetBook(id);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (user?.sub && user?.sub === bookData?.userID) {
+      setIsAuthenticated(true);
+    }
+  });
 
   if (isLoading) {
     return <p>Loading...</p>;
@@ -56,7 +66,7 @@ const Draft = ({ params }: { params: DraftValues }) => {
         </div>
 
         <div>
-          <Book id={id} />
+          <Book id={id} isAuthenticated={isAuthenticated} />
         </div>
       </div>
     </section>

@@ -68,10 +68,10 @@ export async function fetchStoryDataForPDF(id: number) {
     if (!book) {
       throw new Error("Book not found");
     }
-    const { title, image } = book;
-
+    const bookTitle = book?.title;
+    const coverImage = book?.image;
     const pages = book.pages || [];
-    return { title, pages, image };
+    return { bookTitle, coverImage, pages };
   } catch (error) {
     console.error("Error fetching story data:", error);
     throw error;
@@ -88,11 +88,12 @@ export async function fetchStoryDataForWord(id: number) {
     if (!book) {
       throw new Error("Book not found");
     }
-    const { title, image } = book;
-    if (image !== null) {
+    const bookTitle = book.title;
+    const coverImage = book.image;
+    if (coverImage !== null) {
       const paragraphs = book.pages.map((page) => page.paragraph);
       const images = book.pages.map((page) => page.image);
-      return { title, paragraphs, image, images };
+      return { bookTitle, coverImage, paragraphs, images };
     } else {
       console.error("No image provided");
     }

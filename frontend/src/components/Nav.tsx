@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuth0 } from '@auth0/auth0-react';
+import { useAuth0 } from "@auth0/auth0-react";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
@@ -42,7 +42,7 @@ const Nav = () => {
     return (
       <>
         {user ? (
-          <div className="flex items-center">
+          <div className="flex items-center cursor-pointer">
             <div className="relative">
               <button onClick={handleImageClick}>
                 <Image
@@ -50,10 +50,11 @@ const Nav = () => {
                   alt="avatar"
                   width={48}
                   height={48}
-                  className={`object-contain hover:fill-pink-700 ${pathname === "/user-profile"
+                  className={`object-contain hover:fill-pink-700 ${
+                    pathname === "/user-profile"
                       ? "fill-current text-pink"
                       : "fill-black"
-                    }`}
+                  }`}
                 />
               </button>
               {isDropdownVisible && (
@@ -81,9 +82,12 @@ const Nav = () => {
               )}
             </div>
             <a
-              onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}
-              className={` lg:inline-block lg:mt-0 text-black hover:text-pink mx-4 ${pathname === "/logout" ? "underline text-pink" : ""
-                }`}
+              onClick={() =>
+                logout({ logoutParams: { returnTo: window.location.origin } })
+              }
+              className={` lg:inline-block lg:mt-0 text-black hover:text-pink mx-4 ${
+                pathname === "/logout" ? "underline text-pink" : ""
+              }`}
             >
               Logout
             </a>
@@ -101,7 +105,7 @@ const Nav = () => {
         ) : (
           <a
             onClick={() => loginWithRedirect()}
-            className="inline-block px-4 py-2 leading-none border rounded border-white hover:border-transparent text-white bg-pink mt-4 lg:mt-0"
+            className="cursor-pointer inline-block px-4 py-2 leading-none border rounded border-white hover:border-transparent text-white bg-pink mt-4 lg:mt-0"
           >
             Login
           </a>
@@ -134,8 +138,9 @@ const Nav = () => {
                   <a
                     href="/"
                     onClick={() => setActiveLink("home")}
-                    className={`block lg:inline-block lg:mt-0 text-black hover:text-pink mx-4 ${pathname === "/" ? "underline text-pink" : ""
-                      }`}
+                    className={`block lg:inline-block lg:mt-0 text-black hover:text-pink mx-4 ${
+                      pathname === "/" ? "underline text-pink" : ""
+                    }`}
                   >
                     Home
                   </a>
@@ -151,8 +156,9 @@ const Nav = () => {
                   <a
                     href="/user-library"
                     onClick={() => setActiveLink("Library")}
-                    className={`block lg:inline-block lg:mt-0 text-black hover:text-pink mx-4 ${pathname === "/user-library" ? "underline text-pink" : ""
-                      }`}
+                    className={`block lg:inline-block lg:mt-0 text-black hover:text-pink mx-4 ${
+                      pathname === "/user-library" ? "underline text-pink" : ""
+                    }`}
                   >
                     Library
                   </a>
@@ -179,24 +185,27 @@ const Nav = () => {
               <a
                 href="/"
                 onClick={() => setActiveLink("home")}
-                className={`block mt-4 lg:inline-block lg:mt-0 text-black hover:text-pink mx-4 ${pathname === "/" ? "underline text-pink" : ""
-                  }`}
+                className={`block mt-4 lg:inline-block lg:mt-0 text-black hover:text-pink mx-4 ${
+                  pathname === "/" ? "underline text-pink" : ""
+                }`}
               >
                 Home
               </a>
               <a
                 href="/create-story"
                 onClick={() => setActiveLink("About us")}
-                className={`block mt-4 lg:inline-block lg:mt-0 text-black hover:text-pink mx-4 ${pathname === "/create-story" ? "underline text-pink" : ""
-                  }`}
+                className={`block mt-4 lg:inline-block lg:mt-0 text-black hover:text-pink mx-4 ${
+                  pathname === "/create-story" ? "underline text-pink" : ""
+                }`}
               >
                 About us
               </a>
               <a
                 href="/user-library"
                 onClick={() => setActiveLink("Library")}
-                className={`block mt-4 lg:inline-block lg:mt-0 text-black hover:text-pink mx-4 ${pathname === "/user-library" ? "underline text-pink" : ""
-                  }`}
+                className={`block mt-4 lg:inline-block lg:mt-0 text-black hover:text-pink mx-4 ${
+                  pathname === "/user-library" ? "underline text-pink" : ""
+                }`}
               >
                 Library
               </a>

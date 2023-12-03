@@ -13,9 +13,15 @@ export default function (app: Express) {
 
   app.post("/api/create_user", UserController.createUser);
 
+  app.delete("/api/users/:userID", authMiddleware, UserController.deleteUser);
+
   app.get("/api/books/:bookId/pages", BookController.fetchPagesForBook);
 
-  app.post("/api/create_book", validationMW(createBookValSchema),  BookController.createBook);
+  app.post(
+    "/api/create_book",
+    validationMW(createBookValSchema),
+    BookController.createBook
+  );
 
   app.post(
     "/api/create_book/:userID",
@@ -23,6 +29,8 @@ export default function (app: Express) {
     validationMW(createBookValSchema),
     BookController.createBook
   );
+  app.post("/api/generateImage", BookController.generateImageForPage);
+    
   app.get("/api/books", validFetchBookMW, BookController.fetchBooks);
   
   app.get("/api/books/:userID", authMiddleware, BookController.fetchUserBooks);
@@ -31,15 +39,20 @@ export default function (app: Express) {
 
   app.put("/api/books/:id", BookController.updateBookHandler);
 
+  app.put("/api/books/:id/pages", BookController.updateBookPages);
+
   app.put("/api/pages/:pageId", BookController.updatePageHandler);
 
   app.delete("/api/books/:id", BookController.deleteBookHandler);
 
   app.delete("/api/pages/:pageId", BookController.deletePageHandler);
 
-  app.get("/api/download/story/pdf/:bookId", BookController.downloadStoryAsPDF);
+  app.post(
+    "/api/download/story/pdf/:bookId",
+    BookController.downloadStoryAsPDF
+  );
 
-  app.get(
+  app.post(
     "/api/download/story/word/:bookId",
     BookController.downloadStoryAsWord
   );
