@@ -20,36 +20,32 @@ const useLibraryCard = (
 
   useEffect(() => {
     if (userID) {
-      getAccessTokenSilently({
-        authorizationParams: {
-          audience: `${process.env.NEXT_PUBLIC_AUTH0_AUDIENCE}`,
-        },
-      })
-      .then((token) =>
-        axios.get(url, {
-          headers: { Authorization: `Bearer ${token}` },
+      getAccessTokenSilently()
+        .then((token) =>
+          axios.get(url, {
+            headers: { Authorization: `Bearer ${token}` },
+          })
+        )
+        .then((res) => {
+          setBookData(res.data);
         })
-      )
-      .then((res) => {
-        setBookData(res.data);
-      })
-      .catch((err) => {
-        setIsError(true);
-      })
-      .finally(() => setIsLoading(false));
+        .catch((err) => {
+          setIsError(true);
+        })
+        .finally(() => setIsLoading(false));
     } else {
-      axios.get(url)
-      .then((res) => {
-        setBookData(res.data.books);
-        setTotalPages(res.data.totalPages);
-      })
-      .catch((err) => {
-        setIsError(true);
-      })
-      .finally(() => setIsLoading(false));
-  }
+      axios
+        .get(url)
+        .then((res) => {
+          setBookData(res.data.books);
+          setTotalPages(res.data.totalPages);
+        })
+        .catch((err) => {
+          setIsError(true);
+        })
+        .finally(() => setIsLoading(false));
+    }
   }, [currentPage, search]);
-  
 
   return {
     isLoading,
