@@ -6,7 +6,7 @@ export default {
   },
   express: {
     port: process.env.PORT ?? 5001,
-    host: "localhost",
+    host: "0.0.0.0",
   },
   database: {
     host: process.env.DB_HOST,
