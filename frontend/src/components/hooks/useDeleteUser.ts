@@ -10,7 +10,6 @@ const useDeleteUser = async (userId: string | undefined) => {
     axios
       .get(`https://login.auth0.com/api/v2/users/6561862b17b4bdb50112ba1b`)
       .then((res) => {
-        console.log(res.data);
         setIsDeleted(true);
       })
       .catch((err) => {
