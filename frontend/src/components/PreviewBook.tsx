@@ -8,7 +8,7 @@ import SendBook from "./SendBook";
 import Tag from "./Tag";
 import useGetBook from "./hooks/useGetBook";
 import PreviewBookSkeleton from "./skeleton/PreviewBook.skeleton";
-
+import { LinkButton } from "./ui/LinkButton";
 interface PreviewBookValues {
   id: number;
 }
@@ -53,6 +53,20 @@ const PreviewBook = ({ id }: PreviewBookValues) => {
         <div className="mt-10 lg:mt-0 lg:w-1/4 lg:mx-auto gap-5 flex flex-col lg:justify-around">
           <DownloadBook bookId={id} />
           <SendBook bookId={id} />
+          <div className="items-center">
+            <h1 className="font-bold text text-2xl lg:text-3xl">
+              Get Printed Book
+            </h1>
+            <div className="mt-3 py-4">
+              <LinkButton
+                href={`/order-printed-book/${id}`}
+                intent="teal"
+                className="text font-bold"
+              >
+                Order Printed Book
+              </LinkButton>
+            </div>
+          </div>
         </div>
       </div>
     </section>

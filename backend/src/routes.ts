@@ -3,15 +3,19 @@ import { BookController } from "./controller/book.controller";
 import { UserController } from "./controller/user.controller";
 import { upload } from "./middleware/uploadFile";
 import validationMW from "./middleware/validationMiddleware";
-import {createBookValSchema} from "./validations/createBookVal";
-import {fetchBooksVal} from "./validations/fetchBooksVal";
+import { createBookValSchema } from "./validations/createBookVal";
+import { fetchBooksVal } from "./validations/fetchBooksVal";
 import genericValidationMW from "./middleware/genericValidation";
 
 export default function (app: Express) {
   const { authMiddleware } = require("./auth/authCheck");
-  const validFetchBookMW = genericValidationMW(fetchBooksVal, 'query');
+  const validFetchBookMW = genericValidationMW(fetchBooksVal, "query");
 
   app.post("/api/create_user", UserController.createUser);
+  app.post(
+    "/api/create-checkout-session",
+    UserController.createCheckoutSession
+  );
 
   app.delete("/api/users/:userID", authMiddleware, UserController.deleteUser);
 
@@ -30,9 +34,9 @@ export default function (app: Express) {
     BookController.createBook
   );
   app.post("/api/generateImage", BookController.generateImageForPage);
-    
+
   app.get("/api/books", validFetchBookMW, BookController.fetchBooks);
-  
+
   app.get("/api/books/:userID", authMiddleware, BookController.fetchUserBooks);
 
   app.get("/api/book/:id", BookController.fetchCoverAndPagesById);
