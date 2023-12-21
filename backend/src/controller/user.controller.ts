@@ -6,12 +6,11 @@ import { Book } from "../entities/book";
 import { Page } from "../entities/page";
 import { deleteImageFromFirebase } from "../service/image.service";
 import log from "../logger";
-import axios from "axios";
 import {
   deleteUserFromOauth,
   getApiAccessToken,
 } from "../service/auth.service";
-const stripe = require("stripe")(process.env.STRIPE_API_KEY);
+
 export const UserController = {
   createUser: async (req: Request, res: Response) => {
     const body = req.body;
@@ -69,38 +68,6 @@ export const UserController = {
 
       return res.status(200).json({
         success: 1,
-      });
-    } catch (error) {
-      log.error(error);
-      return res.status(500).json({
-        success: 0,
-        message: "Database connection error",
-      });
-    }
-  },
-  createCheckoutSession: async (req: Request, res: Response) => {
-    try {
-      const session = await stripe.checkout.sessions.create({
-        payment_method_types: ["card"],
-        mode: "payment",
-        line_items: [
-          {
-            price_data: {
-              currency: "usd",
-              product_data: {
-                name: req.body.bookData.title,
-              },
-              unit_amount: 10000,
-            },
-            quantity: 1,
-          },
-        ],
-        success_url: `${process.env.FRONTEND_URL}/success-payment`,
-        cancel_url: `${process.env.FRONTEND_URL}/cancel-payment`,
-      });
-
-      return res.status(200).json({
-        url: session,
       });
     } catch (error) {
       log.error(error);

@@ -5,6 +5,7 @@ import { Button } from "../../../components/ui/Button";
 import useGetBook from "@components/hooks/useGetBook";
 import { getIn, useFormik } from "formik";
 import ReusableInput from "../../../components/ReusableInput";
+import { useAuth0 } from "@auth0/auth0-react";
 
 interface OrderBookValues {
   id: number;
@@ -22,6 +23,8 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
   const id = Number(params.id);
 
   const { isLoading, isError, bookData } = useGetBook(id);
+  const { user, getAccessTokenSilently } = useAuth0();
+  console.log(bookData);
 
   const {
     values,
@@ -40,10 +43,15 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
       postalCode: "",
     },
     onSubmit: async (values) => {
+      const token = await getAccessTokenSilently();
+      const amount = 1;
       try {
         const response = await axiosInstance.post(
-          "/api/create-checkout-session",
-          { bookData, values }
+          "/api/orders/create-checkout-session",
+          { bookID: id, userID: user?.sub, values, amount, bookData },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
         );
         window.location = response.data.url.url;
       } catch (error) {

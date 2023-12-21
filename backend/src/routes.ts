@@ -6,16 +6,14 @@ import validationMW from "./middleware/validationMiddleware";
 import { createBookValSchema } from "./validations/createBookVal";
 import { fetchBooksVal } from "./validations/fetchBooksVal";
 import genericValidationMW from "./middleware/genericValidation";
+import { OrderController } from "./controller/order.controller";
+import express from "express";
 
 export default function (app: Express) {
   const { authMiddleware } = require("./auth/authCheck");
   const validFetchBookMW = genericValidationMW(fetchBooksVal, "query");
 
   app.post("/api/create_user", UserController.createUser);
-  app.post(
-    "/api/create-checkout-session",
-    UserController.createCheckoutSession
-  );
 
   app.delete("/api/users/:userID", authMiddleware, UserController.deleteUser);
 
@@ -64,4 +62,15 @@ export default function (app: Express) {
   app.post("/api/sendBookAsPdf/:bookId", BookController.sendBookAsPdf);
 
   app.post("/api/sendBookAsWord/:bookId", BookController.sendBookAsWord);
+
+  app.post(
+    "/api/orders/create-checkout-session",
+    authMiddleware,
+    OrderController.createCheckoutSession
+  );
+  app.post(
+    "/api/orders/webhook",
+    express.raw({ type: "application/json" }),
+    OrderController.webHooks
+  );
 }

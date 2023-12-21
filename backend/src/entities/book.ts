@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
 import { Page } from "./page";
+import { Order } from "./order";
 
 @Entity()
 export class Book {
@@ -11,10 +12,10 @@ export class Book {
 
   @Column()
   title!: string;
-    
+
   @Column()
   subject!: string;
-  
+
   @Column()
   ageGroup!: string;
 
@@ -36,6 +37,15 @@ export class Book {
   @Column({ type: "enum", enum: ["public", "private"], default: "public" })
   privacy!: "public" | "private";
 
-  @OneToMany(() => Page, (page) => page.book, { cascade: ["remove"] ,  createForeignKeyConstraints: false})
+  @OneToMany(() => Page, (page) => page.book, {
+    cascade: ["remove"],
+    createForeignKeyConstraints: false,
+  })
   pages!: Page[];
+
+  @OneToMany(() => Order, (order) => order.book, {
+    cascade: ["remove"],
+    createForeignKeyConstraints: false,
+  })
+  orders!: Order[];
 }
