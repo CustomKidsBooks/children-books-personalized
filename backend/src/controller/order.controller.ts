@@ -60,8 +60,6 @@ export const OrderController = {
     }
   },
   webHooks: async (request: Request, response: Response) => {
-    // const sig = request.headers["stripe-signature"];
-
     const payload = request.body;
     const payloadString = JSON.stringify(payload, null, 2);
 
@@ -78,9 +76,6 @@ export const OrderController = {
         header,
         endpointSecret as string
       );
-      // console.log(`Webhook Verified: `, event);
-
-      // event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
     } catch (err) {
       if (err instanceof Error) {
         response.status(400).send(`Webhook Error: ${err.message}`);
@@ -88,7 +83,9 @@ export const OrderController = {
       return;
     }
 
-    // Handle the event
+    let orderID;
+    let userID;
+
     switch (event.type) {
       case "charge.succeeded":
         break;
@@ -97,8 +94,8 @@ export const OrderController = {
       case "payment_intent.created":
         break;
       case "payment_intent.succeeded":
-        const orderID = event.data.object.metadata.oderID;
-        const userID = event.data.object.metadata.userID;
+        orderID = event.data.object.metadata.oderID;
+        userID = event.data.object.metadata.userID;
 
         await AppDataSource.createQueryBuilder()
           .update(Order)
@@ -108,10 +105,15 @@ export const OrderController = {
 
         break;
       default:
-        console.log(`Unhandled event type ${event.type}`);
+        orderID = event.data.object.metadata.oderID;
+        userID = event.data.object.metadata.userID;
+        await AppDataSource.createQueryBuilder()
+          .update(Order)
+          .set({ paymentStatus: "Error" })
+          .where("id = :id", { id: orderID })
+          .execute();
     }
 
-    // Return a 200 response to acknowledge receipt of the event
     response.status(200).send().end();
   },
 };
