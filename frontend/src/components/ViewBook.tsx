@@ -91,7 +91,6 @@ const ViewBook = ({ id }: BookValues) => {
               <p className="m-4 leading-10 text-base md:text-2xl tracking-widest font-semibold">
                 {pageParagraph}
               </p>
-
               <div className="fixed bottom-3 right-5">{pageNumber + 1}</div>
             </div>
           </div>

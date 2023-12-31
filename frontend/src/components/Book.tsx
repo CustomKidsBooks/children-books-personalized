@@ -1,8 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-
 import Image from "next/image";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, SetStateAction, Dispatch } from "react";
 import { Button } from "./ui/Button";
 import useGetBookPages from "./hooks/useGetBookPages";
 import { storage } from "../services/firebase";
@@ -16,15 +15,19 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { axiosInstance } from "@services/api-client";
 import { useEditedBookContext } from "./context/EditedBookContext";
+import { PageColor } from "./PageColor";
 
 interface BookValues {
   id: number;
   isAuthenticated: boolean;
+  currentPage: number;
+  setCurrentPage: Dispatch<SetStateAction<number>>;
 }
 
-const Book = ({ id, isAuthenticated }: BookValues) => {
-  const [currentPage, setCurrentPage] = useState<number>(0);
-
+const Book = ({ id, isAuthenticated, setCurrentPage, currentPage  }: BookValues) => {
+  //const [currentPage, setCurrentPage] = useState<number>(0);
+  const [backgroundColor, setBackgroundColor] = useState<string | null>(null);
+  const [textColor, setTextColor] = useState<string | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [editImage, setEditImage] = useState<boolean>(false);
   const [editParagraph, setEditParagraph] = useState<boolean>(false);
@@ -37,7 +40,10 @@ const Book = ({ id, isAuthenticated }: BookValues) => {
 
   let { isLoading, isError, bookContent, setEditBookContent, editBookContent } =
     useGetBookPages(id);
-
+  useEffect (() => {
+    console.log("editBookContent",editBookContent ,
+    "bookContent", bookContent, "currentPage", currentPage);
+  }, [editBookContent, bookContent, currentPage])
   const { updateEditedImages, updateEditedBookContent } =
     useEditedBookContext();
   const router = useRouter();
@@ -158,6 +164,14 @@ const Book = ({ id, isAuthenticated }: BookValues) => {
     router.push(`/download-editedbook/${id}`);
   };
 
+  
+  const getParagraphStyle = () => {
+    return {
+      color: textColor || 'black',
+      backgroundColor: textColor ? `bg-${textColor}` : '',
+    };
+  };
+
   const updateCreatedBook = async () => {
     try {
       const response = await axios.put(
@@ -235,7 +249,6 @@ const Book = ({ id, isAuthenticated }: BookValues) => {
                       />
                     </label>
                   </div>
-
                   <div className="">
                     <button
                       onClick={handleGenerateImage}
@@ -266,14 +279,17 @@ const Book = ({ id, isAuthenticated }: BookValues) => {
               <p className="absolute bottom-3 left-5 font-bold">{pageNumber}</p>
             </div>
           </div>
-          <div className="md:w-1/4  overflow-auto scrollbar bg-yellow relative flex items-start font-quicksand font-semibold">
+          <div className="md:w-1/4 overflow-auto scrollbar bg-yellow relative flex items-start font-quicksand font-semibold" 
+          style={{ backgroundColor: editBookContent[currentPage].backgroundColor ?? 'yellow'}}>
+          
             {editParagraph ? (
               <textarea
-                className="mx-2 relative z-[10] w-full scrollbar leading-10 text-base md:text-xl tracking-widest box-border h-full bg-yellow-200"
+                className="mx-2 relative z-[10] w-full scrollbar leading-10 text-base md:text-xl tracking-widest box-border h-full bg-yellow-200 ${textBackgroundColor ? `bg-${textBackgroundColor}` : ''}"
                 rows={8}
                 ref={paragraphRef}
                 defaultValue={pageParagraph}
                 name="paragraph"
+                
               />
             ) : (
               <p className="m-4 leading-10 text-base md:text-2xl tracking-widest font-semibold">

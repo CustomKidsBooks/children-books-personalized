@@ -5,6 +5,8 @@ interface BookContentValues {
   id: number;
   image: string;
   paragraph: string | undefined;
+  textColor:  string | undefined;
+  backgroundColor: string | undefined;
 }
 
 interface GetBookValues {
