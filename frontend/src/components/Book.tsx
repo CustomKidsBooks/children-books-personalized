@@ -24,7 +24,7 @@ interface BookValues {
   setCurrentPage: Dispatch<SetStateAction<number>>;
 }
 
-const Book = ({ id, isAuthenticated, setCurrentPage, currentPage  }: BookValues) => {
+const Book = ({ id, isAuthenticated, setCurrentPage, currentPage }: BookValues) => {
   //const [currentPage, setCurrentPage] = useState<number>(0);
   const [backgroundColor, setBackgroundColor] = useState<string | null>(null);
   const [textColor, setTextColor] = useState<string | null>(null);
@@ -40,10 +40,12 @@ const Book = ({ id, isAuthenticated, setCurrentPage, currentPage  }: BookValues)
 
   let { isLoading, isError, bookContent, setEditBookContent, editBookContent } =
     useGetBookPages(id);
-  useEffect (() => {
-    console.log("editBookContent",editBookContent ,
-    "bookContent", bookContent, "currentPage", currentPage);
+
+  useEffect(() => {
+    console.log("editBookContent", editBookContent,
+      "bookContent", bookContent, "currentPage", currentPage);
   }, [editBookContent, bookContent, currentPage])
+  
   const { updateEditedImages, updateEditedBookContent } =
     useEditedBookContext();
   const router = useRouter();
@@ -164,7 +166,7 @@ const Book = ({ id, isAuthenticated, setCurrentPage, currentPage  }: BookValues)
     router.push(`/download-editedbook/${id}`);
   };
 
-  
+
   const getParagraphStyle = () => {
     return {
       color: textColor || 'black',
@@ -279,17 +281,15 @@ const Book = ({ id, isAuthenticated, setCurrentPage, currentPage  }: BookValues)
               <p className="absolute bottom-3 left-5 font-bold">{pageNumber}</p>
             </div>
           </div>
-          <div className="md:w-1/4 overflow-auto scrollbar bg-yellow relative flex items-start font-quicksand font-semibold" 
-          style={{ backgroundColor: editBookContent[currentPage].backgroundColor ?? 'yellow'}}>
-          
+          <div className="md:w-1/4 overflow-auto scrollbar bg-yellow relative flex items-start font-quicksand font-semibold"
+            style={{ backgroundColor: editBookContent[currentPage]?.backgroundColor ?? 'yellow' }}>
             {editParagraph ? (
               <textarea
-                className="mx-2 relative z-[10] w-full scrollbar leading-10 text-base md:text-xl tracking-widest box-border h-full bg-yellow-200 ${textBackgroundColor ? `bg-${textBackgroundColor}` : ''}"
+                className="mx-2 relative z-[10] w-full scrollbar leading-10 text-base md:text-xl tracking-widest box-border h-full"
                 rows={8}
                 ref={paragraphRef}
                 defaultValue={pageParagraph}
                 name="paragraph"
-                
               />
             ) : (
               <p className="m-4 leading-10 text-base md:text-2xl tracking-widest font-semibold">
