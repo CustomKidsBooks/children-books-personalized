@@ -17,13 +17,12 @@ const Draft = ({ params }: { params: DraftValues }) => {
   const { user } = useAuth0();
   const id = Number(params.id);
   const { isLoading, isError, bookData } = useGetBook(id);
-  const { editBookContent, setEditBookContent } = useGetBookPages(id);
+  const { isLoading: isLoadingPage, editBookContent, setEditBookContent, bookContent } = useGetBookPages(id);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [size, setSize] = useState<number>(12);
+  const [size, setSize] = useState<number>(20);
   const [backgroundColor, setBackgroundColor] = useState<string | null>(null);
   const [textColor, setTextColor] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(0);
-  const [isMenuVisible, setMenuVisibility] = useState<Boolean>(false);
 
   useEffect(() => {
     if (user?.sub && user?.sub === bookData?.userID) {
@@ -31,31 +30,27 @@ const Draft = ({ params }: { params: DraftValues }) => {
     }
   });
   useEffect(() => {
-    if (!backgroundColor) return;
     const allPages = [...editBookContent];
     allPages[currentPage] = {
       ...allPages[currentPage],
-      backgroundColor
+      backgroundColor: backgroundColor ?? undefined,
+      textColor: textColor ?? undefined,
+      size: size ?? undefined,
     }
     setEditBookContent(allPages);
-    console.log("all", allPages);
-  }, [backgroundColor])
+  }, [backgroundColor, textColor, size])
 
   if (isLoading) {
     return <p>Loading...</p>;
   }
-
   if (isError) {
     return <div>Error...</div>;
   }
-  if (size > 18) {
-    setSize(18);
+  if (size > 24) {
+    setSize(24);
   }
-  if (size < 8) {
-    setSize(8);
-  }
-  const toggleMenuVisibility = () => {
-    setMenuVisibility(!isMenuVisible)
+  if (size < 12) {
+    setSize(12);
   }
 
   return (
@@ -92,50 +87,49 @@ const Draft = ({ params }: { params: DraftValues }) => {
           </h2>
           <div className="mt-3 grid grid-cols-4 gap-4">
             <p className="text-xl mr-2">
-              <span className="font-semibold">Background Color :
+              <span className="font-semibold shadow-sm px-3 py-3">Background Color :
                 <PageColor
                   backgroundColor={backgroundColor}
-                  setTextColor={setTextColor}
-                  setBackgroundColor={setBackgroundColor}
+                  onChange={setBackgroundColor}
                 />
               </span>
             </p>
             <p className="text-xl mr-2">
-              <span className="font-semibold">Text Color :
+              <span className="font-semibold shadow-sm px-3 py-3">Text Color :
                 <PageColor
-                  backgroundColor={backgroundColor}
-                  setTextColor={setTextColor}
-                  setBackgroundColor={setBackgroundColor}
-
+                  backgroundColor={textColor}
+                  onChange={setTextColor}
                 />
               </span>
             </p>
             <h2 className="text-xl mr-1">
-              <div className="relative inline-block text-left">
-                <div>
-                  <button type="button" className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-md font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" id="menu-button" aria-expanded="false" onClick={toggleMenuVisibility} aria-haspopup="true">
-                    Text Size
-                    <svg className="-mr-1 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
-                    </svg>
+              <div className="flex items-center">
+                <span className="font-semibold shadow-sm px-3 py-3">Font Size</span>
+                <div className="text-size-container flex items-center">
+                  <button
+                    type="button"
+                    className="text-control-button"
+                    id="increase-button"
+                    onClick={() => setSize(size + 2)}
+                  >
+                    <span className="icon">&#43;</span>
+                  </button>
+                  <button
+                    type="button"
+                    className="text-control-button"
+                    id="decrease-button"
+                    onClick={() => setSize(size - 2)}
+                  >
+                    <span className="icon">&#8722;</span>
                   </button>
                 </div>
-                {isMenuVisible && (
-                  <div className="absolute right-0 z-10 mt-2 w-32 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button">
-                    <div className="py-1" role="none">
-                      <a href="#" onClick={() => setSize(size + 2)} className="text-gray-900 block px-4 py-2 text-md" role="menuitem" id="menu-item-0">Increase</a>
-                      <a href="#" onClick={() => setSize(size - 2)} className="text-gray-900 block px-4 py-2 text-md" role="menuitem" id="menu-item-1">Decrease</a>
-                    </div>
-                  </div>)}
               </div>
-            </h2>
-            <h2 className="text-xl mr-1">
-              <span className="font-semibold">Image Size :</span>
             </h2>
           </div>
         </div>
         <div>
-          <Book id={id} isAuthenticated={isAuthenticated} currentPage={currentPage} setCurrentPage={setCurrentPage} />
+          <Book id={id} isAuthenticated={isAuthenticated} currentPage={currentPage} setCurrentPage={setCurrentPage}
+            isLoading={isLoadingPage} isError={isError} bookContent={bookContent} setEditBookContent={setEditBookContent} editBookContent={editBookContent} />
         </div>
       </div>
     </section>

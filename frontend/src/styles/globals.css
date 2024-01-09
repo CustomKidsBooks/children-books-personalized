@@ -112,4 +112,28 @@
 .label-text {
   @apply text-base md:text-lg font-bold font-quicksand;
 }
-
+.text-size-container {
+  display: flex;
+  gap: 10px;
+}
+.text-control-button {
+  background-color: #d7a3d9;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s, transform 0.3s;
+}
+.text-control-button:hover {
+  background-color: #a300a9;
+  transform: scale(1.05);
+}
+.icon {
+  margin-right: 5px;
+  font-weight: bold;
+}

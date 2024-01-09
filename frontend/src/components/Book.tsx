@@ -15,40 +15,41 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { axiosInstance } from "@services/api-client";
 import { useEditedBookContext } from "./context/EditedBookContext";
-import { PageColor } from "./PageColor";
 
+interface BookContentValues {
+  id: number;
+  image: string;
+  paragraph: string | undefined;
+  textColor: string | undefined;
+  backgroundColor: string | undefined;
+  size: number | undefined;
+}
 interface BookValues {
   id: number;
   isAuthenticated: boolean;
   currentPage: number;
+  isLoading: boolean;
+  isError: boolean;
+  bookContent: BookContentValues[];
+  editBookContent: BookContentValues[];
+  setEditBookContent: Dispatch<SetStateAction<BookContentValues[]>>;
   setCurrentPage: Dispatch<SetStateAction<number>>;
 }
 
-const Book = ({ id, isAuthenticated, setCurrentPage, currentPage }: BookValues) => {
-  //const [currentPage, setCurrentPage] = useState<number>(0);
-  const [backgroundColor, setBackgroundColor] = useState<string | null>(null);
-  const [textColor, setTextColor] = useState<string | null>(null);
+const Book = ({ id, isAuthenticated, setCurrentPage, currentPage, isLoading, isError, bookContent, setEditBookContent, editBookContent }: BookValues) => {
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [editImage, setEditImage] = useState<boolean>(false);
   const [editParagraph, setEditParagraph] = useState<boolean>(false);
   const [isEdited, setIsEdited] = useState<boolean>(false);
   const [isCleanup, setIsCleanup] = useState<boolean>(false);
   const [editedImages, setEditedImages] = useState<string[]>([]);
-
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [isNotGenerated, setIsNotGenerated] = useState<boolean>(false);
 
-  let { isLoading, isError, bookContent, setEditBookContent, editBookContent } =
-    useGetBookPages(id);
-
-  useEffect(() => {
-    console.log("editBookContent", editBookContent,
-      "bookContent", bookContent, "currentPage", currentPage);
-  }, [editBookContent, bookContent, currentPage])
-  
   const { updateEditedImages, updateEditedBookContent } =
     useEditedBookContext();
   const router = useRouter();
+
   useEffect(() => {
     if (isCleanup) {
       setEditedImages([]);
@@ -166,14 +167,6 @@ const Book = ({ id, isAuthenticated, setCurrentPage, currentPage }: BookValues) 
     router.push(`/download-editedbook/${id}`);
   };
 
-
-  const getParagraphStyle = () => {
-    return {
-      color: textColor || 'black',
-      backgroundColor: textColor ? `bg-${textColor}` : '',
-    };
-  };
-
   const updateCreatedBook = async () => {
     try {
       const response = await axios.put(
@@ -282,7 +275,7 @@ const Book = ({ id, isAuthenticated, setCurrentPage, currentPage }: BookValues) 
             </div>
           </div>
           <div className="md:w-1/4 overflow-auto scrollbar bg-yellow relative flex items-start font-quicksand font-semibold"
-            style={{ backgroundColor: editBookContent[currentPage]?.backgroundColor ?? 'yellow' }}>
+            style={{ backgroundColor: editBookContent[currentPage]?.backgroundColor }}>
             {editParagraph ? (
               <textarea
                 className="mx-2 relative z-[10] w-full scrollbar leading-10 text-base md:text-xl tracking-widest box-border h-full"
@@ -292,7 +285,7 @@ const Book = ({ id, isAuthenticated, setCurrentPage, currentPage }: BookValues) 
                 name="paragraph"
               />
             ) : (
-              <p className="m-4 leading-10 text-base md:text-2xl tracking-widest font-semibold">
+              <p className="m-4 leading-10 text-base md:text-2xl tracking-widest font-semibold" style={{ color: editBookContent[currentPage]?.textColor, fontSize: editBookContent[currentPage]?.size }}>
                 {pageParagraph}
               </p>
             )}

@@ -4,30 +4,26 @@ import "react-color-palette/css";
 
 interface PageColorProps {
   backgroundColor: string | null;
-  setTextColor: React.Dispatch<React.SetStateAction<string | null>>;
-  setBackgroundColor: React.Dispatch<React.SetStateAction<string | null>>;
+  onChange: (color: string) => void;
 }
 
 export const PageColor: React.FC<PageColorProps> = ({
   backgroundColor,
-  setTextColor,
-  setBackgroundColor,
+  onChange,
 
 }) => {
   const [showColorPicker, setShowColorPicker] = useState<boolean>(false);
-  const [color, setColor] = useColor(backgroundColor || "yellow");
+  const [color, setColor] = useColor(backgroundColor || "orange");
 
   return (
     <div>
-      <button onClick={() => setShowColorPicker(!showColorPicker)}>Picker</button>
+      <button className="shadow-sm px-3 py-3" onClick={() => setShowColorPicker(!showColorPicker)}>Picker</button>
       {showColorPicker && (
         <ColorPicker
           color={color}
           onChange={(newColor) => {
-            console.log(newColor);
             setColor(newColor);
-            setBackgroundColor(`${newColor.hex}`); 
-            setTextColor(`${newColor.hex}`);
+            onChange(newColor.hex);
           }}
         />
       )}

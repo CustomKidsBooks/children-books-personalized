@@ -7,6 +7,7 @@ interface BookContentValues {
   paragraph: string | undefined;
   textColor:  string | undefined;
   backgroundColor: string | undefined;
+  size:  number | undefined;
 }
 
 interface GetBookValues {
