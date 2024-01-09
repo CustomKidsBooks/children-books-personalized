@@ -17,6 +17,15 @@ export class Order {
   userID!: string;
 
   @Column()
+  coverUrl!: string;
+
+  @Column()
+  interiorUrl!: string;
+
+  @Column()
+  podPackageId!: string;
+
+  @Column()
   orderTotal!: number;
 
   @Column()

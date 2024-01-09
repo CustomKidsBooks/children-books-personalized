@@ -64,6 +64,10 @@ export default function (app: Express) {
   app.post("/api/sendBookAsWord/:bookId", BookController.sendBookAsWord);
 
   app.post(
+    "/api/orders/printJobEstimatedCost",
+    OrderController.getPrintJobEstimatedCost
+  );
+  app.post(
     "/api/orders/create-checkout-session",
     authMiddleware,
     OrderController.createCheckoutSession
