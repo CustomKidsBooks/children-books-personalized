@@ -11,6 +11,7 @@ import { useEditedBookContext } from "../../../components/context/EditedBookCont
 import { useState, useEffect } from "react";
 import { storage } from "../../../services/firebase";
 import { ref, deleteObject } from "firebase/storage";
+import { LinkButton } from "../../../components/ui/LinkButton";
 
 const EditedBook = ({ params }: { params: { id: string } }) => {
   const [isCleanup, setIsCleanup] = useState<boolean>(false);
@@ -101,6 +102,20 @@ const EditedBook = ({ params }: { params: { id: string } }) => {
           <div className="mt-10 lg:mt-0 lg:w-1/4 lg:mx-auto gap-5 flex flex-col lg:justify-around">
             <DownloadBook bookId={id} />
             <SendBook bookId={id} />
+            <div className="items-center">
+              <h1 className="font-bold text text-2xl lg:text-3xl">
+                Get Printed Book
+              </h1>
+              <div className="mt-3 py-4">
+                <LinkButton
+                  href={`/order-printed-book/${id}`}
+                  intent="teal"
+                  className="text font-bold"
+                >
+                  Order Printed Book
+                </LinkButton>
+              </div>
+            </div>
           </div>
         </div>
       </div>

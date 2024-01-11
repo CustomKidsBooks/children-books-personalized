@@ -114,7 +114,7 @@ export const OrderController = {
                 images: [bookData.image],
               },
             },
-            quantity: quantity,
+            quantity: 1,
           },
         ],
         payment_intent_data: {
