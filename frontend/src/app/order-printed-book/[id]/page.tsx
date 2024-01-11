@@ -25,7 +25,14 @@ interface ShippingDetailsValues {
 
 const OrderBook = ({ params }: { params: OrderBookValues }) => {
   const id = Number(params.id);
+  const { user, getAccessTokenSilently, loginWithRedirect } = useAuth0();
+
+  if (!user) {
+    loginWithRedirect();
+  }
+
   const { isLoading, isError, bookData } = useGetBook(id);
+
   const {
     data,
     selectedBookSize,
@@ -60,8 +67,6 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
     handleNumberOfCopiesChange,
     handleShippingOptionChange,
   } = usePrintBook(bookData?.page!);
-
-  const { user, getAccessTokenSilently } = useAuth0();
 
   const pageCount = bookData?.page!;
 
@@ -174,7 +179,7 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
           bookData,
           totalAmount: totalCost,
           quantity,
-          podPackageId: podPackageId[0],
+          podPackageId,
           email: email.current?.value,
           name: fullName.current?.value,
           city: email.current?.value,

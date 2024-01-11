@@ -29,6 +29,8 @@ const usePrintBook = (pageCount: number) => {
 
   const [quantity, setQuantity] = useState<string>("");
 
+  const [errorMessage, setErrorMessage] = useState<string>("");
+
   const [selectedShippingOption, setSelectedShippingOption] = useState<
     string | null
   >(null);
@@ -415,27 +417,32 @@ const usePrintBook = (pageCount: number) => {
     setCountry(country);
     setCountryCode(countryList[`${country}`]);
     setSelectedShippingOption(null);
-    const response = await axios.post(
-      "https://api.lulu.com/shipping-options/",
-      {
-        currency: "USD",
-        line_items: [
-          {
-            page_count: pageCount,
-            pod_package_id: podPackageId,
-            quantity: quantity,
+
+    try {
+      const response = await axios.post(
+        "https://api.lulu.com/shipping-options/",
+        {
+          currency: "USD",
+          line_items: [
+            {
+              page_count: pageCount,
+              pod_package_id: podPackageId,
+              quantity: quantity,
+            },
+          ],
+          shipping_address: {
+            country: countryList[`${country}`],
           },
-        ],
-        shipping_address: {
-          country: countryList[`${country}`],
-        },
-      }
-    );
-    setShippingOptions(
-      response.data.filter((f: any) => {
-        return f.is_active === true;
-      })
-    );
+        }
+      );
+      setShippingOptions(
+        response.data.filter((f: any) => {
+          return f.is_active === true;
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
   };
   const handleEstimatedCost = async () => {
     try {

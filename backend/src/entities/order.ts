@@ -31,6 +31,9 @@ export class Order {
   @Column()
   paymentStatus!: string;
 
+  @Column()
+  printJobId!: number;
+
   @ManyToOne(() => Book, (book) => book.orders, {
     createForeignKeyConstraints: false,
     eager: true,

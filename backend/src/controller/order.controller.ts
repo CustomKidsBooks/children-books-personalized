@@ -97,6 +97,8 @@ export const OrderController = {
         "https://www.dropbox.com/s/r20orb8umqjzav9/lulu_trade_interior_template-32.pdf?dl=1&raw=1";
       newOrder.podPackageId = podPackageId;
 
+      newOrder.printJobId = 0;
+
       const savedOrder = await orderRepository.save(newOrder);
 
       const session = await stripe.checkout.sessions.create({
@@ -253,6 +255,14 @@ export const OrderController = {
             },
           }
         );
+
+        if (response.data?.id) {
+          await AppDataSource.createQueryBuilder()
+            .update(Order)
+            .set({ printJobId: response.data.id })
+            .where("id = :id", { id: orderID })
+            .execute();
+        }
 
         break;
       default:

@@ -65,6 +65,7 @@ export default function (app: Express) {
 
   app.post(
     "/api/orders/printJobEstimatedCost",
+    authMiddleware,
     OrderController.getPrintJobEstimatedCost
   );
   app.post(
