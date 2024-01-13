@@ -9,11 +9,23 @@ import {
 import axios from "axios";
 import * as XLSX from "xlsx";
 import { axiosInstance } from "@services/api-client";
+import { useAuth0 } from "@auth0/auth0-react";
+
+interface ShippingError {
+  code: string;
+  message: string;
+  path: string;
+}
 
 const usePrintBook = (pageCount: number) => {
+  const { getAccessTokenSilently } = useAuth0();
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isError, setIsError] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [shippingError, setShippingError] = useState<ShippingError[] | null>(
+    null
+  );
   const [data, setData] = useState<any>([]);
+  const [isVisible, setIsVisible] = useState<boolean>(false);
 
   const [selectedBookSize, setSelectedBookSize] = useState<string>("");
   const [selectedInteriorColor, setSelectedInteriorColor] =
@@ -28,8 +40,6 @@ const usePrintBook = (pageCount: number) => {
   const [countryCode, setCountryCode] = useState<string>("");
 
   const [quantity, setQuantity] = useState<string>("");
-
-  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const [selectedShippingOption, setSelectedShippingOption] = useState<
     string | null
@@ -47,6 +57,7 @@ const usePrintBook = (pageCount: number) => {
 
   const [podPackageId, setPodPackageId] = useState<string>("");
   useEffect(() => {
+    setErrorMessage("");
     axios
       .get(
         "https://assets.lulu.com/media/specs/lulu-print-api-spec-sheet.xlsx",
@@ -68,12 +79,12 @@ const usePrintBook = (pageCount: number) => {
         );
       })
       .catch((error) => {
-        console.error("Error fetching the file:", error);
+        setIsVisible(true);
+        setErrorMessage("Error fetching the file: Please Try Again");
       });
   }, []);
 
   const countryList = {
-    Afghanistan: "AF",
     Albania: "AL",
     Algeria: "DZ",
     "American Samoa": "AS",
@@ -92,7 +103,6 @@ const usePrintBook = (pageCount: number) => {
     Bahrain: "BH",
     Bangladesh: "BD",
     Barbados: "BB",
-    Belarus: "BY",
     Belgium: "BE",
     Belize: "BZ",
     Benin: "BJ",
@@ -114,20 +124,17 @@ const usePrintBook = (pageCount: number) => {
     Cameroon: "CM",
     Canada: "CA",
     "Cayman Islands (the)": "KY",
-    "Central African Republic (the)": "CF",
     Chad: "TD",
     Chile: "CL",
     China: "CN",
     "Christmas Island": "CX",
     "Cocos (Keeling) Islands (the)": "CC",
     Colombia: "CO",
-    "Comoros (the)": "KM",
     "Congo (the Democratic Republic of the)": "CD",
     "Congo (the)": "CG",
     "Cook Islands (the)": "CK",
     "Costa Rica": "CR",
     Croatia: "HR",
-    Cuba: "CU",
     Curaçao: "CW",
     Cyprus: "CY",
     Czechia: "CZ",
@@ -139,12 +146,10 @@ const usePrintBook = (pageCount: number) => {
     Ecuador: "EC",
     Egypt: "EG",
     "El Salvador": "SV",
-    "Equatorial Guinea": "GQ",
     Eritrea: "ER",
     Estonia: "EE",
     Eswatini: "SZ",
     Ethiopia: "ET",
-    "Falkland Islands (the) [Malvinas]": "FK",
     "Faroe Islands (the)": "FO",
     Fiji: "FJ",
     Finland: "FI",
@@ -166,10 +171,8 @@ const usePrintBook = (pageCount: number) => {
     Guatemala: "GT",
     Guernsey: "GG",
     Guinea: "GN",
-    "Guinea-Bissau": "GW",
     Guyana: "GY",
     Haiti: "HT",
-    "Heard Island and McDonald Islands": "HM",
     "Holy See (the)": "VA",
     Honduras: "HN",
     "Hong Kong": "HK",
@@ -177,7 +180,6 @@ const usePrintBook = (pageCount: number) => {
     Iceland: "IS",
     India: "IN",
     Indonesia: "ID",
-    "Iran (Islamic Republic of)": "IR",
     Iraq: "IQ",
     Ireland: "IE",
     "Isle of Man": "IM",
@@ -189,8 +191,6 @@ const usePrintBook = (pageCount: number) => {
     Jordan: "JO",
     Kazakhstan: "KZ",
     Kenya: "KE",
-    Kiribati: "KI",
-    "Korea (the Democratic People's Republic of)": "KP",
     "Korea (the Republic of)": "KR",
     Kuwait: "KW",
     Kyrgyzstan: "KG",
@@ -224,9 +224,7 @@ const usePrintBook = (pageCount: number) => {
     Montserrat: "MS",
     Morocco: "MA",
     Mozambique: "MZ",
-    Myanmar: "MM",
     Namibia: "NA",
-    Nauru: "NR",
     Nepal: "NP",
     "Netherlands (the)": "NL",
     "New Caledonia": "NC",
@@ -234,7 +232,6 @@ const usePrintBook = (pageCount: number) => {
     Nicaragua: "NI",
     "Niger (the)": "NE",
     Nigeria: "NG",
-    Niue: "NU",
     "Norfolk Island": "NF",
     "Northern Mariana Islands (the)": "MP",
     Norway: "NO",
@@ -254,71 +251,52 @@ const usePrintBook = (pageCount: number) => {
     Qatar: "QA",
     "Republic of North Macedonia": "MK",
     Romania: "RO",
-    "Russian Federation (the)": "RU",
     Rwanda: "RW",
     Réunion: "RE",
     "Saint Barthélemy": "BL",
-    "Saint Helena, Ascension and Tristan da Cunha": "SH",
     "Saint Kitts and Nevis": "KN",
     "Saint Lucia": "LC",
     "Saint Martin (French part)": "MF",
-    "Saint Pierre and Miquelon": "PM",
     "Saint Vincent and the Grenadines": "VC",
     Samoa: "WS",
     "San Marino": "SM",
-    "Sao Tome and Principe": "ST",
     "Saudi Arabia": "SA",
     Senegal: "SN",
     Serbia: "RS",
     Seychelles: "SC",
-    "Sierra Leone": "SL",
     Singapore: "SG",
     "Sint Maarten (Dutch part)": "SX",
     Slovakia: "SK",
     Slovenia: "SI",
-    "Solomon Islands": "SB",
-    Somalia: "SO",
     "South Africa": "ZA",
     "South Georgia and the South Sandwich Islands": "GS",
-    "South Sudan": "SS",
     Spain: "ES",
     "Sri Lanka": "LK",
-    "Sudan (the)": "SD",
     Suriname: "SR",
     "Svalbard and Jan Mayen": "SJ",
     Sweden: "SE",
     Switzerland: "CH",
-    "Syrian Arab Republic": "SY",
     "Taiwan (Province of China)": "TW",
-    Tajikistan: "TJ",
     "Tanzania, United Republic of": "TZ",
     Thailand: "TH",
     "Timor-Leste": "TL",
     Togo: "TG",
-    Tokelau: "TK",
     Tonga: "TO",
     "Trinidad and Tobago": "TT",
     Tunisia: "TN",
     Turkey: "TR",
-    Turkmenistan: "TM",
     "Turks and Caicos Islands (the)": "TC",
-    Tuvalu: "TV",
     Uganda: "UG",
-    Ukraine: "UA",
     "United Arab Emirates (the)": "AE",
     "United Kingdom of Great Britain and Northern Ireland (the)": "GB",
-    "United States Minor Outlying Islands (the)": "UM",
     "United States of America (the)": "US",
     Uruguay: "UY",
     Uzbekistan: "UZ",
     Vanuatu: "VU",
-    "Venezuela (Bolivarian Republic of)": "VE",
     "Viet Nam": "VN",
     "Virgin Islands (British)": "VG",
     "Virgin Islands (U.S.)": "VI",
     "Wallis and Futuna": "WF",
-    "Western Sahara": "EH",
-    Yemen: "YE",
     Zambia: "ZM",
     Zimbabwe: "ZW",
     "Åland Islands": "AX",
@@ -417,8 +395,8 @@ const usePrintBook = (pageCount: number) => {
     setCountry(country);
     setCountryCode(countryList[`${country}`]);
     setSelectedShippingOption(null);
-
     try {
+      setErrorMessage("");
       const response = await axios.post(
         "https://api.lulu.com/shipping-options/",
         {
@@ -441,11 +419,15 @@ const usePrintBook = (pageCount: number) => {
         })
       );
     } catch (error) {
-      console.log(error);
+      setIsVisible(true);
+      setErrorMessage("Something Went Wrong : Please Try Later");
     }
   };
   const handleEstimatedCost = async () => {
+    const token = await getAccessTokenSilently();
     try {
+      setErrorMessage("");
+      setShippingError(null);
       const response = await axiosInstance.post(
         "/api/orders/printJobEstimatedCost",
         {
@@ -459,18 +441,31 @@ const usePrintBook = (pageCount: number) => {
           streetAddress: streetAddress.current?.value,
           shippingLevel: selectedShippingOption,
           phoneNumber: phoneNumber.current?.value,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
 
       setCosts(response.data.costs);
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      if (error?.response?.data?.shippingDetails) {
+        setShippingError(error?.response?.data?.shippingDetails);
+      } else {
+        setIsVisible(true);
+        setErrorMessage("Something went wrong : Please try again Later ");
+      }
     }
   };
 
   return {
     isLoading,
-    isError,
+    errorMessage,
+    setErrorMessage,
+    shippingError,
+    setShippingError,
+    isVisible,
+    setIsVisible,
     data,
     selectedBookSize,
     selectedInteriorColor,

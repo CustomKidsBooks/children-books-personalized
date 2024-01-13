@@ -10,30 +10,25 @@ import { useEffect, useRef, useState, MutableRefObject } from "react";
 import usePrintBook from "@components/hooks/usePrintBook";
 import Image from "next/image";
 import axios from "axios";
+import PrintBookModal from "@components/printBookModal";
 
 interface OrderBookValues {
   id: number;
-}
-
-interface ShippingDetailsValues {
-  fullName: string;
-  streetAddress: string;
-  city: string;
-  state: string;
-  postalCode: string;
 }
 
 const OrderBook = ({ params }: { params: OrderBookValues }) => {
   const id = Number(params.id);
   const { user, getAccessTokenSilently, loginWithRedirect } = useAuth0();
 
-  if (!user) {
-    loginWithRedirect();
-  }
-
   const { isLoading, isError, bookData } = useGetBook(id);
 
   const {
+    errorMessage,
+    setErrorMessage,
+    shippingError,
+    setShippingError,
+    isVisible,
+    setIsVisible,
     data,
     selectedBookSize,
     selectedInteriorColor,
@@ -171,6 +166,7 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
     const token = await getAccessTokenSilently();
     const amount = 1;
     try {
+      setErrorMessage("");
       const response = await axiosInstance.post(
         "/api/orders/create-checkout-session",
         {
@@ -196,7 +192,7 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
       );
       window.location = response.data.url.url;
     } catch (error) {
-      console.log(error);
+      setErrorMessage("Something Went wrong : Please try again later");
     }
   };
 
@@ -786,6 +782,9 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
                       selectedShippingOption === `${shippingOption.level}`
                     }
                     className="ms-4"
+                    onChange={() =>
+                      handleShippingOptionChange(shippingOption.level)
+                    }
                   />
                   <label
                     htmlFor={`${shippingOption.level}`}
@@ -875,6 +874,14 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
                   className="text-xl lg:text-2xl font-quicksand"
                 >
                   State <span className="asterisk">*</span>
+                  <span>
+                    {shippingError?.some(
+                      (obj) =>
+                        obj.hasOwnProperty("path") && obj.path === "state"
+                    ) && (
+                      <span className="text-red-500 ms-5 text-xl">Invalid</span>
+                    )}
+                  </span>
                 </label>
                 <input
                   type="text"
@@ -882,6 +889,14 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
                   id="state"
                   ref={state}
                   className="ps-3 border outline-none focus:border-slate-600 py-2 rounded-md"
+                  onFocus={() =>
+                    setShippingError(
+                      (prevShippingError) =>
+                        prevShippingError?.filter(
+                          (obj) => obj.path !== "state"
+                        ) || []
+                    )
+                  }
                 />
               </div>
             </div>
@@ -909,6 +924,15 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
                   className="text-xl lg:text-2xl font-quicksand"
                 >
                   Phone Number <span className="asterisk">*</span>
+                  <span>
+                    {shippingError?.some(
+                      (obj) =>
+                        obj.hasOwnProperty("path") &&
+                        obj.path === "phone_number"
+                    ) && (
+                      <span className="text-red-500 ms-5 text-xl">Invalid</span>
+                    )}
+                  </span>
                 </label>
                 <input
                   type=""
@@ -916,6 +940,14 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
                   id="phoneNumber"
                   ref={phoneNumber}
                   className="ps-3 border outline-none focus:border-slate-600 py-2 rounded-md"
+                  onFocus={() =>
+                    setShippingError(
+                      (prevShippingError) =>
+                        prevShippingError?.filter(
+                          (obj) => obj.path !== "phone_number"
+                        ) || []
+                    )
+                  }
                 />
               </div>
               <div className="w-1/3 md:flex flex-col">
@@ -924,6 +956,14 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
                   className="text-xl lg:text-2xl font-quicksand"
                 >
                   Postal Code <span className="asterisk">*</span>
+                  <span>
+                    {shippingError?.some(
+                      (obj) =>
+                        obj.hasOwnProperty("path") && obj.path === "postcode"
+                    ) && (
+                      <span className="text-red-500 ms-5 text-xl">Invalid</span>
+                    )}
+                  </span>
                 </label>
                 <input
                   type="text"
@@ -931,6 +971,14 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
                   id="postalCode"
                   ref={postalCode}
                   className="ps-3 border outline-none focus:border-slate-600 py-2 rounded-md"
+                  onFocus={() =>
+                    setShippingError(
+                      (prevShippingError) =>
+                        prevShippingError?.filter(
+                          (obj) => obj.path !== "postcode"
+                        ) || []
+                    )
+                  }
                 />
               </div>
             </div>
@@ -1007,6 +1055,17 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
             </div>
           </div>
         )}
+        <PrintBookModal
+          isVisible={isVisible}
+          onClose={() => {
+            setIsVisible(false);
+            setErrorMessage("");
+          }}
+        >
+          <div className="text-red-500 p-10">
+            {errorMessage && <div>{errorMessage}</div>}
+          </div>
+        </PrintBookModal>
       </div>
     </section>
   );

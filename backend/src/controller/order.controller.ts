@@ -56,8 +56,13 @@ export const OrderController = {
       );
 
       return res.status(200).json({ costs: response.data });
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      if (error?.response.data?.shipping_address?.detail?.errors) {
+        return res.status(500).json({
+          shippingDetails:
+            error?.response.data?.shipping_address?.detail?.errors,
+        });
+      }
       return res.status(500).json({
         success: 0,
         message: "Database connection error",
