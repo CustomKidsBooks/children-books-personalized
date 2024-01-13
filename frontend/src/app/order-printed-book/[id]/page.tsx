@@ -217,7 +217,7 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
           </h1>
           <hr className="border-1 border-black"></hr>
 
-          <div className="flex justify-between my-5">
+          <div className="flex flex-col md:flex-row justify-between my-5">
             <div className="md:flex flex-col  w-3/5">
               <label htmlFor="bookSize" className="text-xl font-quicksand mb-2">
                 Book Size
@@ -239,9 +239,9 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
           </div>
           <hr className="border-1"></hr>
           <h1 className="text-xl font-quicksand my-5">Interior Color</h1>
-          <div className="py-5 flex gap-5">
+          <div className="py-5 flex flex-wrap gap-5 mx-5 md:mx-0">
             <button
-              className={`w-1/4 border pb-3  ${
+              className={`w-full md:w-1/2 lg:w-1/4 border pb-3  ${
                 !interiorColors.includes("Black & White_Premium")
                   ? "hover:cursor-default opacity-70"
                   : "hover:cursor-pointer"
@@ -269,12 +269,15 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
                 checked={selectedInteriorColor === "Black & White_Premium"}
                 disabled={!interiorColors.includes("Black & White_Premium")}
               />
-              <label htmlFor="blackAndWhitePremium" className="ms-4">
+              <label
+                htmlFor="blackAndWhitePremium"
+                className="ms-4 font-semibold"
+              >
                 Black & White Premium
               </label>
             </button>
             <button
-              className={`w-1/4 border pb-3  ${
+              className={`w-full md:w-1/2 lg:w-1/4 border pb-3  ${
                 !interiorColors.includes("Black & White_Standard")
                   ? "hover:cursor-default opacity-70"
                   : "hover:cursor-pointer"
@@ -303,12 +306,15 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
                 checked={selectedInteriorColor === "Black & White_Standard"}
                 disabled={!interiorColors.includes("Black & White_Standard")}
               />
-              <label htmlFor="blackAndWhiteStandard" className="ms-4">
+              <label
+                htmlFor="blackAndWhiteStandard"
+                className="ms-4 font-semibold"
+              >
                 Black & White Standard
               </label>
             </button>
             <button
-              className={`w-1/4 border pb-3 text-start ${
+              className={`w-full md:w-1/2 lg:w-1/4 border pb-3 text-start ${
                 !interiorColors.includes("Full Color_Premium")
                   ? "hover:cursor-default opacity-70"
                   : "hover:cursor-pointer"
@@ -336,12 +342,12 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
                 disabled={!interiorColors.includes("Full Color_Premium")}
                 className="ms-4"
               />
-              <label htmlFor="colorPremium" className="ms-4">
+              <label htmlFor="colorPremium" className="ms-4 font-semibold">
                 Color Premium
               </label>
             </button>
             <button
-              className={`w-1/4 border pb-3 text-start ${
+              className={`w-full md:w-1/2 lg:w-1/4 border pb-3 text-start ${
                 !interiorColors.includes("Full Color_Standard")
                   ? "hover:cursor-default opacity-70"
                   : "hover:cursor-pointer"
@@ -369,7 +375,7 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
                 disabled={!interiorColors.includes("Full Color_Standard")}
                 className="ms-4"
               />
-              <label htmlFor="colorStandard" className="ms-4">
+              <label htmlFor="colorStandard" className="ms-4 font-semibold">
                 Color Standard
               </label>
             </button>
@@ -377,9 +383,9 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
           <hr className="border-1"></hr>
 
           <h1 className="text-xl font-quicksand my-5">Paper Type</h1>
-          <div className="mb-5 flex gap-5">
+          <div className="py-5 flex flex-wrap gap-5 mx-5 md:mx-0">
             <button
-              className={`w-1/4 border pb-3 text-start ${
+              className={`w-full md:w-1/2 lg:w-1/4 border pb-3 text-start ${
                 !paperTypes.includes("60# Uncoated Cream")
                   ? "hover:cursor-default opacity-70"
                   : "hover:cursor-pointer"
@@ -407,12 +413,12 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
                 disabled={!paperTypes.includes("60# Uncoated Cream")}
                 className="ms-4"
               />
-              <label htmlFor="60#Cream" className="ms-4">
+              <label htmlFor="60#Cream" className="ms-4 font-semibold">
                 60# Cream
               </label>
             </button>
             <button
-              className={`w-1/4 border pb-3 text-start ${
+              className={`w-full md:w-1/2 lg:w-1/4 border pb-3 text-start ${
                 !paperTypes.includes("60# Uncoated White")
                   ? "hover:cursor-default opacity-70"
                   : "hover:cursor-pointer"
@@ -440,12 +446,12 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
                 disabled={!paperTypes.includes("60# Uncoated White")}
                 className="ms-4"
               />
-              <label htmlFor="60#White" className="ms-4">
+              <label htmlFor="60#White" className="ms-4 font-semibold">
                 60# White
               </label>
             </button>
             <button
-              className={`w-1/4 border pb-3 text-start ${
+              className={`w-full md:w-1/2 lg:w-1/4 border pb-3 text-start ${
                 !paperTypes.includes("80# Coated White")
                   ? "hover:cursor-default opacity-70"
                   : "hover:cursor-pointer"
@@ -473,16 +479,16 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
                 disabled={!paperTypes.includes("80# Coated White")}
                 className="ms-4"
               />
-              <label htmlFor="80#CoatedWhite" className="ms-4">
+              <label htmlFor="80#CoatedWhite" className="ms-4 font-semibold">
                 80# coated White
               </label>
             </button>
           </div>
           <hr className="border-1 "></hr>
           <h1 className="text-xl font-quicksand my-5">Binding Type</h1>
-          <div className="mb-5 flex flex-wrap gap-5">
+          <div className="py-5 flex flex-wrap gap-5 mx-5 md:mx-0">
             <button
-              className={`w-1/4 border pb-3 text-start ${
+              className={`w-full md:w-1/2 lg:w-1/4 border pb-3 text-start ${
                 !bindingTypes.includes("Coil")
                   ? "hover:cursor-default opacity-70"
                   : "hover:cursor-pointer"
@@ -510,12 +516,12 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
                 disabled={!bindingTypes.includes("Coil")}
                 className="ms-4"
               />
-              <label htmlFor="coilBound" className="ms-4">
+              <label htmlFor="coilBound" className="ms-4 font-semibold">
                 Coil Bound
               </label>
             </button>
             <button
-              className={`w-1/4 border pb-3 text-start ${
+              className={`w-full md:w-1/2 lg:w-1/4 border pb-3 text-start ${
                 !bindingTypes.includes("Perfect")
                   ? "hover:cursor-default opacity-70"
                   : "hover:cursor-pointer"
@@ -543,12 +549,12 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
                 disabled={!bindingTypes.includes("Perfect")}
                 className="ms-4"
               />
-              <label htmlFor="hardcover" className="ms-4">
+              <label htmlFor="hardcover" className="ms-4 font-semibold">
                 Hardcover
               </label>
             </button>
             <button
-              className={`w-1/4 border pb-3 text-start ${
+              className={`w-full md:w-1/2 lg:w-1/4 border pb-3 text-start ${
                 !bindingTypes.includes("Case Wrap")
                   ? "hover:cursor-default opacity-70"
                   : "hover:cursor-pointer"
@@ -576,12 +582,12 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
                 disabled={!bindingTypes.includes("Case Wrap")}
                 className="ms-4"
               />
-              <label htmlFor="paperback" className="ms-4">
+              <label htmlFor="paperback" className="ms-4 font-semibold">
                 Paperback
               </label>
             </button>
             <button
-              className={`w-1/4 border pb-3 text-start ${
+              className={`w-full md:w-1/2 lg:w-1/4 border pb-3 text-start ${
                 !bindingTypes.includes("Saddle Stitch")
                   ? "hover:cursor-default opacity-70"
                   : "hover:cursor-pointer"
@@ -609,12 +615,12 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
                 disabled={!bindingTypes.includes("Saddle Stitch")}
                 className="ms-4"
               />
-              <label htmlFor="saddleStitch" className="ms-4">
+              <label htmlFor="saddleStitch" className="ms-4 font-semibold">
                 Saddle Stitch
               </label>
             </button>
             <button
-              className={`w-1/4 border pb-3 text-start ${
+              className={`w-full md:w-1/2 lg:w-1/4 border pb-3 text-start ${
                 !bindingTypes.includes("Linen Wrap")
                   ? "hover:cursor-default opacity-70"
                   : "hover:cursor-pointer"
@@ -642,16 +648,16 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
                 disabled={!bindingTypes.includes("Linen Wrap")}
                 className="ms-4"
               />
-              <label htmlFor="linenWrap" className="ms-4">
+              <label htmlFor="linenWrap" className="ms-4 font-semibold">
                 Linen wrap
               </label>
             </button>
           </div>
           <hr className="border-1 "></hr>
           <h1 className="text-xl font-quicksand my-5">Cover Finish</h1>
-          <div className="mb-5 flex gap-5">
+          <div className="py-5 flex flex-wrap gap-5 mx-5 md:mx-0">
             <button
-              className={`w-1/4 border py-3 text-start ${
+              className={`w-full md:w-1/2 lg:w-1/4 border py-3 text-start ${
                 !coverFinishes.includes("Gloss")
                   ? "hover:cursor-default opacity-70"
                   : "hover:cursor-pointer"
@@ -672,12 +678,12 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
                 disabled={!coverFinishes.includes("Gloss")}
                 className="ms-4"
               />
-              <label htmlFor="glossy" className="ms-4">
+              <label htmlFor="glossy" className="ms-4 font-semibold">
                 Glossy
               </label>
             </button>
             <button
-              className={`w-1/4 border py-3 text-start ${
+              className={`w-full md:w-1/2 lg:w-1/4 border py-3 text-start ${
                 !coverFinishes.includes("Matte")
                   ? "hover:cursor-default opacity-70"
                   : "hover:cursor-pointer"
@@ -705,18 +711,18 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
           </div>
         </div>
 
-        <div className="mt-10">
+        <div className="mt-10 ">
           <h1 className="mt-14 text-xl lg:text-2xl font-quicksand font-semibold my-5">
             Book Shipping Estimator
           </h1>
           <hr className="border-1 border-black"></hr>
 
-          <div className="flex mt-14 items-center my-10">
-            <div className="w-2/4">
+          <div className="flex flex-col lg:flex-row mt-14 items-center my-10 mx-5 md:mx-0">
+            <div className="w-full lg:w-2/4 mb-6 lg:mb-0">
               <p>Please note: all shipping times and costs are estimates.</p>
             </div>
-            <div className="flex justify-end w-2/4 gap-10">
-              <div className="flex flex-col gap-5">
+            <div className="flex flex-col lg:flex-row gap-5 w-full lg:w-2/4">
+              <div className="flex flex-col gap-5 w-full lg:w-1/2">
                 <label
                   htmlFor="numberOfCopies"
                   className="text-xl font-quicksand"
@@ -727,14 +733,14 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
                   type="number"
                   name="numberOfCopies"
                   id="numberOfCopies"
-                  className="border outline-none focus:border-slate-500 py-2 ps-2"
+                  className="border outline-none focus:border-slate-500 py-2 px-2"
                   min="1"
                   value={quantity}
                   onChange={(e) => handleNumberOfCopiesChange(e.target.value)}
                   disabled={!podPackageId}
                 />
               </div>
-              <div className="flex flex-col gap-5">
+              <div className="flex flex-col gap-5 w-full lg:w-1/2">
                 <label htmlFor="country" className="text-xl font-quicksand">
                   Destination Country
                 </label>
@@ -760,7 +766,7 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
               </div>
             </div>
           </div>
-          <div className="w-2/4 ml-auto ">
+          <div className="w-full lg:w-2/4 md:ml-auto ">
             {shippingOptions.map((shippingOption: any) => (
               <div key={shippingOption.id}>
                 <button
@@ -820,7 +826,7 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
             </h1>
             <hr className="border-1 border-black"></hr>
 
-            <div className="md:flex flex-col mt-5">
+            <div className="flex flex-col mt-5">
               <label
                 htmlFor="fullName"
                 className="text-xl lg:text-2xl font-quicksand"
@@ -836,7 +842,7 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
               />
             </div>
 
-            <div className="md:flex flex-col mt-5">
+            <div className="flex flex-col mt-5">
               <label
                 htmlFor="streetAddress"
                 className="text-xl lg:text-2xl font-quicksand"
@@ -852,8 +858,8 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
               />
             </div>
 
-            <div className="flex gap-10">
-              <div className="w-1/2 md:flex flex-col">
+            <div className="flex flex-col md:flex-row gap-10">
+              <div className="w-full md:w-1/2 flex flex-col">
                 <label
                   htmlFor="city"
                   className="text-xl lg:text-2xl font-quicksand"
@@ -868,7 +874,7 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
                   className="ps-3 border outline-none focus:border-slate-600 py-2 rounded-md"
                 />
               </div>
-              <div className="w-1/2 md:flex flex-col">
+              <div className="w-full md:w-1/2 flex flex-col mt-5 md:mt-0">
                 <label
                   htmlFor="state"
                   className="text-xl lg:text-2xl font-quicksand"
@@ -901,8 +907,8 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
               </div>
             </div>
 
-            <div className="flex justify-between gap-5 my-5">
-              <div className="w-1/3 md:flex flex-col">
+            <div className="flex flex-col md:flex-row gap-5 my-5">
+              <div className="w-full md:w-1/3 flex flex-col">
                 <label
                   htmlFor="email"
                   className="text-xl lg:text-2xl font-quicksand"
@@ -918,7 +924,7 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
                   required
                 />
               </div>
-              <div className="w-1/3 md:flex flex-col">
+              <div className="w-full md:w-1/3 flex flex-col mt-5 md:mt-0">
                 <label
                   htmlFor="phoneNumber"
                   className="text-xl lg:text-2xl font-quicksand"
@@ -950,7 +956,7 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
                   }
                 />
               </div>
-              <div className="w-1/3 md:flex flex-col">
+              <div className="w-full md:w-1/3 flex flex-col mt-5 md:mt-0">
                 <label
                   htmlFor="postalCode"
                   className="text-xl lg:text-2xl font-quicksand"
@@ -1001,45 +1007,43 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
               </h1>
               <hr className="border-1 border-black"></hr>
 
-              <div className="w-2/4 border ml-auto my-5">
-                <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-                  <table className="w-full text-sm text-left rtl:text-right">
-                    <tbody>
-                      <tr className="bg-white border-b">
-                        <th
-                          scope="row"
-                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-                        >
-                          Book Printing ( {quantity} Copies )
-                        </th>
-                        <td className="px-6 py-4 font-bold">
-                          {costs?.currency} {costs && printingCost}
-                        </td>
-                      </tr>
-                      <tr className="bg-white border-b">
-                        <th
-                          scope="row"
-                          className="px-6 py-4 font-medium whitespace-nowrap"
-                        >
-                          Shipping & Handling
-                        </th>
-                        <td className="px-6 py-4 font-bold">
-                          {costs?.currency} {costs && shippingCost}
-                        </td>
-                      </tr>
-                    </tbody>
-                    <tfoot>
-                      <tr className="font-semibold text-gray-900">
-                        <th scope="row" className="px-6 py-3 text-base">
-                          Total ( {quantity} Copies )
-                        </th>
-                        <td className="px-6 py-3 font-bold">
-                          {costs?.currency} {costs && totalCost}
-                        </td>
-                      </tr>
-                    </tfoot>
-                  </table>
-                </div>
+              <div className="w-full sm:w-2/4 border mx-auto my-14 overflow-x-auto shadow-md sm:rounded-lg">
+                <table className="w-full text-sm text-left rtl:text-right">
+                  <tbody>
+                    <tr className="bg-white border-b">
+                      <th
+                        scope="row"
+                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                      >
+                        Book Printing ( {quantity} Copies )
+                      </th>
+                      <td className="px-6 py-4 font-bold">
+                        {costs?.currency} {costs && printingCost}
+                      </td>
+                    </tr>
+                    <tr className="bg-white border-b">
+                      <th
+                        scope="row"
+                        className="px-6 py-4 font-medium whitespace-nowrap"
+                      >
+                        Shipping & Handling
+                      </th>
+                      <td className="px-6 py-4 font-bold">
+                        {costs?.currency} {costs && shippingCost}
+                      </td>
+                    </tr>
+                  </tbody>
+                  <tfoot>
+                    <tr className="font-semibold text-gray-900">
+                      <th scope="row" className="px-6 py-3 text-base">
+                        Total ( {quantity} Copies )
+                      </th>
+                      <td className="px-6 py-3 font-bold">
+                        {costs?.currency} {costs && totalCost}
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
               </div>
             </div>
 
