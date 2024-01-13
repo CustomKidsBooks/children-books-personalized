@@ -88,6 +88,7 @@ export const OrderController = {
         stateCode,
         streetAddress,
         shippingLevel,
+        currency,
       } = req.body;
       const orderRepository = AppDataSource.getRepository(Order);
       const newOrder = new Order();
@@ -113,7 +114,7 @@ export const OrderController = {
         line_items: [
           {
             price_data: {
-              currency: "USD",
+              currency: currency,
               unit_amount: totalAmount * 100,
               product_data: {
                 name: bookData.title,

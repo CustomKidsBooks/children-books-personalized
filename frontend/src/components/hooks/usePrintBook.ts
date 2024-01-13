@@ -17,6 +17,66 @@ interface ShippingError {
   path: string;
 }
 
+interface CountryList {
+  [key: string]: string;
+}
+
+interface ShippingOption {
+  business_only: boolean;
+  carrier_service_name: string;
+  cost_excl_tax: number;
+  currency: string;
+  home_only: boolean;
+  id: number;
+  is_active: boolean;
+  level: string;
+  max_delivery_date: string;
+  max_dispatch_date: string;
+  min_delivery_date: string;
+  min_dispatch_date: string;
+  postbox_ok: boolean;
+  total_days_max: number;
+  total_days_min: number;
+  traceable: boolean;
+  transit_time: number;
+}
+
+interface LineItemCost {
+  cost_excl_discounts: string;
+  discounts: any[];
+  quantity: number;
+  tax_rate: string;
+  total_cost_excl_discounts: string;
+  total_cost_excl_tax: string;
+  total_cost_incl_tax: string;
+  total_tax: string;
+  unit_tier_cost: null | any;
+}
+
+interface ShippingCost {
+  tax_rate: string;
+  total_cost_excl_tax: string;
+  total_cost_incl_tax: string;
+  total_tax: string;
+}
+
+interface FulfillmentCost {
+  tax_rate: string;
+  total_cost_excl_tax: string;
+  total_cost_incl_tax: string;
+  total_tax: string;
+}
+
+interface Costs {
+  currency: string;
+  fulfillment_cost: FulfillmentCost;
+  line_item_costs: LineItemCost[];
+  shipping_cost: ShippingCost;
+  total_cost_excl_tax: string;
+  total_cost_incl_tax: string;
+  total_discount_amount: string;
+  total_tax: string;
+}
 const usePrintBook = (pageCount: number) => {
   const { getAccessTokenSilently } = useAuth0();
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -24,7 +84,7 @@ const usePrintBook = (pageCount: number) => {
   const [shippingError, setShippingError] = useState<ShippingError[] | null>(
     null
   );
-  const [data, setData] = useState<any>([]);
+  const [data, setData] = useState<Array<Array<string | number>>>([]);
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
   const [selectedBookSize, setSelectedBookSize] = useState<string>("");
@@ -35,17 +95,17 @@ const usePrintBook = (pageCount: number) => {
   const [selectedPaperType, setSelectedPaperType] = useState<string>("");
   const [selectedBindingType, setSelectedBindingType] = useState<string>("");
   const [selectedCoverFinish, setSelectedCoverFinish] = useState<string>("");
-  const [shippingOptions, setShippingOptions] = useState<any>([]);
+  const [shippingOptions, setShippingOptions] = useState<ShippingOption[]>([]);
   const [country, setCountry] = useState<string>("");
   const [countryCode, setCountryCode] = useState<string>("");
 
-  const [quantity, setQuantity] = useState<string>("");
+  const [quantity, setQuantity] = useState<number | null>(null);
 
   const [selectedShippingOption, setSelectedShippingOption] = useState<
     string | null
   >(null);
 
-  const [costs, setCosts] = useState<any>(null);
+  const [costs, setCosts] = useState<Costs | null>(null);
 
   const fullName: MutableRefObject<HTMLInputElement | null> = useRef(null);
   const streetAddress: MutableRefObject<HTMLInputElement | null> = useRef(null);
@@ -73,7 +133,7 @@ const usePrintBook = (pageCount: number) => {
           header: 1,
         });
         setData(
-          jsonData.filter((data: any) => {
+          (jsonData as Array<Array<string | number>>).filter((data) => {
             return data[1] === "Yes";
           })
         );
@@ -84,7 +144,7 @@ const usePrintBook = (pageCount: number) => {
       });
   }, []);
 
-  const countryList = {
+  const countryList: CountryList = {
     Albania: "AL",
     Algeria: "DZ",
     "American Samoa": "AS",
@@ -313,7 +373,7 @@ const usePrintBook = (pageCount: number) => {
     setPodPackageId("");
     setShippingOptions([]);
     setSelectedShippingOption("");
-    setQuantity("");
+    setQuantity(null);
     setCountry("");
     setCosts(null);
   };
@@ -328,7 +388,7 @@ const usePrintBook = (pageCount: number) => {
     setPodPackageId("");
     setShippingOptions([]);
     setSelectedShippingOption("");
-    setQuantity("");
+    setQuantity(null);
     setCountry("");
     setCosts(null);
   };
@@ -340,7 +400,7 @@ const usePrintBook = (pageCount: number) => {
     setPodPackageId("");
     setShippingOptions([]);
     setSelectedShippingOption("");
-    setQuantity("");
+    setQuantity(null);
     setCountry("");
     setCosts(null);
   };
@@ -351,7 +411,7 @@ const usePrintBook = (pageCount: number) => {
     setPodPackageId("");
     setShippingOptions([]);
     setSelectedShippingOption("");
-    setQuantity("");
+    setQuantity(0);
     setCountry("");
     setCosts(null);
   };
@@ -359,26 +419,28 @@ const usePrintBook = (pageCount: number) => {
     setSelectedCoverFinish(coverFinish);
     setShippingOptions([]);
     setSelectedShippingOption("");
-    setQuantity("");
+    setQuantity(null);
     setCountry("");
     setCosts(null);
     setPodPackageId(
-      data.filter((data: Array<string | number>) => {
-        return (
-          data[2] === selectedBookSize &&
-          +data[3] < pageCount &&
-          +data[4] > pageCount &&
-          data[23] === selectedColor &&
-          data[24] === selectedPrintQuality &&
-          data[31] === selectedPaperType &&
-          data[25] === selectedBindingType &&
-          data[32] === coverFinish
-        );
-      })[0][0]
+      data
+        .filter((data: Array<string | number>) => {
+          return (
+            data[2] === selectedBookSize &&
+            +data[3] < pageCount &&
+            +data[4] > pageCount &&
+            data[23] === selectedColor &&
+            data[24] === selectedPrintQuality &&
+            data[31] === selectedPaperType &&
+            data[25] === selectedBindingType &&
+            data[32] === coverFinish
+          );
+        })[0][0]
+        .toString()
     );
   };
 
-  const handleNumberOfCopiesChange = (quantity: string) => {
+  const handleNumberOfCopiesChange = (quantity: number) => {
     setQuantity(quantity);
     setShippingOptions([]);
     setSelectedShippingOption("");
@@ -391,10 +453,13 @@ const usePrintBook = (pageCount: number) => {
     setCosts(null);
   };
 
-  const getShippingOptions = async (country: keyof typeof countryList) => {
-    setCountry(country);
+  const getShippingOptions = async (country: keyof CountryList) => {
+    setCountry((prevCountry) => {
+      return countryList[prevCountry];
+    });
     setCountryCode(countryList[`${country}`]);
     setSelectedShippingOption(null);
+    setCosts(null);
     try {
       setErrorMessage("");
       const response = await axios.post(
@@ -424,6 +489,7 @@ const usePrintBook = (pageCount: number) => {
     }
   };
   const handleEstimatedCost = async () => {
+    setCosts(null);
     const token = await getAccessTokenSilently();
     try {
       setErrorMessage("");

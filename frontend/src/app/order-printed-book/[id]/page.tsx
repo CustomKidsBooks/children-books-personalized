@@ -63,7 +63,7 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
     handleShippingOptionChange,
   } = usePrintBook(bookData?.page!);
 
-  const pageCount = bookData?.page!;
+  const pageCount: number = bookData?.page!;
 
   const countryNames: string[] = Object.keys(countryList);
 
@@ -75,7 +75,7 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
         })
         .map((data: Array<string | number>) => {
           return data[2];
-        })
+        }) as string[]
     )
   );
 
@@ -109,7 +109,7 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
         })
         .map((data: Array<string | number>) => {
           return data[31];
-        })
+        }) as string[]
     )
   );
 
@@ -128,7 +128,7 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
         })
         .map((data: Array<string | number>) => {
           return data[25];
-        })
+        }) as string[]
     )
   );
 
@@ -148,18 +148,23 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
         })
         .map((data: Array<string | number>) => {
           return data[32];
-        })
+        }) as string[]
     )
   );
 
   const printingCost =
-    Math.round(costs?.line_item_costs[0]?.total_cost_incl_tax * 100) / 100;
+    costs?.line_item_costs[0]?.total_cost_incl_tax !== undefined
+      ? Math.round(Number(costs.line_item_costs[0].total_cost_incl_tax) * 100) /
+        100
+      : 0;
+
   const shippingCost =
     Math.round(
-      (+costs?.shipping_cost?.total_cost_incl_tax +
-        +costs?.fulfillment_cost?.total_cost_incl_tax) *
+      (+costs?.shipping_cost?.total_cost_incl_tax! +
+        +costs?.fulfillment_cost?.total_cost_incl_tax!) *
         100
     ) / 100;
+
   const totalCost = Math.round((printingCost + shippingCost) * 100) / 100;
 
   const makePayment = async () => {
@@ -185,6 +190,7 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
           stateCode: state.current?.value,
           streetAddress: streetAddress.current?.value,
           shippingLevel: selectedShippingOption,
+          currency: costs?.currency,
         },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -735,8 +741,7 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
                   id="numberOfCopies"
                   className="border outline-none focus:border-slate-500 py-2 px-2"
                   min="1"
-                  value={quantity}
-                  onChange={(e) => handleNumberOfCopiesChange(e.target.value)}
+                  onChange={(e) => handleNumberOfCopiesChange(+e.target.value)}
                   disabled={!podPackageId}
                 />
               </div>
@@ -994,7 +999,7 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
                 className="text font-bold"
                 onClick={handleEstimatedCost}
               >
-                Get Quote
+                Calculate Price
               </Button>
             </div>
           </div>
@@ -1066,7 +1071,7 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
             setErrorMessage("");
           }}
         >
-          <div className="text-red-500 p-10">
+          <div className="text-red-500 md:py-10 py-6 md:px-5 ">
             {errorMessage && <div>{errorMessage}</div>}
           </div>
         </PrintBookModal>
