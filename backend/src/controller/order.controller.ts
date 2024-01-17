@@ -9,6 +9,45 @@ const stripe = require("stripe")(process.env.STRIPE_API_KEY);
 const endpointSecret = process.env.STRIPE_WEBHOOK_ENDPOINT_SECRET;
 
 export const OrderController = {
+  getOrders: async (req: Request, res: Response) => {
+    try {
+      const userID = req.params.userID;
+      const orderRepository = AppDataSource.getRepository(Order);
+      const orders = await orderRepository.find({ where: { userID: userID } });
+
+      return res.status(200).json({ orders });
+    } catch (error: any) {
+      return res.status(500).json({
+        success: 0,
+        message: "Database connection error",
+      });
+    }
+  },
+  getOrderStatus: async (req: Request, res: Response) => {
+    try {
+      const printJobId = req.params.printJobId;
+
+      const access_token = await getAccessTokenFromLulu();
+
+      const response = await axios.get(
+        `https://api.lulu.com/print-jobs/${printJobId}/status/`,
+        {
+          headers: {
+            "Cache-Control": "no-cache",
+            Authorization: `Bearer ${access_token}`,
+          },
+        }
+      );
+
+      return res.status(200).json({ status: response.data });
+    } catch (error: any) {
+      return res.status(500).json({
+        success: 0,
+        message: "Database connection error",
+      });
+    }
+  },
+
   getPrintJobEstimatedCost: async (req: Request, res: Response) => {
     try {
       const {

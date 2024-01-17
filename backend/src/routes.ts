@@ -63,6 +63,12 @@ export default function (app: Express) {
 
   app.post("/api/sendBookAsWord/:bookId", BookController.sendBookAsWord);
 
+  app.get("/api/users/:userID/orders", OrderController.getOrders);
+  app.get(
+    "/api/users/:userID/orders/:printJobId/status",
+    OrderController.getOrderStatus
+  );
+
   app.post(
     "/api/orders/printJobEstimatedCost",
     authMiddleware,

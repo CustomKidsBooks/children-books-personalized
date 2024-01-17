@@ -13,6 +13,9 @@ export class Order {
   @PrimaryGeneratedColumn()
   id!: number;
 
+  @Column({ type: "datetime", default: () => "NOW()" })
+  date!: string;
+
   @Column()
   userID!: string;
 
