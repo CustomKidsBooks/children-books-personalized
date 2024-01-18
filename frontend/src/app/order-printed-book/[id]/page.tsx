@@ -205,6 +205,20 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
   return (
     <section className="">
       <div className="p-2 mb-3 flex flex-col justify-between max-w-5xl mx-auto">
+        <div className="relative mb-10">
+          <Image
+            src="/assets/print-book.jpg"
+            alt="your-story"
+            width={250}
+            height={56.957}
+          />
+          <div className="absolute w-full top-2/4 -translate-y-2/4">
+            <h1 className="text-3xl ms-10 font-quicksand font-medium">
+              Print Book
+            </h1>
+          </div>
+        </div>
+
         <div className="font-quicksand mt-10">
           <p className="text-xl my-3">
             <span className="font-bold">Title :</span> {bookData?.title}

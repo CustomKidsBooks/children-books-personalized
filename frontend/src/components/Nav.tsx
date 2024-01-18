@@ -70,6 +70,15 @@ const Nav = () => {
                   </div>
                   <div>
                     <LinkButton
+                      href="/orders"
+                      intent="teal"
+                      className="text-sm font-normal inline-flex items-center justify-center"
+                    >
+                      My Orders
+                    </LinkButton>
+                  </div>
+                  <div>
+                    <LinkButton
                       href="#"
                       intent="teal"
                       onClick={handleDeleteClick}

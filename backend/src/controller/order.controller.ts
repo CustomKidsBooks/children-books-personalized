@@ -11,11 +11,24 @@ const endpointSecret = process.env.STRIPE_WEBHOOK_ENDPOINT_SECRET;
 export const OrderController = {
   getOrders: async (req: Request, res: Response) => {
     try {
+      const page = Number(req.query.page);
+      const limit = Number(req.query.limit);
       const userID = req.params.userID;
       const orderRepository = AppDataSource.getRepository(Order);
-      const orders = await orderRepository.find({ where: { userID: userID } });
 
-      return res.status(200).json({ orders });
+      const ordersAndCount = await orderRepository.findAndCount({
+        where: { userID: userID },
+        order: {
+          id: "DESC",
+        },
+        skip: (page - 1) * limit,
+        take: limit,
+      });
+      const orders = ordersAndCount[0];
+      const count = ordersAndCount[1];
+      const totalPages = Math.ceil(count / limit);
+
+      return res.status(200).json({ orders, totalPages });
     } catch (error: any) {
       return res.status(500).json({
         success: 0,
@@ -23,6 +36,7 @@ export const OrderController = {
       });
     }
   },
+
   getOrderStatus: async (req: Request, res: Response) => {
     try {
       const printJobId = req.params.printJobId;
@@ -108,7 +122,29 @@ export const OrderController = {
       });
     }
   },
+  paymentDone: async (req: Request, res: Response) => {
+    try {
+      const orderID = Number(req.params.orderID);
+      const orderRepository = AppDataSource.getRepository(Order);
 
+      const order = await orderRepository.findOne({
+        where: { id: orderID },
+      });
+      if (order?.paymentStatus === "Not Paid") {
+        await AppDataSource.createQueryBuilder()
+          .update(Order)
+          .set({ paymentStatus: "In Process" })
+          .where("id = :id", { id: orderID })
+          .execute();
+      }
+      return res.status(200).json({});
+    } catch (error: any) {
+      return res.status(500).json({
+        success: 0,
+        message: "Database connection error",
+      });
+    }
+  },
   createCheckoutSession: async (req: Request, res: Response) => {
     try {
       const {
@@ -134,14 +170,14 @@ export const OrderController = {
 
       newOrder.userID = userID;
       newOrder.book = bookID;
-      newOrder.paymentStatus = "processing";
+      newOrder.paymentStatus = "Not Paid";
       newOrder.orderTotal = totalAmount;
       newOrder.coverUrl =
         "https://www.dropbox.com/s/7bv6mg2tj0h3l0r/lulu_trade_perfect_template.pdf?dl=1&raw=1";
       newOrder.interiorUrl =
         "https://www.dropbox.com/s/r20orb8umqjzav9/lulu_trade_interior_template-32.pdf?dl=1&raw=1";
       newOrder.podPackageId = podPackageId;
-
+      newOrder.quantity = quantity;
       newOrder.printJobId = 0;
 
       const savedOrder = await orderRepository.save(newOrder);
@@ -184,8 +220,8 @@ export const OrderController = {
             shippingLevel: shippingLevel,
           },
         },
-        success_url: `${process.env.FRONTEND_URL}/success-payment`,
-        cancel_url: `${process.env.FRONTEND_URL}/cancel-payment`,
+        success_url: `${process.env.FRONTEND_URL}/success-payment/${savedOrder.id}`,
+        cancel_url: `${process.env.FRONTEND_URL}/cancel-payment/${savedOrder.id}`,
       });
 
       return res.status(200).json({

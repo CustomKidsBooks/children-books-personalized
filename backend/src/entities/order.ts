@@ -29,6 +29,9 @@ export class Order {
   podPackageId!: string;
 
   @Column()
+  quantity!: number;
+
+  @Column()
   orderTotal!: number;
 
   @Column()
