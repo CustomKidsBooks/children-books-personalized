@@ -58,12 +58,13 @@ const Nav = () => {
                 />
               </button>
               {isDropdownVisible && (
-                <div className="absolute right-[-120px] top-[22px] mt-6 py-2 px-2 w-44 border-solid border-pink flex-shrink-0 bg-white rounded-lg shadow-3x">
+                <div className="absolute z-10 right-[-120px] top-[22px] mt-6 py-2 px-2 w-44 border-solid border-pink flex-shrink-0 bg-white rounded-lg shadow-3x">
                   <div>
                     <LinkButton
                       href="/user-profile"
                       intent="teal"
                       className="text-sm font-normal inline-flex items-center justify-center"
+                      onClick={handleImageClick}
                     >
                       My Profile
                     </LinkButton>
@@ -73,6 +74,7 @@ const Nav = () => {
                       href="/orders"
                       intent="teal"
                       className="text-sm font-normal inline-flex items-center justify-center"
+                      onClick={handleImageClick}
                     >
                       My Orders
                     </LinkButton>
@@ -81,7 +83,10 @@ const Nav = () => {
                     <LinkButton
                       href="#"
                       intent="teal"
-                      onClick={handleDeleteClick}
+                      onClick={() => {
+                        handleDeleteClick();
+                        handleImageClick();
+                      }}
                       className="text-sm font-normal"
                     >
                       Delete my account
