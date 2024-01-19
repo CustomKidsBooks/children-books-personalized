@@ -13,7 +13,7 @@ const UserLibrary = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [firstPage, setFirstPage] = useState<number>(1);
-  const booksPerPage = 1;
+  const booksPerPage = 8;
   const pagesToDisplay = 3;
   const tag: string =
     "  1. #FallStorybook  2. #KidsFallAdventure  3. #AutumnFantasy";
@@ -29,8 +29,8 @@ const UserLibrary = () => {
   };
 
   const displaySelectedPage = (selectedPage: number) => {
-    const pageSet = Math.ceil(selectedPage / 3);
-    setFirstPage(pageSet * 3 - 3 + 1);
+    const pageSet = Math.ceil(selectedPage / pagesToDisplay);
+    setFirstPage(pageSet * pagesToDisplay - pagesToDisplay + 1);
     setCurrentPage(selectedPage);
   };
 
@@ -88,7 +88,7 @@ const UserLibrary = () => {
             </Button>
           </div>
           <div className={`${totalPages > 1 && `flex gap-3`}`}>
-            {Array.from(Array(3), (e, i) => {
+            {Array.from(Array(pagesToDisplay), (e, i) => {
               return (
                 <div key={i}>
                   {firstPage + i <= totalPages && (
