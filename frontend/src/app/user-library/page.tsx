@@ -13,7 +13,7 @@ const UserLibrary = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [firstPage, setFirstPage] = useState<number>(1);
-  const booksPerPage = 8;
+  const booksPerPage = 1;
   const pagesToDisplay = 3;
   const tag: string =
     "  1. #FallStorybook  2. #KidsFallAdventure  3. #AutumnFantasy";
@@ -28,18 +28,10 @@ const UserLibrary = () => {
     setFirstPage(1);
   };
 
-  const displayPreviousPages = () => {
-    if (firstPage > pagesToDisplay) {
-      setFirstPage(() => firstPage - pagesToDisplay);
-      setCurrentPage(() => firstPage - pagesToDisplay);
-    }
-  };
-
-  const displayNextPages = () => {
-    if (firstPage <= totalPages - pagesToDisplay) {
-      setFirstPage(() => firstPage + pagesToDisplay);
-      setCurrentPage(() => firstPage + pagesToDisplay);
-    }
+  const displaySelectedPage = (selectedPage: number) => {
+    const pageSet = Math.ceil(selectedPage / 3);
+    setFirstPage(pageSet * 3 - 3 + 1);
+    setCurrentPage(selectedPage);
   };
 
   return (
@@ -79,58 +71,58 @@ const UserLibrary = () => {
       />
 
       <div className="my-16">
-        <div className="flex justify-between sm:justify-center items-center gap-2 md:gap-3">
-          <Button
-            onClick={displayPreviousPages}
-            className="shadow-none disabled:opacity-50"
-            disabled={firstPage <= 3 ? true : false}
-          >
-            <Image
-              src="/assets/backward-arrow.svg"
-              alt="backward-arrow"
-              width={15}
-              height={3}
-              className="hover:cursor-pointer fill-amber-100"
-            />
-          </Button>
-
-          {firstPage > pagesToDisplay ? <div>...</div> : ""}
-
-          {Array.from(Array(pagesToDisplay), (e, i) => {
-            return (
-              <div key={i}>
-                {firstPage + i <= totalPages && (
-                  <div
-                    onClick={() => setCurrentPage(firstPage + i)}
-                    className={
-                      currentPage === firstPage + i
-                        ? "bg-pink border-black rounded-full text-white"
-                        : ""
-                    }
-                  >
-                    <button className="border rounded-full text-sm md:text-base py-2 px-3 md:py-2 md:px-4 cursor-pointer font-quicksand font-bold">
-                      {firstPage + i}
+        <div className="flex gap-3 justify-center items-center my-14">
+          <div className="flex items-center me-3">
+            <Button
+              disabled={currentPage === 1}
+              onClick={() => displaySelectedPage(currentPage - 1)}
+              className="shadow-none disabled:opacity-50"
+            >
+              <Image
+                src="/assets/backward-arrow.svg"
+                alt="backward-arrow"
+                width={15}
+                height={3}
+                className="hover:cursor-pointer fill-amber-100"
+              />
+            </Button>
+          </div>
+          <div className={`${totalPages > 1 && `flex gap-3`}`}>
+            {Array.from(Array(3), (e, i) => {
+              return (
+                <div key={i}>
+                  {firstPage + i <= totalPages && (
+                    <button
+                      onClick={() => displaySelectedPage(i + firstPage)}
+                      className={
+                        currentPage === i + firstPage
+                          ? "bg-pink text-white font-semibold border px-4 py-2 rounded-full"
+                          : "border-pink text-black font-semibold border px-4 py-2 rounded-full"
+                      }
+                    >
+                      {i + firstPage}
                     </button>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-          {firstPage <= totalPages - pagesToDisplay ? <div>...</div> : ""}
+                  )}
+                </div>
+              );
+            })}
+          </div>
 
-          <Button
-            onClick={displayNextPages}
-            className="shadow-none disabled:opacity-50"
-            disabled={firstPage > totalPages - 3 ? true : false}
-          >
-            <Image
-              src="/assets/forward-arrow.svg"
-              alt="forward-arrow"
-              width={15}
-              height={3}
-              className="hover:cursor-pointer"
-            />
-          </Button>
+          <div className="flex items-center ms-3">
+            <Button
+              disabled={currentPage === totalPages}
+              onClick={() => displaySelectedPage(currentPage + 1)}
+              className="shadow-none disabled:opacity-50"
+            >
+              <Image
+                src="/assets/forward-arrow.svg"
+                alt="forward-arrow"
+                width={15}
+                height={3}
+                className="hover:cursor-pointer"
+              />
+            </Button>
+          </div>
         </div>
       </div>
     </section>

@@ -3,7 +3,7 @@ import { ValidationSchema } from "../validations/interface";
 
 export const fetchBooksVal: ValidationSchema = Yup.object().shape(
   {
-    limit: Yup.number().required("limit is required").min(4, "limit must be 4"),
+    limit: Yup.number().required("limit is required").min(1, "limit must be 4"),
     page: Yup.number()
       .min(1, "Page must be at least 1")
       .required("page is required"),
