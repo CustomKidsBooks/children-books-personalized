@@ -39,8 +39,8 @@ const useOrders = (userID: string) => {
   const [totalPages, setTotalPages] = useState<number>(1);
   const { getAccessTokenSilently } = useAuth0();
 
-  const ordersPerPage = 1;
-  const pagesToDisplay = 4;
+  const ordersPerPage = 5;
+  const pagesToDisplay = 3;
   useEffect(() => {
     const getOrders = async () => {
       setIsLoading(true);
