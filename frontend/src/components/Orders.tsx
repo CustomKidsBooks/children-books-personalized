@@ -46,6 +46,7 @@ const Orders = ({ user }: ordersValues) => {
     totalPages,
     getOrders,
     currentPage,
+    pagesToDisplay,
   } = useOrders(user?.sub!);
 
   if (isError) {
@@ -144,7 +145,7 @@ const Orders = ({ user }: ordersValues) => {
                 1
               </div>
             ) : (
-              Array.from(Array(3), (e, i) => {
+              Array.from(Array(pagesToDisplay), (e, i) => {
                 return (
                   <div key={i}>
                     {firstPage + i <= totalPages && (
