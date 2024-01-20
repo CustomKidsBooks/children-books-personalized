@@ -4,6 +4,7 @@ import useOrders from "./hooks/useOrders";
 import Image from "next/image";
 import { useState } from "react";
 import Order from "./Order";
+import Pagination from "./Pagination";
 
 interface ordersValues {
   user: User;
@@ -123,65 +124,13 @@ const Orders = ({ user }: ordersValues) => {
           </table>
         </div>
 
-        <div className="flex gap-3 justify-center items-center my-14">
-          <div className="flex items-center me-3">
-            <button
-              disabled={currentPage === 1 || orders.length === 0}
-              onClick={() => getOrders(currentPage - 1)}
-              className="font-semibold disabled:font-normal disabled:opacity-70"
-            >
-              <Image
-                src="/assets/backward-arrow.svg"
-                alt="backward-arrow"
-                width={15}
-                height={3}
-                className="hover:cursor-pointer fill-amber-100"
-              />
-            </button>
-          </div>
-          <div className={`${totalPages > 1 && `flex gap-3`}`}>
-            {orders.length === 0 ? (
-              <div className="border-pink text-white font-semibold border px-4 py-2 rounded-full">
-                1
-              </div>
-            ) : (
-              Array.from(Array(pagesToDisplay), (e, i) => {
-                return (
-                  <div key={i}>
-                    {firstPage + i <= totalPages && (
-                      <button
-                        onClick={() => getOrders(i + firstPage)}
-                        className={
-                          currentPage === i + firstPage
-                            ? "bg-pink text-white font-semibold border px-4 py-2 rounded-full"
-                            : "border-pink text-black font-semibold border px-4 py-2 rounded-full"
-                        }
-                      >
-                        {i + firstPage}
-                      </button>
-                    )}
-                  </div>
-                );
-              })
-            )}
-          </div>
-
-          <div className="flex items-center ms-3">
-            <button
-              disabled={currentPage === totalPages || orders.length === 0}
-              onClick={() => getOrders(currentPage + 1)}
-              className="font-semibold disabled:font-normal disabled:opacity-70"
-            >
-              <Image
-                src="/assets/forward-arrow.svg"
-                alt="forward-arrow"
-                width={15}
-                height={3}
-                className="hover:cursor-pointer"
-              />
-            </button>
-          </div>
-        </div>
+        <Pagination
+          firstPage={firstPage}
+          currentPage={currentPage}
+          pagesToDisplay={pagesToDisplay}
+          displaySelectedPage={getOrders}
+          totalPages={totalPages}
+        ></Pagination>
       </section>
     </>
   );
