@@ -46,13 +46,11 @@ const LibraryDisplay = ({
   }
 
   return (
-    <section className="py-10">
-      <div className="py-3 place-items-center lg:grid lg:grid-cols-4 gap-4 flex overflow-x-auto scrollbar">
-        {books!.map((book) => (
-          <BookCard key={book.id} {...book} />
-        ))}
-      </div>
-    </section>
+    <div className="pt-10 pb-3 place-items-center lg:grid lg:grid-cols-4 gap-x-4 gap-y-10 flex overflow-x-auto scrollbar">
+      {books!.map((book) => (
+        <BookCard key={book.id} {...book} />
+      ))}
+    </div>
   );
 };
 

@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Tag from "@components/Tag";
 import { BookValues } from "@utils/interfaces";
+import { Button } from "./ui/Button";
 
 const BookCard = (book: BookValues) => {
   const router = useRouter();

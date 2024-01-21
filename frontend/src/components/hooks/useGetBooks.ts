@@ -50,11 +50,43 @@ const useGetBooks = (
     }
   }, [currentPage, search]);
 
+  const changeBookPrivacy = async (bookId: number, privacy: string) => {
+    try {
+      const token = await getAccessTokenSilently();
+      const response = await axiosInstance.put(
+        `/api/users/${userID}/books/${bookId}/change-privacy`,
+        { privacy },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setBooks(response.data.books);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const deleteBook = async (bookId: number) => {
+    try {
+      // TODO : implement API after merginf the deleteBookFunction branch
+
+      // const token = await getAccessTokenSilently();
+      // axiosInstance.delete(`/api/book/${bookId}`, {
+      //   headers: { Authorization: `Bearer ${token}` },
+      // });
+      setBooks(() => books.filter((book) => book.id !== bookId));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return {
     isLoading,
     isError,
     books,
     totalPages,
+    changeBookPrivacy,
+    deleteBook,
   };
 };
 

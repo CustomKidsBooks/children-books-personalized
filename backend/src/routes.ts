@@ -45,6 +45,12 @@ export default function (app: Express) {
 
   app.put("/api/pages/:pageId", BookController.updatePageHandler);
 
+  app.put(
+    "/api/users/:userID/books/:bookID/change-privacy",
+    authMiddleware,
+    BookController.changeBookPrivacy
+  );
+
   app.delete("/api/books/:id", BookController.deleteBookHandler);
 
   app.delete("/api/pages/:pageId", BookController.deletePageHandler);

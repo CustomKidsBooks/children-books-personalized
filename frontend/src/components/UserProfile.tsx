@@ -7,7 +7,10 @@ import useGetBooks from "./hooks/useGetBooks";
 import Pagination from "./Pagination";
 import BookCard from "./BookCard";
 import { BookValues } from "@utils/interfaces";
-
+import { Button } from "./ui/Button";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import LibrarySkeleton from "./Library/LibraryCard.skeleton";
 interface UserProfileValues {
   user: User;
 }
@@ -17,24 +20,27 @@ const UserProfile = ({ user }: UserProfileValues) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [firstPage, setFirstPage] = useState<number>(1);
   const [booksToDisplay, setBooksToDisplay] = useState<BookValues[]>([]);
-  const { isLoading, isError, books } = useGetBooks(user?.sub);
 
-  const booksPerPage = 8;
-  const pagesToDisplay = 3;
+  const { isLoading, isError, books, changeBookPrivacy, deleteBook } =
+    useGetBooks(user?.sub);
 
   let totalBooks: BookValues[] = books;
   if (privacy !== "all") {
     totalBooks = books.filter((book) => book.privacy === privacy);
   }
+
+  const booksPerPage = 8;
+  const pagesToDisplay = 3;
   const totalPages = Math.ceil(totalBooks.length / booksPerPage);
 
   useEffect(() => {
-    const a = totalBooks.filter(
-      (book: BookValues, i) =>
-        i >= booksPerPage * 1 - 1 - (booksPerPage - 1) &&
-        i <= booksPerPage * 1 - 1
+    setBooksToDisplay(() =>
+      totalBooks.filter(
+        (book: BookValues, i) =>
+          i >= booksPerPage * 1 - 1 - (booksPerPage - 1) &&
+          i <= booksPerPage * 1 - 1
+      )
     );
-    setBooksToDisplay(a);
     const pageSet = Math.ceil(1 / pagesToDisplay);
     setFirstPage(pageSet * pagesToDisplay - pagesToDisplay + 1);
     setCurrentPage(1);
@@ -44,12 +50,13 @@ const UserProfile = ({ user }: UserProfileValues) => {
     const pageSet = Math.ceil(selectedPage / pagesToDisplay);
     setFirstPage(pageSet * pagesToDisplay - pagesToDisplay + 1);
     setCurrentPage(selectedPage);
-    const a = totalBooks.filter(
-      (book: BookValues, i) =>
-        i >= booksPerPage * selectedPage - 1 - (booksPerPage - 1) &&
-        i <= booksPerPage * selectedPage - 1
+    setBooksToDisplay(() =>
+      totalBooks.filter(
+        (book: BookValues, i) =>
+          i >= booksPerPage * selectedPage - 1 - (booksPerPage - 1) &&
+          i <= booksPerPage * selectedPage - 1
+      )
     );
-    setBooksToDisplay(a);
   };
 
   return (
@@ -106,11 +113,59 @@ const UserProfile = ({ user }: UserProfileValues) => {
           </div>
         </div>
 
-        <div className="py-14 place-items-center lg:grid lg:grid-cols-4 gap-4 flex overflow-x-auto scrollbar">
-          {booksToDisplay.map((book) => (
-            <BookCard key={book.id} {...book} />
-          ))}
+        <div>
+          {!isLoading && !isError && booksToDisplay.length === 0 && (
+            <h1 className="py-14 text p-4">
+              You don't have any {privacy} book!
+            </h1>
+          )}
+          {isLoading && <LibrarySkeleton />}
+          {isError && (
+            <h1 className="py-14 text-red-600 text-xl font-semibold flex items-center justify-center">
+              Error
+            </h1>
+          )}
         </div>
+        {booksToDisplay.length > 0 && (
+          <div className="pt-14 pb-10 place-items-center lg:grid lg:grid-cols-4 gap-x-4 gap-y-14 flex overflow-x-auto scrollbar">
+            {booksToDisplay.map((book) => (
+              <div key={book.id}>
+                <BookCard {...book} />
+                <div className="flex mt-5 mx-2 justify-between items-center">
+                  <div className="flex gap-3 justify-center">
+                    <Button
+                      className={`text-black capitalize text-sm ${
+                        book.privacy === "public"
+                          ? "bg-gray-500 text-white"
+                          : ""
+                      }`}
+                      size="medium"
+                      onClick={() => changeBookPrivacy(book.id, "public")}
+                    >
+                      Public
+                    </Button>
+                    <Button
+                      className={`text-black capitalize text-sm ${
+                        book.privacy === "private"
+                          ? "bg-gray-500 text-white"
+                          : ""
+                      }`}
+                      size="medium"
+                      onClick={() => changeBookPrivacy(book.id, "private")}
+                    >
+                      Private
+                    </Button>
+                  </div>
+                  <FontAwesomeIcon
+                    icon={faTrash}
+                    className="fa-icon hover:cursor-pointer"
+                    onClick={() => deleteBook(book.id)}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
 
         <Pagination
           firstPage={firstPage}
