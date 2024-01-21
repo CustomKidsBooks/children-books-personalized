@@ -1,6 +1,5 @@
 "use client";
 
-import LibraryCard from "@components/Library/LibraryCard";
 import Tag from "@components/Tag";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,6 +7,7 @@ import Image from "next/image";
 import { ChangeEvent, useState } from "react";
 import { Button } from "../../components/ui/Button";
 import Pagination from "@components/Pagination";
+import LibraryDisplay from "@components/Library/LibraryDisplay";
 
 const UserLibrary = () => {
   const [search, setSearch] = useState("");
@@ -64,7 +64,7 @@ const UserLibrary = () => {
           />
         </div>
       </div>
-      <LibraryCard
+      <LibraryDisplay
         search={search}
         currentPage={currentPage}
         getTotalPages={getTotalPages}
