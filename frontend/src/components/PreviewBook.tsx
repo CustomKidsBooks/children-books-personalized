@@ -8,15 +8,18 @@ import SendBook from "./SendBook";
 import Tag from "./Tag";
 import useGetBook from "./hooks/useGetBook";
 import PreviewBookSkeleton from "./skeleton/PreviewBook.skeleton";
-import { LinkButton } from "./ui/LinkButton";
+import { Button } from "./ui/Button";
 interface PreviewBookValues {
   id: number;
 }
-
+import { useAuth0 } from "@auth0/auth0-react";
+import { useRouter } from "next/navigation";
 // TODO: Add functionality to the page
 
 const PreviewBook = ({ id }: PreviewBookValues) => {
   const { bookData: book, isLoading, isError } = useGetBook(id);
+  const { user, getAccessTokenSilently, loginWithRedirect } = useAuth0();
+  const router = useRouter();
   if (isLoading) {
     return <PreviewBookSkeleton />;
   }
@@ -58,13 +61,18 @@ const PreviewBook = ({ id }: PreviewBookValues) => {
               Get Printed Book
             </h1>
             <div className="mt-3 py-4">
-              <LinkButton
-                href={`/order-printed-book/${id}`}
+              <Button
+                // href={`/order-printed-book/${id}`}
                 intent="teal"
                 className="text font-bold"
+                onClick={() =>
+                  !user
+                    ? loginWithRedirect()
+                    : router.push(`/order-printed-book/${id}`)
+                }
               >
                 Order Printed Book
-              </LinkButton>
+              </Button>
             </div>
           </div>
         </div>

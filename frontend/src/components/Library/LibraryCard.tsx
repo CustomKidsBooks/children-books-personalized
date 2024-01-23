@@ -8,6 +8,7 @@ import Tag from "../Tag";
 import LibrarySkeleton from "./LibraryCard.skeleton";
 import useLibraryCard from "../hooks/useLibraryCard";
 import { BookValues } from "@utils/interfaces";
+import { useEffect } from "react";
 
 interface LibraryValues {
   userID?: string | null;
@@ -34,7 +35,9 @@ const LibraryCard = ({
     booksPerPage
   );
 
-  getTotalPages ? getTotalPages(totalPages) : "";
+  useEffect(() => {
+    getTotalPages ? getTotalPages(totalPages) : "";
+  }, [totalPages]);
 
   let books: BookValues[] = bookData;
   if (userID && privacy !== "all") {

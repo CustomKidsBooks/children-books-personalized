@@ -2,21 +2,183 @@ import { Request, Response } from "express";
 import { AppDataSource } from "../db/connect";
 import { Order } from "../entities/order";
 import { Book } from "../entities/book";
+import axios from "axios";
+import { getAccessTokenFromLulu } from "../service/lulu.service";
 
 const stripe = require("stripe")(process.env.STRIPE_API_KEY);
 const endpointSecret = process.env.STRIPE_WEBHOOK_ENDPOINT_SECRET;
 
 export const OrderController = {
+  getOrders: async (req: Request, res: Response) => {
+    try {
+      const page = Number(req.query.page);
+      const limit = Number(req.query.limit);
+      const userID = req.params.userID;
+      const orderRepository = AppDataSource.getRepository(Order);
+
+      const ordersAndCount = await orderRepository.findAndCount({
+        where: { userID: userID },
+        order: {
+          id: "DESC",
+        },
+        skip: (page - 1) * limit,
+        take: limit,
+      });
+      const orders = ordersAndCount[0];
+      const count = ordersAndCount[1];
+      const totalPages = Math.ceil(count / limit);
+
+      return res.status(200).json({ orders, totalPages });
+    } catch (error: any) {
+      return res.status(500).json({
+        success: 0,
+        message: "Database connection error",
+      });
+    }
+  },
+
+  getOrderStatus: async (req: Request, res: Response) => {
+    try {
+      const printJobId = req.params.printJobId;
+
+      const access_token = await getAccessTokenFromLulu();
+
+      const response = await axios.get(
+        `https://api.lulu.com/print-jobs/${printJobId}/status/`,
+        {
+          headers: {
+            "Cache-Control": "no-cache",
+            Authorization: `Bearer ${access_token}`,
+          },
+        }
+      );
+
+      return res.status(200).json({ status: response.data });
+    } catch (error: any) {
+      return res.status(500).json({
+        success: 0,
+        message: "Database connection error",
+      });
+    }
+  },
+
+  getPrintJobEstimatedCost: async (req: Request, res: Response) => {
+    try {
+      const {
+        pageCount,
+        podPackageId,
+        quantity,
+        city,
+        countryCode,
+        postalCode,
+        state,
+        streetAddress,
+        shippingLevel,
+        phoneNumber,
+      } = req.body;
+
+      const access_token = await getAccessTokenFromLulu();
+
+      const response = await axios.post(
+        "https://api.lulu.com/print-job-cost-calculations/",
+        {
+          line_items: [
+            {
+              page_count: pageCount,
+              pod_package_id: podPackageId,
+              quantity: quantity,
+            },
+          ],
+          shipping_address: {
+            city: city,
+            country_code: countryCode,
+            postcode: postalCode,
+            state_code: state,
+            street1: streetAddress,
+            phone_number: phoneNumber,
+          },
+          shipping_level: shippingLevel,
+        },
+        {
+          headers: {
+            "Cache-Control": "no-cache",
+            Authorization: `Bearer ${access_token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      return res.status(200).json({ costs: response.data });
+    } catch (error: any) {
+      if (error?.response.data?.shipping_address?.detail?.errors) {
+        return res.status(500).json({
+          shippingDetails:
+            error?.response.data?.shipping_address?.detail?.errors,
+        });
+      }
+      return res.status(500).json({
+        success: 0,
+        message: "Database connection error",
+      });
+    }
+  },
+  paymentDone: async (req: Request, res: Response) => {
+    try {
+      const orderID = Number(req.params.orderID);
+      const orderRepository = AppDataSource.getRepository(Order);
+
+      const order = await orderRepository.findOne({
+        where: { id: orderID },
+      });
+      if (order?.paymentStatus === "Not Paid") {
+        await AppDataSource.createQueryBuilder()
+          .update(Order)
+          .set({ paymentStatus: "In Process" })
+          .where("id = :id", { id: orderID })
+          .execute();
+      }
+      return res.status(200).json({});
+    } catch (error: any) {
+      return res.status(500).json({
+        success: 0,
+        message: "Database connection error",
+      });
+    }
+  },
   createCheckoutSession: async (req: Request, res: Response) => {
     try {
-      const { bookID, userID, amount, bookData } = req.body;
+      const {
+        bookID,
+        userID,
+        totalAmount,
+        quantity,
+        bookData,
+        podPackageId,
+        email,
+        name,
+        city,
+        countryCode,
+        phoneNumber,
+        postalCode,
+        stateCode,
+        streetAddress,
+        shippingLevel,
+        currency,
+      } = req.body;
       const orderRepository = AppDataSource.getRepository(Order);
       const newOrder = new Order();
 
       newOrder.userID = userID;
       newOrder.book = bookID;
-      newOrder.paymentStatus = "processing";
-      newOrder.orderTotal = amount;
+      newOrder.paymentStatus = "Not Paid";
+      newOrder.orderTotal = totalAmount;
+      newOrder.coverUrl =
+        "https://www.dropbox.com/s/7bv6mg2tj0h3l0r/lulu_trade_perfect_template.pdf?dl=1&raw=1";
+      newOrder.interiorUrl =
+        "https://www.dropbox.com/s/r20orb8umqjzav9/lulu_trade_interior_template-32.pdf?dl=1&raw=1";
+      newOrder.podPackageId = podPackageId;
+      newOrder.quantity = quantity;
+      newOrder.printJobId = 0;
 
       const savedOrder = await orderRepository.save(newOrder);
 
@@ -27,11 +189,11 @@ export const OrderController = {
         line_items: [
           {
             price_data: {
-              currency: "USD",
-              unit_amount: amount * 100,
+              currency: currency,
+              unit_amount: totalAmount * 100,
               product_data: {
-                name: "testOrder",
-                description: "Print Book Order",
+                name: bookData.title,
+                description: bookData.subject,
                 images: [bookData.image],
               },
             },
@@ -42,10 +204,24 @@ export const OrderController = {
           metadata: {
             userID: userID,
             oderID: savedOrder?.id,
+            coverUrl: savedOrder?.coverUrl,
+            interiorUrl: savedOrder?.interiorUrl,
+            podPackageId: savedOrder?.podPackageId,
+            quantity: quantity,
+            title: bookData.title,
+            name: name,
+            streetAddress: streetAddress,
+            city: city,
+            stateCode: stateCode,
+            countryCode: countryCode,
+            postalCode: postalCode,
+            email: email,
+            phoneNumber: phoneNumber,
+            shippingLevel: shippingLevel,
           },
         },
-        success_url: `${process.env.FRONTEND_URL}/success-payment`,
-        cancel_url: `${process.env.FRONTEND_URL}/cancel-payment`,
+        success_url: `${process.env.FRONTEND_URL}/success-payment/${savedOrder.id}`,
+        cancel_url: `${process.env.FRONTEND_URL}/cancel-payment/${savedOrder.id}`,
       });
 
       return res.status(200).json({
@@ -96,12 +272,78 @@ export const OrderController = {
       case "payment_intent.succeeded":
         orderID = event.data.object.metadata.oderID;
         userID = event.data.object.metadata.userID;
+        let coverUrl = event.data.object.metadata.coverUrl;
+        let interiorUrl = event.data.object.metadata.interiorUrl;
+        let podPackageId = event.data.object.metadata.podPackageId;
+        let title = event.data.object.metadata.title;
+        let name = event.data.object.metadata.name;
+        let streetAddress = event.data.object.metadata.streetAddress;
+        let city = event.data.object.metadata.city;
+        let stateCode = event.data.object.metadata.stateCode;
+        let countryCode = event.data.object.metadata.countryCode;
+        let postalCode = event.data.object.metadata.postalCode;
+        let email = event.data.object.metadata.email;
+        let quantity = event.data.object.metadata.quantity;
+        let phoneNumber = event.data.object.metadata.phoneNumber;
+        let shippingLevel = event.data.object.metadata.shippingLevel;
 
         await AppDataSource.createQueryBuilder()
           .update(Order)
           .set({ paymentStatus: "Paid" })
           .where("id = :id", { id: orderID })
           .execute();
+
+        const access_token = await getAccessTokenFromLulu();
+
+        const response = await axios.post(
+          "https://api.lulu.com/print-jobs/",
+          {
+            contact_email: email,
+            external_id: orderID,
+            line_items: [
+              {
+                external_id: orderID,
+                printable_normalization: {
+                  cover: {
+                    source_url: `${coverUrl}`,
+                  },
+                  interior: {
+                    source_url: `${interiorUrl}`,
+                  },
+                  pod_package_id: `${podPackageId}`,
+                },
+                quantity: quantity,
+                title: title,
+              },
+            ],
+            production_delay: 120,
+            shipping_address: {
+              city: city,
+              country_code: countryCode,
+              name: name,
+              phone_number: phoneNumber,
+              postcode: postalCode,
+              state_code: stateCode,
+              street1: streetAddress,
+            },
+            shipping_level: shippingLevel,
+          },
+          {
+            headers: {
+              "Cache-Control": "no-cache",
+              Authorization: `Bearer ${access_token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (response.data?.id) {
+          await AppDataSource.createQueryBuilder()
+            .update(Order)
+            .set({ printJobId: response.data.id })
+            .where("id = :id", { id: orderID })
+            .execute();
+        }
 
         break;
       default:
