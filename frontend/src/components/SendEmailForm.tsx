@@ -5,7 +5,6 @@ import { emailValidationSchema } from "@utils/emailValidation";
 import ReusableInput from "./ReusableInput";
 import { SendEmailModalProps } from "@utils/interfaces";
 import { Button } from "@ui/Button";
-import { useRouter } from "next/navigation";
 import { useEditedBookContext } from "./context/EditedBookContext";
 import { axiosInstance } from "@services/api-client";
 
@@ -19,9 +18,10 @@ const SendEmailForm: React.FC<SendEmailProps> = ({
   bookId,
 }) => {
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const router = useRouter();
-  const { editedBook } = useEditedBookContext();
+  const [emailSentMessage, setEmailSentMessage] = useState<String>("");
+  const [sending, setSending] = useState<boolean>(false);
 
+  const { editedBook } = useEditedBookContext();
   const { values, handleChange, handleBlur, errors, touched, handleSubmit } =
     useFormik<SendEmailModalProps>({
       initialValues: {
@@ -30,19 +30,21 @@ const SendEmailForm: React.FC<SendEmailProps> = ({
       validationSchema: emailValidationSchema,
       onSubmit: async (values) => {
         const recipientEmail = values.email;
+
+        setSending(true);
+
         try {
-          const response: any = await axiosInstance.post(
+          const response = await axiosInstance.post(
             `/api/sendBookAs${selectedFormat}/${bookId}`,
             { bookId, recipientEmail, editedBook }
           );
-          if (response.ok) {
-            router.push(`/download/${bookId}`);
-          } else {
-            setErrorMessage(
-              `Failed to send the book as ${selectedFormat} via email`
-            );
-          }
+          setEmailSentMessage(response.data.message);
+          setSending(false);
         } catch (error) {
+          setSending(false);
+          setErrorMessage(
+            `Failed to send the book as ${selectedFormat} via email`
+          );
           console.error(
             `Error sending the book as ${selectedFormat} via email:`,
             error
@@ -88,7 +90,12 @@ const SendEmailForm: React.FC<SendEmailProps> = ({
             </Button>
           </div>
         </form>
-
+        {sending && <p className="text-pink font-semibold my-3">Sending...</p>}
+        {emailSentMessage && (
+          <p className="text-gray-900 font-semibold my-3">
+            {emailSentMessage}{" "}
+          </p>
+        )}
         {errorMessage && (
           <p className="text-red-500 font-semibold my-3"> {errorMessage} </p>
         )}
