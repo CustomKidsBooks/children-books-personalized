@@ -1,70 +1,12 @@
 import { Button } from "@ui/Button";
-import { useState, useContext } from "react";
-import { ModalContext } from "./ModalProvider";
+import { useState } from "react";
 import Modal from "@components/Modal";
 import SendEmailForm from "./SendEmailForm";
-import { SendEmailModalProps } from "@utils/interfaces";
 import { useRouter } from "next/navigation";
-import ToastModal from "./ToastModal";
-import { useEditedBookContext } from "./context/EditedBookContext";
 
 const SendBook = ({ bookId }: { bookId: number }) => {
-  const [recipientEmail, setRecipientEmailLocally] = useState<string>("");
-  const { showModal, openModal, closeModal } = useContext(ModalContext);
   const [selectedFormat, setSelectedFormat] = useState<string>("Pdf");
-  const [toastMessage, setToastMessage] = useState<string>("");
-  const [isToastVisible, setToastVisible] = useState(false);
-  const router = useRouter();
-
-  const { editedBook } = useEditedBookContext();
-
-  const handleEmailChange = (email: string) => {
-    setRecipientEmailLocally(email);
-  };
-  const handleSubmit = async (
-    values: SendEmailModalProps,
-    formType: "SendEmail"
-  ) => {
-    try {
-      if (formType === "SendEmail") {
-        closeModal("sendEmailModal");
-      }
-    } catch (error) {
-      console.error("API error:", error);
-    }
-  };
-
-  const sendEmail = (selectedFormat: string, recipientEmail: string) => {
-    fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/sendBookAs${selectedFormat}/${bookId}`,
-      {
-        method: "POST",
-        body: JSON.stringify({ bookId, recipientEmail, editedBook }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )
-      .then((response) => {
-        if (response.ok) {
-          setToastMessage(
-            `Book sent as ${selectedFormat} via email successfully`
-          );
-          setToastVisible(true);
-          router.push(`/download/${bookId}`);
-        } else {
-          setToastMessage(
-            `Failed to send the book as ${selectedFormat} via email`
-          );
-        }
-      })
-      .catch((error) => {
-        console.error(
-          `Error sending the book as ${selectedFormat} via email:`,
-          error
-        );
-      });
-  };
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <div className="items-center">
@@ -72,7 +14,7 @@ const SendBook = ({ bookId }: { bookId: number }) => {
       <div className="flex flex-col gap-4 py-4 w-32">
         <Button
           onClick={() => {
-            openModal("sendEmailModal");
+            setIsModalOpen(true);
             setSelectedFormat("Pdf");
           }}
           intent="secondary"
@@ -82,7 +24,7 @@ const SendBook = ({ bookId }: { bookId: number }) => {
         </Button>
         <Button
           onClick={() => {
-            openModal("sendEmailModal");
+            setIsModalOpen(true);
             setSelectedFormat("Word");
           }}
           intent="secondary"
@@ -91,24 +33,14 @@ const SendBook = ({ bookId }: { bookId: number }) => {
           Word
         </Button>
       </div>
-      {showModal.sendEmailModal && (
-        <Modal
-          isVisible={showModal.sendEmailModal}
-          onClose={() => closeModal("sendEmailModal")}
-        >
-          <SendEmailForm
-            handleSubmit={handleSubmit}
-            selectedFormat={selectedFormat}
-            sendEmailDoc={sendEmail}
-            onEmailChange={handleEmailChange}
-          />
-        </Modal>
-      )}
-      <ToastModal
-        isVisible={isToastVisible}
-        message={toastMessage}
-        onClose={() => setToastVisible(false)}
-      />
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+        }}
+      >
+        <SendEmailForm selectedFormat={selectedFormat} bookId={bookId} />
+      </Modal>
     </div>
   );
 };

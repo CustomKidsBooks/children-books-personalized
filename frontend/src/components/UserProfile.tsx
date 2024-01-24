@@ -1,5 +1,4 @@
 import Image from "next/image";
-// import LibraryCard from "./Library/LibraryCard";
 import { LinkButton } from "./ui/LinkButton";
 import { User } from "@auth0/auth0-react";
 import { useEffect, useState } from "react";
@@ -10,7 +9,7 @@ import { BookValues } from "@utils/interfaces";
 import { Button } from "./ui/Button";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import LibrarySkeleton from "./Library/LibraryCard.skeleton";
+import LibrarySkeleton from "./skeleton/LibraryCard.skeleton";
 interface UserProfileValues {
   user: User;
 }

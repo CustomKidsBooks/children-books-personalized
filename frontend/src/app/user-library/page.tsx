@@ -7,7 +7,7 @@ import Image from "next/image";
 import { ChangeEvent, useState } from "react";
 import { Button } from "../../components/ui/Button";
 import Pagination from "@components/Pagination";
-import LibraryDisplay from "@components/Library/LibraryDisplay";
+import LibraryDisplay from "@components/LibraryDisplay";
 
 const UserLibrary = () => {
   const [search, setSearch] = useState("");
