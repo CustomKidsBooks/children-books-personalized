@@ -31,6 +31,9 @@ export default function (app: Express) {
     validationMW(createBookValSchema),
     BookController.createBook
   );
+  //curl -X DELETE http://localhost:5001/api/book/1
+  app.delete("/api/book/:id", BookController.deleteBookHandler);
+
   app.post("/api/generateImage", BookController.generateImageForPage);
 
   app.get("/api/books", validFetchBookMW, BookController.fetchBooks);
