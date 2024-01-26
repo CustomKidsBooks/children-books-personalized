@@ -18,7 +18,7 @@ import {
   fetchStoryDataForWord,
   fetchStoryDataForPDF,
 } from "../service/book.service";
-import { deleteImage } from "../service/image.service";
+import { deleteImage, deleteImageHandler } from "../service/image.service";
 type PageData = {
   pageNumber: number;
   paragraphs: string[];
@@ -389,7 +389,9 @@ export const BookController = {
             `../../images/page/${imageName}`
           );
           try {
-            fs.unlinkSync(imagePath);
+            console.log(page.image);
+            await deleteImageHandler(page.image);
+            //fs.unlinkSync(imagePath);
           } catch (error) {
             log.error("Error deleting image file:", error);
           }
@@ -403,7 +405,9 @@ export const BookController = {
           `../../images/bookCover/${bookImageName}`
         );
         try {
-          fs.unlinkSync(bookImagePath);
+          console.log(book.image);
+          deleteImageHandler(book.image);
+          //fs.unlinkSync(bookImagePath);
         } catch (error) {
           log.error("Error deleting book image file:", error);
         }

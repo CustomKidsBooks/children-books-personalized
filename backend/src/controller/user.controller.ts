@@ -6,7 +6,6 @@ import { Book } from "../entities/book";
 import { Page } from "../entities/page";
 import { deleteImageFromFirebase } from "../service/image.service";
 import log from "../logger";
-import axios from "axios";
 import {
   deleteUserFromOauth,
   getApiAccessToken,

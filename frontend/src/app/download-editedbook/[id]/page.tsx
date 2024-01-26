@@ -11,12 +11,15 @@ import { useEditedBookContext } from "../../../components/context/EditedBookCont
 import { useState, useEffect } from "react";
 import { storage } from "../../../services/firebase";
 import { ref, deleteObject } from "firebase/storage";
-
+import { Button } from "../../../components/ui/Button";
+import { useAuth0 } from "@auth0/auth0-react";
+import { useRouter } from "next/navigation";
 const EditedBook = ({ params }: { params: { id: string } }) => {
   const [isCleanup, setIsCleanup] = useState<boolean>(false);
   const id = Number(params.id);
   const { bookData: book, isLoading, isError } = useGetBook(id);
-
+  const { user, getAccessTokenSilently, loginWithRedirect } = useAuth0();
+  const router = useRouter();
   const {
     updateEditedBookContent,
     editedBook,
@@ -101,6 +104,25 @@ const EditedBook = ({ params }: { params: { id: string } }) => {
           <div className="mt-10 lg:mt-0 lg:w-1/4 lg:mx-auto gap-5 flex flex-col lg:justify-around">
             <DownloadBook bookId={id} />
             <SendBook bookId={id} />
+            <div className="items-center">
+              <h1 className="font-bold text text-2xl lg:text-3xl">
+                Get Printed Book
+              </h1>
+              <div className="mt-3 py-4">
+                <Button
+                  // href={`/order-printed-book/${id}`}
+                  intent="teal"
+                  className="text font-bold"
+                  onClick={() =>
+                    !user
+                      ? loginWithRedirect()
+                      : router.push(`/order-printed-book/${id}`)
+                  }
+                >
+                  Order Printed Book
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
