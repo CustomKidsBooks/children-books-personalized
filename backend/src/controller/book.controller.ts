@@ -241,6 +241,38 @@ export const BookController = {
       });
     }
   },
+
+  changeBookPrivacy: async (req: Request, res: Response) => {
+    try {
+      const userID = req.params.userID;
+      const bookID = Number(req.params.bookID);
+      const newPrivacy = req.body.privacy;
+
+      const bookRepository = AppDataSource.getRepository(Book);
+      const book = await bookRepository.findOne({ where: { id: bookID } });
+      if (!book) {
+        return res.status(404).json({ success: 0, message: "Book not found" });
+      }
+
+      if (book && book.userID === userID) {
+        book.privacy = newPrivacy;
+        await bookRepository.save(book);
+      }
+      const books = await bookRepository.find({ where: { userID: userID } });
+      return res.status(200).json({
+        success: 1,
+        books,
+        message: "Book Privacy updated successfully",
+      });
+    } catch (error) {
+      log.error("Error updating book:", error);
+      return res.status(500).json({
+        success: 0,
+        message: "An error occurred while updating the book",
+      });
+    }
+  },
+
   updateBookHandler: async (req: Request, res: Response) => {
     const id = parseInt(req.params.id);
     const { title, subject, lesson, privacy } = req.body;
