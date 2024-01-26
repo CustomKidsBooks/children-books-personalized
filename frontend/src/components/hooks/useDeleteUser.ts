@@ -1,26 +1,39 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
+import { axiosInstance } from "@services/api-client";
 
-const useDeleteUser = async (userId: string | undefined) => {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+const useDeleteUser = () => {
+  const { getAccessTokenSilently, logout } = useAuth0();
+
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
   const [isDeleted, setIsDeleted] = useState<boolean>(false);
 
-  useEffect(() => {
-    axios
-      .get(`https://login.auth0.com/api/v2/users/6561862b17b4bdb50112ba1b`)
-      .then((res) => {
+  const deleteUser = async (userId: string) => {
+    const token = await getAccessTokenSilently();
+    setIsDeleting(true);
+    setIsError(false);
+    try {
+      const response = await axiosInstance.delete(`/api/users/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (response.data.success === 1) {
+        logout({ logoutParams: { returnTo: window.location.origin } });
         setIsDeleted(true);
-      })
-      .catch((err) => {
-        setIsError(true);
-      })
-      .finally(() => setIsLoading(false));
-  }, []);
+      }
+    } catch (error) {
+      setIsError(true);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
   return {
     isError,
-    isLoading,
+    isDeleting,
     isDeleted,
+    deleteUser,
   };
 };
 

@@ -3,14 +3,10 @@
 import { axiosInstance } from "@services/api-client";
 import { Button } from "../../../components/ui/Button";
 import useGetBook from "@components/hooks/useGetBook";
-import { useFormik } from "formik";
-import ReusableInput from "../../../components/ReusableInput";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useEffect, useRef, useState, MutableRefObject } from "react";
 import usePrintBook from "@components/hooks/usePrintBook";
 import Image from "next/image";
-import axios from "axios";
-import PrintBookModal from "@components/printBookModal";
+import Modal from "@components/Modal";
 
 interface OrderBookValues {
   id: number;
@@ -27,8 +23,8 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
     setErrorMessage,
     shippingError,
     setShippingError,
-    isVisible,
-    setIsVisible,
+    isModalOpen,
+    setIsModalOpen,
     data,
     selectedBookSize,
     selectedInteriorColor,
@@ -198,6 +194,7 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
       );
       window.location = response.data.url.url;
     } catch (error) {
+      setIsModalOpen(true);
       setErrorMessage("Something Went wrong : Please try again later");
     }
   };
@@ -1078,17 +1075,17 @@ const OrderBook = ({ params }: { params: OrderBookValues }) => {
             </div>
           </div>
         )}
-        <PrintBookModal
-          isVisible={isVisible}
+        <Modal
+          isOpen={isModalOpen}
           onClose={() => {
-            setIsVisible(false);
             setErrorMessage("");
+            setIsModalOpen(false);
           }}
         >
-          <div className="text-red-500 md:py-10 py-6 md:px-5 ">
+          <div className="text-red-500 font-semibold md:py-14 py-14 md:px-5 text-center ">
             {errorMessage && <div>{errorMessage}</div>}
           </div>
-        </PrintBookModal>
+        </Modal>
       </div>
     </section>
   );

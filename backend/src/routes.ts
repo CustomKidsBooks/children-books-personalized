@@ -31,7 +31,6 @@ export default function (app: Express) {
     validationMW(createBookValSchema),
     BookController.createBook
   );
-  //curl -X DELETE http://localhost:5001/api/book/1
   app.delete("/api/book/:id", BookController.deleteBookHandler);
 
   app.post("/api/generateImage", BookController.generateImageForPage);
@@ -47,6 +46,12 @@ export default function (app: Express) {
   app.put("/api/books/:id/pages", BookController.updateBookPages);
 
   app.put("/api/pages/:pageId", BookController.updatePageHandler);
+
+  app.put(
+    "/api/users/:userID/books/:bookID/change-privacy",
+    authMiddleware,
+    BookController.changeBookPrivacy
+  );
 
   app.delete("/api/books/:id", BookController.deleteBookHandler);
 

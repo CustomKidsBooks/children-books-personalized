@@ -10,7 +10,7 @@ import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import ReusableInput from "./ReusableInput";
 import CreateStorySkeleton from "./skeleton/CreateStory.skeleton";
-import CreateStoryResponseModal from "@components/create-story-model/createStoryResponse";
+import Modal from "./Modal";
 
 interface CreateStoryFormProps {
   isError: boolean;
@@ -29,6 +29,8 @@ const StoryForm: React.FC<CreateStoryFormProps> = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const {
     values,
     handleChange,
@@ -53,15 +55,11 @@ const StoryForm: React.FC<CreateStoryFormProps> = ({
     },
   });
 
-  const handleModalClose = () => {
-    setIsModalVisible(false);
-  };
-
   useEffect(() => {
     if (isError || bookID !== "") {
-      setIsModalVisible(true);
+      setIsModalOpen(true);
     }
-    return () => { };
+    return () => {};
   }, [isError, bookID]);
 
   if (submitting) {
@@ -220,73 +218,73 @@ const StoryForm: React.FC<CreateStoryFormProps> = ({
                 </div>
                 {values.characters && values.characters.length > 0
                   ? (values.characters || []).map((character, index) => (
-                    <div key={index} className="flex flex-col mt-1">
-                      <div className="md:flex items-center justify-between px-1">
-                        <label
-                          htmlFor={`characters.${index}.name`}
-                          className="label-input font-medium"
+                      <div key={index} className="flex flex-col mt-1">
+                        <div className="md:flex items-center justify-between px-1">
+                          <label
+                            htmlFor={`characters.${index}.name`}
+                            className="label-input font-medium"
+                          >
+                            Name:
+                          </label>
+                          <ReusableInput
+                            type="text"
+                            id={`characters.${index}.name`}
+                            name={`characters.${index}.name`}
+                            onChange={handleChange}
+                            value={character.name}
+                            placeholder="Name"
+                            onBlur={handleBlur}
+                            className="w-full"
+                          />
+                        </div>
+                        <div className="asterisk">
+                          {errors.characters && (
+                            <div>
+                              {getIn(errors, `characters.${index}.name`)}
+                            </div>
+                          )}
+                        </div>
+                        <div className="md:flex items-center justify-between px-1">
+                          <label
+                            htmlFor={`characters.${index}.description`}
+                            className="label-input font-medium"
+                          >
+                            Description:
+                          </label>
+                          <ReusableInput
+                            type="text"
+                            id={`characters.${index}.description`}
+                            name={`characters.${index}.description`}
+                            onChange={handleChange}
+                            value={character.description}
+                            onBlur={handleBlur}
+                            placeholder={`Ex. Description of the character`}
+                            rows={2}
+                          />
+                        </div>
+                        <div className="asterisk">
+                          {errors.characters && (
+                            <div>
+                              {getIn(errors, `characters.${index}.description`)}
+                            </div>
+                          )}
+                        </div>
+                        <button
+                          className="text-pink p-3"
+                          type="button"
+                          onClick={() => {
+                            const updatedCharacters = [
+                              ...(values.characters || []),
+                            ];
+                            updatedCharacters.splice(index, 1);
+                            setFieldValue("characters", updatedCharacters);
+                          }}
                         >
-                          Name:
-                        </label>
-                        <ReusableInput
-                          type="text"
-                          id={`characters.${index}.name`}
-                          name={`characters.${index}.name`}
-                          onChange={handleChange}
-                          value={character.name}
-                          placeholder="Name"
-                          onBlur={handleBlur}
-                          className="w-full"
-                        />
+                          Remove Character
+                        </button>
+                        <hr className="bg-pink h-0.5 mx-10" />
                       </div>
-                      <div className="asterisk">
-                        {errors.characters && (
-                          <div>
-                            {getIn(errors, `characters.${index}.name`)}
-                          </div>
-                        )}
-                      </div>
-                      <div className="md:flex items-center justify-between px-1">
-                        <label
-                          htmlFor={`characters.${index}.description`}
-                          className="label-input font-medium"
-                        >
-                          Description:
-                        </label>
-                        <ReusableInput
-                          type="text"
-                          id={`characters.${index}.description`}
-                          name={`characters.${index}.description`}
-                          onChange={handleChange}
-                          value={character.description}
-                          onBlur={handleBlur}
-                          placeholder={`Ex. Description of the character`}
-                          rows={2}
-                        />
-                      </div>
-                      <div className="asterisk">
-                        {errors.characters && (
-                          <div>
-                            {getIn(errors, `characters.${index}.description`)}
-                          </div>
-                        )}
-                      </div>
-                      <button
-                        className="text-pink p-3"
-                        type="button"
-                        onClick={() => {
-                          const updatedCharacters = [
-                            ...(values.characters || []),
-                          ];
-                          updatedCharacters.splice(index, 1);
-                          setFieldValue("characters", updatedCharacters);
-                        }}
-                      >
-                        Remove Character
-                      </button>
-                      <hr className="bg-pink h-0.5 mx-10" />
-                    </div>
-                  ))
+                    ))
                   : null}
 
                 <div className="md:flex items-center justify-between">
@@ -310,18 +308,47 @@ const StoryForm: React.FC<CreateStoryFormProps> = ({
                     Write my book!
                   </Button>
                 </div>
-                {isModalVisible && (
-                  <div>
-                    <CreateStoryResponseModal
-                      onClose={handleModalClose}
-                      isVisible={true}
-                      bookID={bookID}
-                      isError={isError}
-                    />
-                  </div>
-                )}
               </div>
             </form>
+            <Modal
+              isOpen={isModalOpen}
+              onClose={() => {
+                setIsModalOpen(false);
+              }}
+            >
+              <div className="p-10 ">
+                <div>
+                  {isError && (
+                    <div className="flex flex-col items-center gap-2 text-red-700 font-semibold">
+                      <p>Please Try Again Later</p>
+                      <p>Or Contact Us At</p>
+                      <p>TinyTaleCreators@gmail.com</p>
+                    </div>
+                  )}
+                  {bookID !== "" && (
+                    <div className="flex flex-col items-center gap-4 md:gap-10">
+                      <p className="text-center font-semibold text-pink">
+                        Your book has been successfully created.
+                      </p>
+                      <div className="flex flex-col md:flex-row gap-5">
+                        <a
+                          href={`/view-book/${bookID}`}
+                          className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow mt-0 me-5"
+                        >
+                          Read Book
+                        </a>
+                        <a
+                          href={`/download/${bookID}`}
+                          className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow mt-0 me-5"
+                        >
+                          Get Book
+                        </a>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </Modal>
           </div>
           <div className="lg:w-2/4 bg-contain bg-no-repeat bg-top bg-kid-book hidden lg:block"></div>
         </div>

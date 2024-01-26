@@ -85,8 +85,7 @@ const usePrintBook = (pageCount: number) => {
     null
   );
   const [data, setData] = useState<Array<Array<string | number>>>([]);
-  const [isVisible, setIsVisible] = useState<boolean>(false);
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBookSize, setSelectedBookSize] = useState<string>("");
   const [selectedInteriorColor, setSelectedInteriorColor] =
     useState<string>("");
@@ -139,7 +138,7 @@ const usePrintBook = (pageCount: number) => {
         );
       })
       .catch((error) => {
-        setIsVisible(true);
+        setIsModalOpen(true);
         setErrorMessage("Error fetching the file: Please Try Again");
       });
   }, []);
@@ -484,7 +483,7 @@ const usePrintBook = (pageCount: number) => {
         })
       );
     } catch (error) {
-      setIsVisible(true);
+      setIsModalOpen(true);
       setErrorMessage("Something Went Wrong : Please Try Later");
     }
   };
@@ -518,7 +517,7 @@ const usePrintBook = (pageCount: number) => {
       if (error?.response?.data?.shippingDetails) {
         setShippingError(error?.response?.data?.shippingDetails);
       } else {
-        setIsVisible(true);
+        setIsModalOpen(true);
         setErrorMessage("Something went wrong : Please try again Later ");
       }
     }
@@ -530,8 +529,8 @@ const usePrintBook = (pageCount: number) => {
     setErrorMessage,
     shippingError,
     setShippingError,
-    isVisible,
-    setIsVisible,
+    isModalOpen,
+    setIsModalOpen,
     data,
     selectedBookSize,
     selectedInteriorColor,

@@ -7,7 +7,7 @@ export async function generateBookText(prompt: string): Promise<string> {
   });
   const openai = new OpenAIApi(config);
   const completionRequest: CreateCompletionRequest = {
-    model: "text-davinci-003",
+    model: "gpt-3.5-turbo-instruct",
     max_tokens: 512,
     temperature: 0,
     prompt,

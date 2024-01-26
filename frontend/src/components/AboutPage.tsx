@@ -1,8 +1,8 @@
 "use client";
 
-import LibraryCard from "@components/Library/LibraryCard";
 import { LinkButton } from "@ui/LinkButton";
 import Image from "next/image";
+import LibraryDisplay from "./LibraryDisplay";
 
 const AboutPage = () => {
   return (
@@ -68,12 +68,23 @@ const AboutPage = () => {
             </div>
           </div>
           <h2 className="pt-10 lg:text-xl font-quicksand lg:font-semibold">
-            Welcome to the Tiny Tale, an AI-Powered Children&apos;s Books Platform!
-            <br />Our mission is to transform how children engage with stories by combining technology
-            <br />and storytelling to create a personalized and educational reading experience.
-            <br />We are committed to nurturing a love for reading, fostering creativity, and
-            <br />cultivating a thirst for knowledge. Join us on this magical quest to make
-            <br />learning an enchanting adventure for every child, one tiny tale at a time.
+            Welcome to the Tiny Tale, an AI-Powered Children&apos;s Books
+            Platform!
+            <br />
+            Our mission is to transform how children engage with stories by
+            combining technology
+            <br />
+            and storytelling to create a personalized and educational reading
+            experience.
+            <br />
+            We are committed to nurturing a love for reading, fostering
+            creativity, and
+            <br />
+            cultivating a thirst for knowledge. Join us on this magical quest to
+            make
+            <br />
+            learning an enchanting adventure for every child, one tiny tale at a
+            time.
           </h2>
         </div>
       </section>
@@ -89,7 +100,7 @@ const AboutPage = () => {
             Library
           </h1>
         </div>
-        <LibraryCard booksPerPage={4} />
+        <LibraryDisplay booksPerPage={4} />
       </section>
     </>
   );

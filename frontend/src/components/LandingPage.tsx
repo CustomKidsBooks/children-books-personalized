@@ -1,12 +1,12 @@
 "use client";
 
-import { useAuth0 } from '@auth0/auth0-react';
-import LibraryCard from "@components/Library/LibraryCard";
+import { useAuth0 } from "@auth0/auth0-react";
 import { LinkButton } from "@ui/LinkButton";
 import Image from "next/image";
 import StartStep from "./StartStep";
 import LandinPageSkeleton from "./skeleton/LandinPage.skeleton";
-import LibrarySkeleton from "./Library/LibraryCard.skeleton";
+import LibrarySkeleton from "./skeleton/LibraryCard.skeleton";
+import LibraryDisplay from "./LibraryDisplay";
 
 const LandingPage = () => {
   const { error, isLoading } = useAuth0();
@@ -73,11 +73,7 @@ const LandingPage = () => {
             Library
           </h1>
         </div>
-        {isLoading ? (
-          <LibrarySkeleton />
-        ) : (
-          <LibraryCard booksPerPage={4} />
-        )}
+        {isLoading ? <LibrarySkeleton /> : <LibraryDisplay booksPerPage={4} />}
       </section>
       <section className="bg-ellipse-landing-page bg-no-repeat bg-right sm:bg-none">
         <div className="py-10 w-5/6 mx-auto lg:h-[600px] sm:h-auto">

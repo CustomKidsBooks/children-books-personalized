@@ -4,7 +4,6 @@ import Footer from "@components/Footer";
 import Nav from "@components/Nav";
 import "@styles/globals.css";
 import React from "react";
-import { ModalProvider } from "../components/ModalProvider";
 import { EditedBookProvider } from "../components/context/EditedBookContext";
 
 export default function RootLayout({
@@ -23,19 +22,17 @@ export default function RootLayout({
           scope: process.env.NEXT_PUBLIC_AUTH0_SCOPE,
         }}
       >
-        <ModalProvider>
-          <EditedBookProvider>
-            <body>
-              <div className="flex flex-col min-h-screen h-auto">
-                <main className="">
-                  <Nav />
-                  {children}
-                </main>
-                <Footer />
-              </div>
-            </body>
-          </EditedBookProvider>
-        </ModalProvider>
+        <EditedBookProvider>
+          <body>
+            <div className="flex flex-col min-h-screen h-auto">
+              <main className="">
+                <Nav />
+                {children}
+              </main>
+              <Footer />
+            </div>
+          </body>
+        </EditedBookProvider>
       </Auth0Provider>
     </html>
   );

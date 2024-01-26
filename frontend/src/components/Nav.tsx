@@ -7,32 +7,24 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import DeleteModal from "./delete/delete";
 import NavbarSkeleton from "./skeleton/Navbar.skeleton";
 import { LinkButton } from "./ui/LinkButton";
+import Modal from "./Modal";
+import useDeleteUser from "./hooks/useDeleteUser";
 
 const Nav = () => {
   const { user, error, isLoading, loginWithRedirect, logout } = useAuth0();
   const pathname = usePathname();
+
   const [activeLink, setActiveLink] = useState<string | null>(null);
   const [isDropdownVisible, setDropdownVisible] = useState(false);
-  const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
   const [isMenuOpen, setMenuOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const { isError, isDeleting, isDeleted, deleteUser } = useDeleteUser();
 
   const handleImageClick = () => {
     setDropdownVisible(!isDropdownVisible);
-  };
-
-  const handleDeleteClick = () => {
-    setDeleteModalVisible(true);
-  };
-
-  const handleDeleteConfirm = () => {
-    setDeleteModalVisible(false);
-  };
-
-  const handleDeleteCancel = () => {
-    setDeleteModalVisible(false);
   };
 
   if (isLoading) return <NavbarSkeleton />;
@@ -84,7 +76,7 @@ const Nav = () => {
                       href="#"
                       intent="teal"
                       onClick={() => {
-                        handleDeleteClick();
+                        setIsModalOpen(true);
                         handleImageClick();
                       }}
                       className="text-sm font-normal"
@@ -105,16 +97,6 @@ const Nav = () => {
             >
               Logout
             </a>
-            {isDeleteModalVisible && (
-              <DeleteModal
-                onClose={handleDeleteCancel}
-                title="Delete Confirmation"
-                text="Are you sure you want to delete?"
-                buttonText="Delete"
-                isVisible={true}
-                onConfirm={handleDeleteConfirm}
-              />
-            )}
           </div>
         ) : (
           <a
@@ -228,6 +210,35 @@ const Nav = () => {
           </div>
         )}
       </nav>
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+        }}
+      >
+        <div className="text-red-500 text-center md:py-14 py-14 md:px-5 ">
+          {isDeleting && (
+            <h1 className="text-xl font-semibold">Deleting..... Please wait</h1>
+          )}
+          {isError && (
+            <h1 className="text-xl font-semibold">
+              Error : Please Try Again Later
+            </h1>
+          )}
+          {!isDeleting && !isError && (
+            <div className="text-xl font-semibold">
+              <h1 className="mb-2">Delete Confirmation</h1>
+              <p className="mb-5">Are you sure you want to delete Account ?</p>
+              <button
+                className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow mt-0"
+                onClick={() => deleteUser(user?.sub!)}
+              >
+                Delete
+              </button>
+            </div>
+          )}
+        </div>
+      </Modal>
     </>
   );
 };
