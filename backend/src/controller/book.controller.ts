@@ -15,7 +15,6 @@ import { generateBookText, generateImage } from "../service/openai.service";
 import nodemailer from "nodemailer";
 import { generatePdfDoc, generateWordDoc } from "../utils";
 import {
-  fetchStoryDataForWord,
   fetchStoryDataForPDF,
 } from "../service/book.service";
 import { deleteImage, deleteImageHandler } from "../service/image.service";
@@ -415,15 +414,8 @@ export const BookController = {
 
       for (const page of pages) {
         if (page.image) {
-          const imageName = path.basename(page.image);
-          const imagePath = path.join(
-            __dirname,
-            `../../images/page/${imageName}`
-          );
           try {
-            console.log(page.image);
             await deleteImageHandler(page.image);
-            //fs.unlinkSync(imagePath);
           } catch (error) {
             log.error("Error deleting image file:", error);
           }
@@ -431,15 +423,8 @@ export const BookController = {
       }
 
       if (book.image) {
-        const bookImageName = path.basename(book.image);
-        const bookImagePath = path.join(
-          __dirname,
-          `../../images/bookCover/${bookImageName}`
-        );
         try {
-          console.log(book.image);
           deleteImageHandler(book.image);
-          //fs.unlinkSync(bookImagePath);
         } catch (error) {
           log.error("Error deleting book image file:", error);
         }

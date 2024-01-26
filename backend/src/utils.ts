@@ -1,8 +1,4 @@
 import {
-  fetchStoryDataForWord,
-  fetchStoryDataForPDF,
-} from "./service/book.service";
-import {
   Document,
   Packer,
   PageNumber,
@@ -50,11 +46,6 @@ export async function generatePdfDoc(
   }
 
   try {
-    // const { title, image, pages } = await fetchStoryDataForPDF(bookId);
-    // if (!title) {
-    //   throw new Error("Story not found");
-    // }
-
     const doc = new PDFDocument();
     let pageNumber = 1;
     const textConfig = {
@@ -76,7 +67,7 @@ export async function generatePdfDoc(
       });
       const imageBuffer = Buffer.from(response.data);
       const imageWidth = imageConfig.width;
-      const imagePadding = 40;
+      const imagePadding = 30;
       const imageY = centerY - imageWidth / 2 - imagePadding;
 
       drawFrameOverlay(
@@ -84,7 +75,7 @@ export async function generatePdfDoc(
         frameX,
         imageY,
         frameWidth,
-        imageWidth + 100,
+        imageWidth + 150,
         "gold",
         "orange",
         0.5
@@ -93,7 +84,7 @@ export async function generatePdfDoc(
         width: imageWidth,
         height: imageWidth,
       });
-      doc.y = imageY + imageWidth + 5;
+      doc.y = imageY + imageWidth + 55;
       doc.fillColor("black").text(`(${pageNumber})`, { align: "center" });
     }
 
@@ -105,7 +96,7 @@ export async function generatePdfDoc(
         });
         const imageBuffer = Buffer.from(response.data);
         const imageWidth = imageConfig.width;
-        const imagePadding = 40;
+        const imagePadding = 110;
         const imageY = centerY - imageWidth / 2 - imagePadding;
 
         drawFrameOverlay(
@@ -113,7 +104,7 @@ export async function generatePdfDoc(
           frameX,
           imageY,
           frameWidth,
-          imageWidth + 150,
+          imageWidth + 300,
           "orange",
           "orange",
           0.5
@@ -124,8 +115,7 @@ export async function generatePdfDoc(
         });
         doc.y = imageY + imageWidth;
       }
-      const textPadding = 5;
-      const textY = centerY + imageConfig.width / 2 + textPadding;
+      const textY = centerY + imageConfig.width / 2.75;
 
       drawFrameOverlay(
         doc,

@@ -1,6 +1,4 @@
-import config from "config";
 import axios from "axios";
-import fs from "fs";
 import { Book } from "../entities/book";
 import { AppDataSource } from "../db/connect";
 import { uploadImages } from "./image.service";
@@ -25,7 +23,6 @@ export async function downloadPagesImageLocally(
 ): Promise<string> {
   try {
     const response = await axios.get(imageUrl, { responseType: "arraybuffer" });
-
     const imageBuffer = Buffer.from(response.data, "binary");
     const directoryPath = "ChildrenBook/PagesImage";
     const uploadedImageUrl = await uploadImages(imageBuffer, directoryPath);
