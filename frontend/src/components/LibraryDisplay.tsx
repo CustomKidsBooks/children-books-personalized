@@ -1,6 +1,6 @@
 import useGetBooks from "@components/hooks/useGetBooks";
 import { useEffect } from "react";
-import LibrarySkeleton from "./LibraryCard.skeleton";
+import LibrarySkeleton from "./skeleton/LibraryCard.skeleton";
 import BookCard from "@components/BookCard";
 
 interface LibraryDisplayValues {

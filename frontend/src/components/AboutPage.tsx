@@ -2,7 +2,7 @@
 
 import { LinkButton } from "@ui/LinkButton";
 import Image from "next/image";
-import LibraryDisplay from "./Library/LibraryDisplay";
+import LibraryDisplay from "./LibraryDisplay";
 
 const AboutPage = () => {
   return (

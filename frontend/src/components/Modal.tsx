@@ -1,18 +1,42 @@
-import React, { useState } from "react";
-import { ModalProps } from "@utils/interfaces";
+import React, { ReactNode } from "react";
 
-const Modal: React.FC<ModalProps> = ({ isVisible, onClose, children }) => {
-  if (!isVisible) return null;
+interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  height?: string;
+  width?: string;
+  children?: ReactNode;
+}
 
-  const handleClose = (e: React.MouseEvent<HTMLDivElement>) => {
-    const target = e.target as HTMLDivElement;
-    if (target.id === "wrapper") onClose();
-  };
-
+const Modal: React.FC<ModalProps> = ({
+  isOpen,
+  onClose,
+  height,
+  width,
+  children,
+}) => {
   return (
-    <div className="md:w-full md:h-full fixed bg-black bg-opacity-40 right-[-100px] top-0 md:left-0 z-50 p-20 flex justify-center items-center" id="wrapper" onClick={handleClose}>
-      <div className="md:w-[420px] w-full mx-auto flex flex-col">
-        <div className="p-2 rounded">{children}</div>
+    <div
+      className={`
+    ${
+      isOpen ? "block" : "hidden"
+    } fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2
+     bg-white px-3 py-2 rounded-md z-20 shadow-2xl shadow-black
+    ${height ? `h-${height}` : ""} ${width ? `w-${width}` : "w-[90%] md:w-auto"}
+  `}
+    >
+      <div
+        className="absolute top-0 left-0 w-full h-full bg-white rounded-lg shadow-3xl"
+        onClick={onClose}
+      ></div>
+      <div className="relative">
+        <button
+          className="absolute top-0 right-0 font-semibold text-xl me-2"
+          onClick={onClose}
+        >
+          X
+        </button>
+        {children}
       </div>
     </div>
   );

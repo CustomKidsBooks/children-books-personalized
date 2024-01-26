@@ -5,8 +5,8 @@ import { LinkButton } from "@ui/LinkButton";
 import Image from "next/image";
 import StartStep from "./StartStep";
 import LandinPageSkeleton from "./skeleton/LandinPage.skeleton";
-import LibrarySkeleton from "./Library/LibraryCard.skeleton";
-import LibraryDisplay from "./Library/LibraryDisplay";
+import LibrarySkeleton from "./skeleton/LibraryCard.skeleton";
+import LibraryDisplay from "./LibraryDisplay";
 
 const LandingPage = () => {
   const { error, isLoading } = useAuth0();
