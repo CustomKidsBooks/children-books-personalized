@@ -1,4 +1,3 @@
-// contexts/BookContext.tsx
 import { createContext, useContext, ReactNode, useState } from "react";
 
 interface BookContentValues {
@@ -8,7 +7,7 @@ interface BookContentValues {
 }
 
 interface BookContextType {
-  editedBook: BookContentValues[]; // Replace YourObjectType with the actual type of bookContent items
+  editedBook: BookContentValues[];
   updateEditedBookContent: (newBookContent: BookContentValues[]) => void;
   editedImages: string[];
   updateEditedImages: (newEditedImages: string[]) => void;
