@@ -14,9 +14,7 @@ import {
 import { generateBookText, generateImage } from "../service/openai.service";
 import nodemailer from "nodemailer";
 import { generatePdfDoc, generateWordDoc } from "../utils";
-import {
-  fetchStoryDataForPDF,
-} from "../service/book.service";
+import { fetchStoryDataForPDF } from "../service/book.service";
 import { deleteImage, deleteImageHandler } from "../service/image.service";
 type PageData = {
   pageNumber: number;
@@ -66,7 +64,7 @@ export const BookController = {
 
         await bookRepository.save(newBook);
 
-        let desc = `create a ${page} page story book titled "${title}" with ${ageGroup}-year-old readers, with one paragraph per page`;
+        let desc = `Create a ${page}-page storybook titled '${title}' for ${ageGroup}-year-old readers, with one paragraph per page, each containing a maximum of 30 words`;
         desc += subject ? ` about ${subject}` : "";
         if (characters.length > 0) {
           characters.forEach(
