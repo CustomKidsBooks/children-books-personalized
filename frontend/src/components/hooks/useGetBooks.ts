@@ -67,13 +67,11 @@ const useGetBooks = (
   };
 
   const deleteBook = async (bookId: number) => {
-    try {
-      // TODO : implement API after merginf the deleteBookFunction branch
-
-      // const token = await getAccessTokenSilently();
-      // axiosInstance.delete(`/api/book/${bookId}`, {
-      //   headers: { Authorization: `Bearer ${token}` },
-      // });
+    try { 
+      const token = await getAccessTokenSilently();
+      axiosInstance.delete(`/api/book/${bookId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setBooks(() => books.filter((book) => book.id !== bookId));
     } catch (error) {
       console.log(error);
