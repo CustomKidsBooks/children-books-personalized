@@ -115,7 +115,7 @@ const UserProfile = ({ user }: UserProfileValues) => {
         <div>
           {!isLoading && !isError && booksToDisplay.length === 0 && (
             <h1 className="py-14 text p-4">
-              You don't have any {privacy} book!
+              You don't have any {privacy !== "all" ? privacy : ""} book!
             </h1>
           )}
           {isLoading && <LibrarySkeleton />}

@@ -2,11 +2,15 @@ import { Button } from "@ui/Button";
 import { useState } from "react";
 import Modal from "@components/Modal";
 import SendEmailForm from "./SendEmailForm";
-import { useRouter } from "next/navigation";
 
 const SendBook = ({ bookId }: { bookId: number }) => {
   const [selectedFormat, setSelectedFormat] = useState<string>("Pdf");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [emailSentMessage, setEmailSentMessage] = useState<string>("");
+
+  const handleEmailSentMessageChange = (message: string) => {
+    setEmailSentMessage(message);
+  };
 
   return (
     <div className="items-center">
@@ -37,9 +41,10 @@ const SendBook = ({ bookId }: { bookId: number }) => {
         isOpen={isModalOpen}
         onClose={() => {
           setIsModalOpen(false);
+          setEmailSentMessage("");
         }}
       >
-        <SendEmailForm selectedFormat={selectedFormat} bookId={bookId} />
+        <SendEmailForm selectedFormat={selectedFormat} bookId={bookId} emailSentMessage= {emailSentMessage} setEmailSentMessage={handleEmailSentMessageChange} />
       </Modal>
     </div>
   );
