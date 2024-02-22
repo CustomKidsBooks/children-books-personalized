@@ -75,7 +75,10 @@ const SendEmailForm: React.FC<SendEmailProps> = ({
                 name="email"
                 type="email"
                 value={values.email}
-                onChange={handleChange}
+                onChange={(e) => {
+                  handleChange(e);
+                  setEmailSentMessage("");
+                }}
                 onBlur={handleBlur}
               />
               {touched.email && errors.email ? (
