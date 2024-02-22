@@ -11,18 +11,21 @@ import { axiosInstance } from "@services/api-client";
 interface SendEmailProps {
   selectedFormat: string;
   bookId: Number;
+  emailSentMessage: string;
+  setEmailSentMessage: (message: string) => void;
 }
 
 const SendEmailForm: React.FC<SendEmailProps> = ({
   selectedFormat,
   bookId,
+  emailSentMessage,
+  setEmailSentMessage,
 }) => {
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [emailSentMessage, setEmailSentMessage] = useState<String>("");
   const [sending, setSending] = useState<boolean>(false);
 
   const { editedBook } = useEditedBookContext();
-  const { values, handleChange, handleBlur, errors, touched, handleSubmit } =
+  const { values, handleChange, handleBlur, errors, touched, handleSubmit, resetForm } =
     useFormik<SendEmailModalProps>({
       initialValues: {
         email: "",
@@ -40,6 +43,7 @@ const SendEmailForm: React.FC<SendEmailProps> = ({
           );
           setEmailSentMessage(response.data.message);
           setSending(false);
+          resetForm();
         } catch (error) {
           setSending(false);
           setErrorMessage(
@@ -71,7 +75,10 @@ const SendEmailForm: React.FC<SendEmailProps> = ({
                 name="email"
                 type="email"
                 value={values.email}
-                onChange={handleChange}
+                onChange={(e) => {
+                  handleChange(e);
+                  setEmailSentMessage("");
+                }}
                 onBlur={handleBlur}
               />
               {touched.email && errors.email ? (
@@ -92,7 +99,7 @@ const SendEmailForm: React.FC<SendEmailProps> = ({
         </form>
         {sending && <p className="text-pink font-semibold my-3">Sending...</p>}
         {emailSentMessage && (
-          <p className="text-gray-900 font-semibold my-3">
+          <p className="text-pink font-semibold my-3">
             {emailSentMessage}{" "}
           </p>
         )}
